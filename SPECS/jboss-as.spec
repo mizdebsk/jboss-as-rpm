@@ -9,7 +9,7 @@
 
 %global tcuid 92
 
-%global modules controller-client controller deployment-repository domain-management ee embedded jmx logging naming network platform-mbean process-controller protocol remoting server transactions
+%global modules controller-client controller deployment-repository domain-management ee embedded jmx logging naming network platform-mbean process-controller protocol remoting security server transactions
 
 Name:             jboss-as
 Version:          7.1.0
@@ -46,6 +46,9 @@ Patch17:          0018-Removing-use-of-HornetqJournalEnvironmentBean-in-Arj.patc
 Patch18:          0019-adding-org.jboss.jboss-transaction-spi-to-minimal-bu.patch
 Patch19:          0020-adding-jts-modules-to-minimal-build.patch
 Patch20:          0021-adding-org.omg.api-to-minimal-build.patch
+Patch21:          0022-Enable-org.jboss.as.security-module.patch
+Patch22:          0023-Enable-part-of-org.jboss.as.clustering-module-infini.patch
+Patch23:          0024-Removing-some-banned-deps-as-in-Fedora-those-are-jus.patch
 
 BuildArch:        noarch
 
@@ -58,6 +61,7 @@ BuildRequires:    dom4j
 BuildRequires:    geronimo-annotation
 BuildRequires:    h2
 BuildRequires:    hibernate-validator >= 4.2.0
+BuildRequires:    infinispan >= 5.1.1-1
 BuildRequires:    jandex >= 1.0.3
 BuildRequires:    java-devel
 BuildRequires:    jgroups
@@ -79,6 +83,7 @@ BuildRequires:    jboss-marshalling >= 1.3.4
 BuildRequires:    jboss-metadata >= 7.0.0-1
 BuildRequires:    jboss-modules >= 1.1.1-1
 BuildRequires:    jboss-msc >= 1.0.1
+BuildRequires:    jboss-negotiation
 BuildRequires:    jboss-remoting >= 3.2.2
 BuildRequires:    jboss-remoting-jmx
 BuildRequires:    jboss-remote-naming >= 1.0.1
@@ -97,6 +102,9 @@ BuildRequires:    maven-jar-plugin
 BuildRequires:    maven-checkstyle-plugin
 BuildRequires:    maven-resources-plugin
 BuildRequires:    maven-surefire-plugin
+BuildRequires:    picketbox
+BuildRequires:    picketbox-commons
+BuildRequires:    rhq-plugin-annotations
 BuildRequires:    staxmapper >= 1.1.0
 BuildRequires:    xnio >= 3.0.0-0.2.CR5
 
@@ -105,6 +113,7 @@ Requires:         dom4j
 Requires:         geronimo-annotation
 Requires:         h2
 Requires:         hibernate-validator >= 4.2.0
+Requires:         infinispan >= 5.1.1-1
 Requires:         jandex >= 1.0.3
 Requires:         java
 Requires:         jboss-annotations-1.1-api
@@ -124,6 +133,7 @@ Requires:         jboss-marshalling >= 1.3.4
 Requires:         jboss-metadata >= 7.0.0-1
 Requires:         jboss-modules >= 1.1.0-0.1.CR4
 Requires:         jboss-msc >= 1.0.1
+Requires:         jboss-negotiation
 Requires:         jboss-remoting >= 3.2.2
 Requires:         jboss-remoting-jmx
 Requires:         jboss-remote-naming >= 1.0.1
@@ -137,6 +147,9 @@ Requires:         jbossws-api
 Requires:         jgroups
 Requires:         jline
 Requires:         jpackage-utils
+Requires:         picketbox
+Requires:         picketbox-commons
+Requires:         rhq-plugin-annotations
 Requires:         staxmapper >= 1.1.0
 Requires:         xnio >= 3.0.0-0.2.CR5
 
@@ -178,6 +191,9 @@ This package contains the API documentation for %{name}.
 %patch18 -p1
 %patch19 -p1
 %patch20 -p1
+%patch21 -p1
+%patch22 -p1
+%patch23 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)

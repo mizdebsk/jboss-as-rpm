@@ -1,0 +1,41 @@
+From 125bf90972be150856c0b043f71f7441125f405f Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 21 Feb 2012 18:35:01 +0100
+Subject: [PATCH 24/24] Removing some banned deps as in Fedora those are just
+ aliases
+
+---
+ pom.xml |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/pom.xml b/pom.xml
+index 3d75c22..f9537bc 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -372,11 +372,11 @@
+                                             <exclude>com.gwtplatform:gwtp-all</exclude>
+                                             <exclude>commons-httpclient:commons-httpclient</exclude>
+                                             <exclude>commons-logging:commons-logging</exclude>
+-                                            <exclude>concurrent:concurrent</exclude>
++                                            <!-- <exclude>concurrent:concurrent</exclude> PicketBox uses oswego-concurrent:concurrent, in Fedora it's just an alias -->
+                                             <exclude>jacorb:jacorb</exclude>
+                                             <exclude>javassist:javassist</exclude>
+-                                            <exclude>javax.persistence:persistence-api</exclude>
+-                                            <exclude>javax.servlet:servlet-api</exclude>
++                                            <!-- <exclude>javax.persistence:persistence-api</exclude> Needs investigation -->
++                                            <!-- <exclude>javax.servlet:servlet-api</exclude> Needs investigation -->
+                                             <exclude>javax.transaction:jta</exclude>
+                                             <exclude>javax.xml:jaxrpc-api</exclude>
+                                             <exclude>javax.xml.soap:saaj-api</exclude>
+@@ -432,7 +432,7 @@
+                                             <exclude>sun-jaxb:jaxb-api</exclude>
+                                             <exclude>trove:trove</exclude>
+                                             <exclude>woodstox:wstx-lgpl</exclude>
+-                                            <exclude>xml-apis:xml-apis</exclude>
++                                            <!-- <exclude>xml-apis:xml-apis</exclude> An alias in Fedora -->
+                                         </excludes>
+                                     </bannedDependencies>
+                                 </rules>
+-- 
+1.7.9.1
+

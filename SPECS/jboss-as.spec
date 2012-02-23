@@ -54,6 +54,9 @@ Patch24:          0025-Add-jgroups-module.patch
 Patch25:          0026-Add-infinispan-modules.patch
 Patch26:          0027-Added-jboss-jacc-api-module.patch
 Patch27:          0028-Added-javax.servlet.api-module.patch
+Patch28:          0029-Added-org.jboss.security.negotiation-module.patch
+Patch29:          0030-Added-org.picketbox-module.patch
+Patch30:          0031-Added-sun.jdk-module.patch
 
 BuildArch:        noarch
 
@@ -204,6 +207,9 @@ This package contains the API documentation for %{name}.
 %patch25 -p1
 %patch26 -p1
 %patch27 -p1
+%patch28 -p1
+%patch29 -p1
+%patch30 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -360,6 +366,14 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-remote-naming) org/jboss/remote-naming/main/jboss-remote-naming.jar
     ln -s $(build-classpath jboss-remoting-jmx) org/jboss/remoting3/remoting-jmx/main/jboss-remoting-jmx.jar
     ln -s $(build-classpath jboss/jboss-sasl) org/jboss/sasl/main/jboss-sasl.jar
+
+    ln -s $(build-classpath jboss-negotiation/common) org/jboss/security/negotiation/main/common.jar
+    ln -s $(build-classpath jboss-negotiation/extras) org/jboss/security/negotiation/main/extras.jar
+    ln -s $(build-classpath jboss-negotiation/main) org/jboss/security/negotiation/main/main.jar
+    ln -s $(build-classpath jboss-negotiation/net) org/jboss/security/negotiation/main/net.jar
+    ln -s $(build-classpath jboss-negotiation/ntlm) org/jboss/security/negotiation/main/ntlm.jar
+    ln -s $(build-classpath jboss-negotiation/spnego) org/jboss/security/negotiation/main/spnego.jar
+
     ln -s $(build-classpath jboss/jboss-servlet-3.0-api) javax/servlet/api/main/jboss-servlet-3.0-api.jar
     ln -s $(build-classpath jboss/jboss-stdio) org/jboss/stdio/main/jboss-stdio.jar
     ln -s $(build-classpath jboss/jboss-threads) org/jboss/threads/main/jboss-threads.jar
@@ -367,6 +381,9 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-transaction-spi) org/jboss/jboss-transaction-spi/main/jboss-transaction-spi.jar
     ln -s $(build-classpath jboss/jboss-vfs) org/jboss/vfs/main/jboss-vfs.jar
     ln -s $(build-classpath jgroups) org/jgroups/main/jgroups.jar
+    ln -s $(build-classpath picketbox/bare) org/picketbox/main/bare.jar
+    ln -s $(build-classpath picketbox/infinispan) org/picketbox/main/infinispan.jar
+    ln -s $(build-classpath jboss/picketbox-commons) org/picketbox/main/picketbox-commons.jar
     ln -s $(build-classpath jboss/staxmapper) org/jboss/staxmapper/main/staxmapper.jar
     ln -s $(build-classpath jboss/xnio-api) org/jboss/xnio/main/xnio-api.jar
     ln -s $(build-classpath jboss/xnio-nio) org/jboss/xnio/nio/main/xnio-nio.jar

@@ -52,6 +52,8 @@ Patch22:          0023-Enable-part-of-org.jboss.as.clustering-module-infini.patc
 Patch23:          0024-Removing-some-banned-deps-as-in-Fedora-those-are-jus.patch
 Patch24:          0025-Add-jgroups-module.patch
 Patch25:          0026-Add-infinispan-modules.patch
+Patch26:          0027-Added-jboss-jacc-api-module.patch
+Patch27:          0028-Added-javax.servlet.api-module.patch
 
 BuildArch:        noarch
 
@@ -200,6 +202,8 @@ This package contains the API documentation for %{name}.
 %patch23 -p1
 %patch24 -p1
 %patch25 -p1
+%patch26 -p1
+%patch27 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -337,6 +341,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss/jboss-httpserver) org/jboss/com/sun/httpserver/main/jboss-httpserver.jar
     ln -s $(build-classpath jboss/jboss-interceptors-1.1-api) javax/interceptor/api/main/jboss-interceptors-1.1-api.jar
     ln -s $(build-classpath jboss/jboss-invocation) org/jboss/invocation/main/jboss-invocation.jar
+    ln -s $(build-classpath jboss/jboss-jacc-1.4-api) javax/security/jacc/api/main/jboss-jacc-1.4-api.jar
     ln -s $(build-classpath jboss-jts/jbossjta) org/jboss/jts/main/jbossjta.jar
     ln -s $(build-classpath jboss-jts/jbossjta-integration) org/jboss/jts/integration/main/jbossjta-integration.jar
     ln -s $(build-classpath log4j) org/apache/log4j/main/log4j.jar
@@ -355,6 +360,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-remote-naming) org/jboss/remote-naming/main/jboss-remote-naming.jar
     ln -s $(build-classpath jboss-remoting-jmx) org/jboss/remoting3/remoting-jmx/main/jboss-remoting-jmx.jar
     ln -s $(build-classpath jboss/jboss-sasl) org/jboss/sasl/main/jboss-sasl.jar
+    ln -s $(build-classpath jboss/jboss-servlet-3.0-api) javax/servlet/api/main/jboss-servlet-3.0-api.jar
     ln -s $(build-classpath jboss/jboss-stdio) org/jboss/stdio/main/jboss-stdio.jar
     ln -s $(build-classpath jboss/jboss-threads) org/jboss/threads/main/jboss-threads.jar
     ln -s $(build-classpath jboss/jboss-transaction-1.1-api) ./javax/transaction/api/main/jboss-transaction-1.1-api.jar
@@ -382,6 +388,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
 popd
 
 %pre
+# Add jboss-as user and group
 getent group %{name} >/dev/null || groupadd -r %{name}
 getent passwd %{name} >/dev/null || \
     useradd -c "JBoss AS" -u %{jbuid} -g %{name} -s /bin/nologin -r -d %{homedir} %{name}

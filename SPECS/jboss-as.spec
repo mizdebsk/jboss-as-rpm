@@ -7,7 +7,7 @@
 %global logdir %{_var}/log/%{name}
 %global confdir %{_sysconfdir}/%{name}
 
-%global tcuid 92
+%global jbuid 92
 
 %global modules controller-client controller deployment-repository domain-management ee embedded jmx logging naming network platform-mbean process-controller protocol remoting security server transactions
 %global modules_clustering common infinispan jgroups
@@ -155,6 +155,7 @@ Requires:         picketbox-commons
 Requires:         rhq-plugin-annotations
 Requires:         staxmapper >= 1.1.0
 Requires:         xnio >= 3.0.0-0.2.CR5
+Requires(pre):    shadow-utils
 
 %description
 JBoss Application Server 7 is the latest release in a series of JBoss
@@ -290,7 +291,7 @@ popd
 
 pushd $RPM_BUILD_ROOT%{homedir}
 
-  # Dtandalone
+  # Standalone
   ln -s %{cachedir}/standalone/deployments standalone/deployments
   ln -s %{confdir}/standalone standalone/configuration
 
@@ -381,16 +382,16 @@ pushd $RPM_BUILD_ROOT%{homedir}
 popd
 
 %pre
-# Add jboss-as user and group
-%{_sbindir}/groupadd -g %{jbuid} -r %{name} 2>/dev/null || :
-%{_sbindir}/useradd -c "JBoss AS" -u %{jbuid} -g %{name} -s /bin/nologin -r -d %{homedir} %{name} 2>/dev/null || :
+getent group %{name} >/dev/null || groupadd -r %{name}
+getent passwd %{name} >/dev/null || \
+    useradd -c "JBoss AS" -u %{jbuid} -g %{name} -s /bin/nologin -r -d %{homedir} %{name}
 
 %files
 %defattr(0664,root,jboss-as,0755)
 %{homedir}/appclient
 %{bindir}/*.conf
 %attr(0755,root,root) %{bindir}/*.sh
-#%attr(0755,root,root) %{bindir}/util/*.sh
+%dir %{homedir}/bin
 %{homedir}/auth
 %{homedir}/domain
 %{homedir}/standalone
@@ -403,7 +404,8 @@ popd
 %attr(0775,root,jboss-as) %dir %{cachedir}/domain/data
 %attr(0775,root,jboss-as) %dir %{cachedir}/domain/tmp
 %attr(0700,jboss-as,jboss-as) %dir %{cachedir}/auth
-%attr(0770,root,jboss-as) %dir %{logdir}
+%attr(0770,root,jboss-as) %dir %{logdir}/standalone
+%attr(0770,root,jboss-as) %dir %{logdir}/domain
 %attr(0775,root,jboss-as) %dir %{confdir}/standalone
 %attr(0775,root,jboss-as) %dir %{confdir}/domain
 %attr(0664,jboss-as,jboss-as) %config(noreplace) %{confdir}/%{name}.conf

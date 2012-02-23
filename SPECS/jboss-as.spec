@@ -9,8 +9,7 @@
 
 %global jbuid 92
 
-%global modules controller-client controller deployment-repository domain-management ee embedded jmx logging naming network platform-mbean process-controller protocol remoting security server transactions
-%global modules_clustering common infinispan jgroups
+%global modules controller-client controller deployment-repository domain-management ee embedded jmx logging naming network platform-mbean process-controller protocol remoting security server threads transactions
 
 Name:             jboss-as
 Version:          7.1.0
@@ -77,7 +76,7 @@ BuildRequires:    jboss-annotations-1.1-api
 BuildRequires:    jboss-connector-1.6-api
 BuildRequires:    jboss-dmr >= 1.1.1-1
 BuildRequires:    jboss-ejb-3.1-api
-BuildRequires:    jboss-httpserver >= 1.0.0-0.3.Beta3
+BuildRequires:    jboss-httpserver >= 1.0.0-1
 BuildRequires:    jboss-invocation
 BuildRequires:    jboss-interceptor >= 2.0.0-1
 BuildRequires:    jboss-interceptors-1.1-api
@@ -87,15 +86,15 @@ BuildRequires:    jboss-parent
 BuildRequires:    jboss-logging >= 3.1.0-0.1.CR1
 BuildRequires:    jboss-logging-tools >= 1.0.0-1
 BuildRequires:    jboss-logmanager-log4j >= 1.0.0
-BuildRequires:    jboss-marshalling >= 1.3.4
+BuildRequires:    jboss-marshalling >= 1.3.9-2
 BuildRequires:    jboss-metadata >= 7.0.0-1
-BuildRequires:    jboss-modules >= 1.1.1-1
+BuildRequires:    jboss-modules >= 1.1.1-2
 BuildRequires:    jboss-msc >= 1.0.1
 BuildRequires:    jboss-negotiation
-BuildRequires:    jboss-remoting >= 3.2.2
+BuildRequires:    jboss-remoting >= 3.2.2-2
 BuildRequires:    jboss-remoting-jmx
 BuildRequires:    jboss-remote-naming >= 1.0.1
-BuildRequires:    jboss-sasl >= 1.0.0-0.1.Beta9
+BuildRequires:    jboss-sasl >= 1.0.0-2
 BuildRequires:    jboss-stdio >= 1.0.1
 BuildRequires:    jboss-specs-parent
 BuildRequires:    jboss-threads >= 2.0.0
@@ -113,8 +112,8 @@ BuildRequires:    maven-surefire-plugin
 BuildRequires:    picketbox
 BuildRequires:    picketbox-commons
 BuildRequires:    rhq-plugin-annotations
-BuildRequires:    staxmapper >= 1.1.0
-BuildRequires:    xnio >= 3.0.0-0.2.CR5
+BuildRequires:    staxmapper >= 1.1.0-2
+BuildRequires:    xnio >= 3.0.1-2
 
 Requires:         bean-validation-api
 Requires:         dom4j
@@ -128,7 +127,7 @@ Requires:         jboss-annotations-1.1-api
 Requires:         jboss-connector-1.6-api
 Requires:         jboss-dmr >= 1.1.1-1
 Requires:         jboss-ejb-3.1-api
-Requires:         jboss-httpserver >= 1.0.0-0.3.Beta3
+Requires:         jboss-httpserver >= 1.0.0-1
 Requires:         jboss-interceptor >= 2.0.0-1
 Requires:         jboss-interceptors-1.1-api
 Requires:         jboss-invocation
@@ -137,15 +136,15 @@ Requires:         jboss-logging >= 3.1.0-0.1.CR1
 Requires:         jboss-logging-tools >= 1.0.0-1
 Requires:         jboss-jad-1.2-api
 Requires:         jboss-logmanager-log4j >= 1.0.0
-Requires:         jboss-marshalling >= 1.3.4
+Requires:         jboss-marshalling >= 1.3.9-2
 Requires:         jboss-metadata >= 7.0.0-1
-Requires:         jboss-modules >= 1.1.0-0.1.CR4
+Requires:         jboss-modules >= 1.1.1-2
 Requires:         jboss-msc >= 1.0.1
 Requires:         jboss-negotiation
-Requires:         jboss-remoting >= 3.2.2
+Requires:         jboss-remoting >= 3.2.2-2
 Requires:         jboss-remoting-jmx
 Requires:         jboss-remote-naming >= 1.0.1
-Requires:         jboss-sasl >= 1.0.0-0.1.Beta9
+Requires:         jboss-sasl >= 1.0.0-2
 Requires:         jboss-stdio >= 1.0.1
 Requires:         jboss-threads >= 2.0.0
 Requires:         jboss-transaction-1.1-api
@@ -158,8 +157,8 @@ Requires:         jpackage-utils
 Requires:         picketbox
 Requires:         picketbox-commons
 Requires:         rhq-plugin-annotations
-Requires:         staxmapper >= 1.1.0
-Requires:         xnio >= 3.0.0-0.2.CR5
+Requires:         staxmapper >= 1.1.0-2
+Requires:         xnio >= 3.0.1-2
 Requires(pre):    shadow-utils
 
 %description
@@ -216,6 +215,7 @@ This package contains the API documentation for %{name}.
 mvn-rpmbuild -Dmaven.test.skip=true -Dminimalistic -e install javadoc:aggregate
 
 %install
+
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/init.d
@@ -231,7 +231,9 @@ for mode in standalone domain; do
   install -d -m 775 $RPM_BUILD_ROOT%{logdir}/${mode}
 done
 
-for m in %{modules} build-config ee-deployment threads; do
+# build-config is not installed in the resulting package, but required to build it
+# ee-deployment is a special case, it should be a submodule of ee, but it isn't...
+for m in %{modules} build-config ee-deployment; do
   # JAR
   cp -a ${m}/target/jboss-as-${m}-%{namedversion}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-${m}.jar
   # POM
@@ -240,26 +242,24 @@ for m in %{modules} build-config ee-deployment threads; do
   %add_maven_depmap JPP.%{name}-%{name}-${m}.pom %{name}/%{name}-${m}.jar
 done
 
-# TODO simplify this!
+# Definition of submodules
+multimodules="domain-http clustering"
+# If a submodule contains hyphen in the name, just skip it, e.g. domain-http => domainhttp
+modules_clustering="common infinispan jgroups"
+modules_domainhttp="interface error-context"
 
-# Special case domain-http submodules
-for m in interface error-context; do
-  # JAR
-  cp -a domain-http/${m}/target/jboss-as-domain-http-${m}-%{namedversion}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-domain-http-${m}.jar
-  # POM
-  cp -a domain-http/${m}/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-%{name}-domain-http-${m}.pom
-  # DEPMAP
-  %add_maven_depmap JPP.%{name}-%{name}-domain-http-${m}.pom %{name}/%{name}-domain-http-${m}.jar
-done
+for m in ${multimodules}; do
 
-# Clustering submodules
-for m in %{modules_clustering}; do
-  # JAR
-  cp -a clustering/${m}/target/jboss-as-clustering-${m}-%{namedversion}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-clustering-${m}.jar
-  # POM
-  cp -a clustering/${m}/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-%{name}-clustering-${m}.pom
-  # DEPMAP
-  %add_maven_depmap JPP.%{name}-%{name}-clustering-${m}.pom %{name}/%{name}-clustering-${m}.jar
+  eval submodules=\$"modules_${m//-/}"
+
+  for sm in $submodules; do
+    # JAR
+    cp -a ${m}/${sm}/target/jboss-as-${m}-${sm}-%{namedversion}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-${m}-${sm}.jar
+    # POM
+    cp -a ${m}/${sm}/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-%{name}-${m}-${sm}.pom
+    # DEPMAP
+    %add_maven_depmap JPP.%{name}-%{name}-${m}-${sm}.pom %{name}/%{name}-${m}-${sm}.jar
+  done
 done
 
 # Parent POM
@@ -309,7 +309,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
   ln -s %{confdir}/domain domain/configuration
 
   # Symlink jboss-modules
-  ln -s $(build-classpath jboss/jboss-modules) jboss-modules.jar
+  ln -s $(build-classpath jboss-modules) jboss-modules.jar
   
   # Symlinks to log dirs
   ln -s %{logdir}/standalone standalone/log
@@ -344,7 +344,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss/jboss-common-core) org/jboss/common-core/main/jboss-common-core.jar
     ln -s $(build-classpath jboss/jboss-dmr) org/jboss/dmr/main/jboss-dmr.jar
     ln -s $(build-classpath jboss/jboss-ejb3-ext-api) org/jboss/ejb3/main/jboss-ejb3-ext-api.jar
-    ln -s $(build-classpath jboss/jboss-httpserver) org/jboss/com/sun/httpserver/main/jboss-httpserver.jar
+    ln -s $(build-classpath jboss-httpserver) org/jboss/com/sun/httpserver/main/jboss-httpserver.jar
     ln -s $(build-classpath jboss/jboss-interceptors-1.1-api) javax/interceptor/api/main/jboss-interceptors-1.1-api.jar
     ln -s $(build-classpath jboss/jboss-invocation) org/jboss/invocation/main/jboss-invocation.jar
     ln -s $(build-classpath jboss/jboss-jacc-1.4-api) javax/security/jacc/api/main/jboss-jacc-1.4-api.jar
@@ -354,18 +354,18 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss/jboss-logging) org/jboss/logging/main/jboss-logging.jar
     ln -s $(build-classpath jboss/jboss-logmanager) org/jboss/logmanager/main/jboss-logmanager.jar
     ln -s $(build-classpath jboss/jboss-logmanager-log4j) org/jboss/logmanager/log4j/main/jboss-logmanager-log4j.jar
-    ln -s $(build-classpath jboss/jboss-marshalling) org/jboss/marshalling/main/jboss-marshalling.jar
-    ln -s $(build-classpath jboss/jboss-marshalling-river) org/jboss/marshalling/river/main/jboss-marshalling-river.jar
+    ln -s $(build-classpath jboss-marshalling) org/jboss/marshalling/main/jboss-marshalling.jar
+    ln -s $(build-classpath jboss-marshalling-river) org/jboss/marshalling/river/main/jboss-marshalling-river.jar
     ln -s $(build-classpath jboss/jboss-metadata-appclient) org/jboss/metadata/main/jboss-metadata-appclient.jar
     ln -s $(build-classpath jboss/jboss-metadata-common) org/jboss/metadata/main/jboss-metadata-common.jar
     ln -s $(build-classpath jboss/jboss-metadata-ear) org/jboss/metadata/main/jboss-metadata-ear.jar
     ln -s $(build-classpath jboss/jboss-metadata-ejb) org/jboss/metadata/main/jboss-metadata-ejb.jar
     ln -s $(build-classpath jboss/jboss-metadata-web) org/jboss/metadata/main/jboss-metadata-web.jar
     ln -s $(build-classpath jboss/jboss-msc) org/jboss/msc/main/jboss-msc.jar
-    ln -s $(build-classpath jboss/jboss-remoting) org/jboss/remoting3/main/jboss-remoting.jar
+    ln -s $(build-classpath jboss-remoting) org/jboss/remoting3/main/jboss-remoting.jar
     ln -s $(build-classpath jboss-remote-naming) org/jboss/remote-naming/main/jboss-remote-naming.jar
     ln -s $(build-classpath jboss-remoting-jmx) org/jboss/remoting3/remoting-jmx/main/jboss-remoting-jmx.jar
-    ln -s $(build-classpath jboss/jboss-sasl) org/jboss/sasl/main/jboss-sasl.jar
+    ln -s $(build-classpath jboss-sasl) org/jboss/sasl/main/jboss-sasl.jar
 
     ln -s $(build-classpath jboss-negotiation/common) org/jboss/security/negotiation/main/common.jar
     ln -s $(build-classpath jboss-negotiation/extras) org/jboss/security/negotiation/main/extras.jar
@@ -381,25 +381,33 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-transaction-spi) org/jboss/jboss-transaction-spi/main/jboss-transaction-spi.jar
     ln -s $(build-classpath jboss/jboss-vfs) org/jboss/vfs/main/jboss-vfs.jar
     ln -s $(build-classpath jgroups) org/jgroups/main/jgroups.jar
-    ln -s $(build-classpath picketbox/bare) org/picketbox/main/bare.jar
+    # TODO: This needs investigation on why AS7 build picks up bare.jar name instead of picketbox.jar
+    ln -s $(build-classpath picketbox/picketbox) org/picketbox/main/bare.jar
     ln -s $(build-classpath picketbox/infinispan) org/picketbox/main/infinispan.jar
     ln -s $(build-classpath jboss/picketbox-commons) org/picketbox/main/picketbox-commons.jar
-    ln -s $(build-classpath jboss/staxmapper) org/jboss/staxmapper/main/staxmapper.jar
-    ln -s $(build-classpath jboss/xnio-api) org/jboss/xnio/main/xnio-api.jar
-    ln -s $(build-classpath jboss/xnio-nio) org/jboss/xnio/nio/main/xnio-nio.jar
+    ln -s $(build-classpath staxmapper) org/jboss/staxmapper/main/staxmapper.jar
+    ln -s $(build-classpath xnio-api) org/jboss/xnio/main/xnio-api.jar
+    ln -s $(build-classpath xnio-nio) org/jboss/xnio/nio/main/xnio-nio.jar
 
-    # JBoss AS modules (without build-config)
-    for m in %{modules} threads domain-http-error-context; do
+    # JBoss AS modules
+    # Symlinks all main AS7 modules + some addtiional modules that have different naming scheme
+    for m in %{modules} domain-http-error-context domain-http-interface; do
       ln -s %{_javadir}/jboss-as/jboss-as-${m}.jar org/jboss/as/${m}/main/jboss-as-${m}-%{namedversion}.jar
     done
 
-    # JBoss AS clustering submodules
-    for m in %{modules_clustering}; do
-      ln -s %{_javadir}/jboss-as/jboss-as-clustering-${m}.jar org/jboss/as/clustering/${m}/main/jboss-as-clustering-${m}-%{namedversion}.jar
+    for m in ${multimodules}; do
+      eval submodules=\$"modules_${m//-/}"
+
+      for sm in $submodules; do
+        if [ -d "org/jboss/as/${m}/${sm}/main/" ]; then
+          ln -s %{_javadir}/jboss-as/jboss-as-${m}-${sm}.jar org/jboss/as/${m}/${sm}/main/jboss-as-${m}-${sm}-%{namedversion}.jar
+        else
+          echo "SKIPPING symlinking 'jboss-as-${m}-${sm}.jar'. This may be a special case handled elsewhere."
+        fi
+      done
     done
 
-    # special case naming
-    ln -s %{_javadir}/jboss-as/jboss-as-domain-http-interface.jar org/jboss/as/domain-http-interface/main/jboss-as-domain-http-interface-%{namedversion}.jar
+    # And don't forget this module which should be a submodule...
     ln -s %{_javadir}/jboss-as/jboss-as-ee-deployment.jar org/jboss/as/ee/deployment/main/jboss-as-ee-deployment-%{namedversion}.jar
   popd
 popd

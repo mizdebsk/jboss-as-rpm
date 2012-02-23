@@ -378,7 +378,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
     # JBoss AS clustering submodules
     for m in %{modules_clustering}; do
-      ln -s %{_javadir}/jboss-as/jboss-as-clustering-${m}.jar org/jboss/as/clustering/${m}/main/jboss-as-${m}-%{namedversion}.jar
+      ln -s %{_javadir}/jboss-as/jboss-as-clustering-${m}.jar org/jboss/as/clustering/${m}/main/jboss-as-clustering-${m}-%{namedversion}.jar
     done
 
     # special case naming

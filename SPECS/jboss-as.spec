@@ -9,7 +9,7 @@
 
 %global jbuid 92
 
-%global modules controller-client controller deployment-repository domain-management ee embedded jmx logging naming network platform-mbean process-controller protocol remoting security server threads transactions
+%global modules connector controller-client controller deployment-repository domain-management ee embedded jmx logging naming network platform-mbean process-controller protocol remoting security server threads transactions
 
 Name:             jboss-as
 Version:          7.1.0
@@ -56,6 +56,7 @@ Patch27:          0028-Added-javax.servlet.api-module.patch
 Patch28:          0029-Added-org.jboss.security.negotiation-module.patch
 Patch29:          0030-Added-org.picketbox-module.patch
 Patch30:          0031-Added-sun.jdk-module.patch
+Patch31:          0032-Added-jboss-as-connector-AS7-module.patch
 
 BuildArch:        noarch
 
@@ -69,6 +70,7 @@ BuildRequires:    geronimo-annotation
 BuildRequires:    h2
 BuildRequires:    hibernate-validator >= 4.2.0
 BuildRequires:    infinispan >= 5.1.1-1
+BuildRequires:    ironjacamar >= 1.0.7-1
 BuildRequires:    jandex >= 1.0.3
 BuildRequires:    java-devel
 BuildRequires:    jgroups
@@ -97,7 +99,7 @@ BuildRequires:    jboss-remote-naming >= 1.0.1
 BuildRequires:    jboss-sasl >= 1.0.0-2
 BuildRequires:    jboss-stdio >= 1.0.1
 BuildRequires:    jboss-specs-parent
-BuildRequires:    jboss-threads >= 2.0.0
+BuildRequires:    jboss-threads >= 2.0.0-4
 BuildRequires:    jboss-transaction-1.1-api
 BuildRequires:    jboss-transaction-spi
 BuildRequires:    jboss-vfs >= 3.1.0-0.1.CR1
@@ -121,6 +123,7 @@ Requires:         geronimo-annotation
 Requires:         h2
 Requires:         hibernate-validator >= 4.2.0
 Requires:         infinispan >= 5.1.1-1
+Requires:         ironjacamar >= 1.0.7-1
 Requires:         jandex >= 1.0.3
 Requires:         java
 Requires:         jboss-annotations-1.1-api
@@ -146,7 +149,7 @@ Requires:         jboss-remoting-jmx
 Requires:         jboss-remote-naming >= 1.0.1
 Requires:         jboss-sasl >= 1.0.0-2
 Requires:         jboss-stdio >= 1.0.1
-Requires:         jboss-threads >= 2.0.0
+Requires:         jboss-threads >= 2.0.0-4
 Requires:         jboss-transaction-1.1-api
 Requires:         jboss-transaction-spi
 Requires:         jboss-vfs >= 3.1.0-0.1.CR1
@@ -209,6 +212,7 @@ This package contains the API documentation for %{name}.
 %patch28 -p1
 %patch29 -p1
 %patch30 -p1
+%patch31 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -376,7 +380,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
     ln -s $(build-classpath jboss/jboss-servlet-3.0-api) javax/servlet/api/main/jboss-servlet-3.0-api.jar
     ln -s $(build-classpath jboss/jboss-stdio) org/jboss/stdio/main/jboss-stdio.jar
-    ln -s $(build-classpath jboss/jboss-threads) org/jboss/threads/main/jboss-threads.jar
+    ln -s $(build-classpath jboss-threads) org/jboss/threads/main/jboss-threads.jar
     ln -s $(build-classpath jboss/jboss-transaction-1.1-api) ./javax/transaction/api/main/jboss-transaction-1.1-api.jar
     ln -s $(build-classpath jboss-transaction-spi) org/jboss/jboss-transaction-spi/main/jboss-transaction-spi.jar
     ln -s $(build-classpath jboss/jboss-vfs) org/jboss/vfs/main/jboss-vfs.jar

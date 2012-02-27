@@ -85,7 +85,7 @@ BuildRequires:    jboss-interceptors-1.1-api
 BuildRequires:    jboss-jad-1.2-api
 BuildRequires:    jboss-jts
 BuildRequires:    jboss-parent
-BuildRequires:    jboss-logging >= 3.1.0-0.1.CR1
+BuildRequires:    jboss-logging >= 3.1.0-2
 BuildRequires:    jboss-logging-tools >= 1.0.0-1
 BuildRequires:    jboss-logmanager-log4j >= 1.0.0
 BuildRequires:    jboss-marshalling >= 1.3.9-2
@@ -135,7 +135,7 @@ Requires:         jboss-interceptor >= 2.0.0-1
 Requires:         jboss-interceptors-1.1-api
 Requires:         jboss-invocation
 Requires:         jboss-jts
-Requires:         jboss-logging >= 3.1.0-0.1.CR1
+Requires:         jboss-logging >= 3.1.0-2
 Requires:         jboss-logging-tools >= 1.0.0-1
 Requires:         jboss-jad-1.2-api
 Requires:         jboss-logmanager-log4j >= 1.0.0
@@ -355,7 +355,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-jts/jbossjta) org/jboss/jts/main/jbossjta.jar
     ln -s $(build-classpath jboss-jts/jbossjta-integration) org/jboss/jts/integration/main/jbossjta-integration.jar
     ln -s $(build-classpath log4j) org/apache/log4j/main/log4j.jar
-    ln -s $(build-classpath jboss/jboss-logging) org/jboss/logging/main/jboss-logging.jar
+    ln -s $(build-classpath jboss-logging) org/jboss/logging/main/jboss-logging.jar
     ln -s $(build-classpath jboss/jboss-logmanager) org/jboss/logmanager/main/jboss-logmanager.jar
     ln -s $(build-classpath jboss/jboss-logmanager-log4j) org/jboss/logmanager/log4j/main/jboss-logmanager-log4j.jar
     ln -s $(build-classpath jboss-marshalling) org/jboss/marshalling/main/jboss-marshalling.jar

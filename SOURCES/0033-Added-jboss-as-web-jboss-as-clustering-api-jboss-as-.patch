@@ -1,0 +1,222 @@
+From e35b5fb43cf2e27ff4db88e74d5aefb4d6539fbd Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Mon, 27 Feb 2012 15:11:20 +0100
+Subject: [PATCH 33/33] Added jboss-as-web, jboss-as-clustering-api,
+ jboss-as-clustering-web-spi modules. Removed
+ jboss-jdt dependency.
+
+---
+ build/build.xml    |   29 ++++++++++++++---------------
+ build/pom.xml      |   30 +++++++++++++++---------------
+ clustering/pom.xml |    6 +++---
+ pom.xml            |    2 +-
+ web/pom.xml        |    5 -----
+ 5 files changed, 33 insertions(+), 39 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index ff67e72..cfc9ebb 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -173,6 +173,10 @@
+             <maven-resource group="org.hibernate" artifact="hibernate-validator"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.clustering.api">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-api"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.clustering.common">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-common"/>
+         </module-def>
+@@ -185,6 +189,10 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-jgroups"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.clustering.web.spi">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-web-spi"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.connector">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-connector"/>
+         </module-def>
+@@ -271,6 +279,12 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-transactions"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.web">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-web"/>
++            <!-- <maven-resource group="org.jboss.web" artifact="jasper-jdt"/> -->
++            <maven-resource group="org.jboss.web" artifact="jbossweb"/>
++        </module-def>
++
+         <module-def name="org.jboss.com.sun.httpserver">
+             <maven-resource group="org.jboss.com.sun.httpserver" artifact="httpserver"/>
+         </module-def>
+@@ -771,10 +785,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-cli"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.clustering.api">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-api"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.clustering.ejb3.infinispan">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-ejb3-infinispan"/>
+         </module-def>
+@@ -799,10 +809,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-web-infinispan"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.clustering.web.spi">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-web-spi"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.configadmin">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-configadmin"/>
+         </module-def>
+@@ -908,13 +914,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-sar"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.web">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-web"/>
+-            <maven-resource group="org.jboss.web" artifact="jasper-jdt"/>
+-            <maven-resource group="org.jboss.web" artifact="jbossweb"/>
+-            <extract-native-jar group="org.jboss.as" artifact="jbossweb-native"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.webservices">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-webservices-server-integration"/>
+             <maven-resource-with-classifier group="org.jboss.ws.cxf" artifact="jbossws-cxf-resources" classifier="jboss700"/>
+diff --git a/build/pom.xml b/build/pom.xml
+index 3249ef0..0f8b843 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -141,6 +141,16 @@
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-clustering-api</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-clustering-web-spi</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-connector</artifactId>
+         </dependency>
+ 
+@@ -190,6 +200,11 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-web</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>org.jboss.ejb3</groupId>
+             <artifactId>jboss-ejb3-ext-api</artifactId>
+         </dependency>
+@@ -833,11 +848,6 @@
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-clustering-api</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-clustering-ejb3-infinispan</artifactId>
+                 </dependency>
+ 
+@@ -867,11 +877,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-clustering-web-spi</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                    <groupId>org.jboss.as</groupId>
+                    <artifactId>jboss-as-cmp</artifactId>
+                 </dependency>
+@@ -1031,11 +1036,6 @@
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-web</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-weld</artifactId>
+                 </dependency>
+ 
+diff --git a/clustering/pom.xml b/clustering/pom.xml
+index 4f02d01..f1f9014 100644
+--- a/clustering/pom.xml
++++ b/clustering/pom.xml
+@@ -38,16 +38,16 @@
+     <name>JBoss Application Server: Clustering Subsystem</name>
+     
+     <modules>
+-        <!-- <module>api</module> -->
++        <module>api</module>
+         <module>common</module>
+         <!-- <module>impl</module> -->
+         <module>jgroups</module>
+         <module>infinispan</module>
+         <!-- <module>registry</module>
+         <module>service</module>
+-        <module>singleton</module>
++        <module>singleton</module>-->
+         <module>web-spi</module>
+-        <module>web-infinispan</module>
++        <!--<module>web-infinispan</module>
+         <module>ejb3-infinispan</module>-->
+     </modules>
+ 
+diff --git a/pom.xml b/pom.xml
+index 861ec88..ed64a5a 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -289,6 +289,7 @@
+         <module>subsystem-test</module>
+         <module>threads</module>
+         <module>transactions</module>
++        <module>web</module>
+     </modules>
+ 
+     <build>
+@@ -5943,7 +5944,6 @@
+                 <module>remoting-test</module>
+                 <module>sar</module>
+                 <module>spec-api</module>
+-                <module>web</module>
+                 <module>webservices</module>
+                 <module>weld</module>
+                 <!--
+diff --git a/web/pom.xml b/web/pom.xml
+index 49def4e..fae1fb1 100644
+--- a/web/pom.xml
++++ b/web/pom.xml
+@@ -145,11 +145,6 @@
+ 
+         <dependency>
+             <groupId>org.jboss.web</groupId>
+-            <artifactId>jasper-jdt</artifactId>
+-        </dependency>
+-
+-        <dependency>
+-            <groupId>org.jboss.web</groupId>
+             <artifactId>jbossweb</artifactId>
+         </dependency>
+ 
+-- 
+1.7.9.1
+

@@ -75,7 +75,6 @@ BuildRequires:    dom4j
 # TODO: ecj dependency tree is big and ugly...
 BuildRequires:    ecj
 BuildRequires:    geronimo-annotation
-BuildRequires:    glassfish-jsf-impl
 BuildRequires:    h2
 BuildRequires:    hibernate-jpa-2.0-api
 BuildRequires:    hibernate-validator >= 4.2.0
@@ -136,6 +135,7 @@ BuildRequires:    maven-jar-plugin
 BuildRequires:    maven-checkstyle-plugin
 BuildRequires:    maven-resources-plugin
 BuildRequires:    maven-surefire-plugin
+BuildRequires:    mojarra
 BuildRequires:    picketbox
 BuildRequires:    picketbox-commons
 BuildRequires:    rhq-plugin-annotations
@@ -154,7 +154,6 @@ Requires:         dom4j
 # TODO: ecj dependency tree is big and ugly...
 Requires:         ecj
 Requires:         geronimo-annotation
-Requires:         glassfish-jsf-impl
 Requires:         h2
 Requires:         hibernate-jpa-2.0-api
 Requires:         hibernate-validator >= 4.2.0
@@ -208,6 +207,7 @@ Requires:         jgroups
 Requires:         jline
 Requires:         joda-time
 Requires:         jpackage-utils
+Requires:         mojarra
 Requires:         picketbox
 Requires:         picketbox-commons
 Requires:         rhq-plugin-annotations
@@ -417,7 +417,6 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath cdi-api) javax/enterprise/api/main/cdi-api.jar
     ln -s $(build-classpath ecj) org/jboss/as/web/main/ecj.jar
     ln -s $(build-classpath geronimo-validation) javax/validation/api/main/geronimo-validation.jar
-    ln -s $(build-classpath glassfish-jsf-impl) com/sun/jsf-impl/main/glassfish-jsf-impl.jar
     ln -s $(build-classpath hibernate-validator) org/hibernate/validator/main/hibernate-validator.jar
     ln -s $(build-classpath hibernate/hibernate-jpa-2.0-api) javax/persistence/api/main/hibernate-jpa-2.0-api.jar
 
@@ -493,6 +492,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-web) org/jboss/as/web/main/jboss-web.jar
     ln -s $(build-classpath jgroups) org/jgroups/main/jgroups.jar
     ln -s $(build-classpath joda-time) org/joda/time/main/joda-time.jar
+    ln -s $(build-classpath mojarra/jsf-impl) com/sun/jsf-impl/main/jsf-impl.jar
     # TODO: This needs investigation on why AS7 build picks up bare.jar name instead of picketbox.jar
     ln -s $(build-classpath picketbox/picketbox) org/picketbox/main/bare.jar
     ln -s $(build-classpath picketbox/infinispan) org/picketbox/main/infinispan.jar

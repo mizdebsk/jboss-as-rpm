@@ -80,7 +80,7 @@ BuildRequires:    h2
 BuildRequires:    hibernate-jpa-2.0-api
 BuildRequires:    hibernate-validator >= 4.2.0
 BuildRequires:    infinispan >= 5.1.1-1
-BuildRequires:    ironjacamar >= 1.0.7-1
+BuildRequires:    ironjacamar >= 1.0.7-2
 BuildRequires:    jandex >= 1.0.3
 BuildRequires:    java-devel
 BuildRequires:    javamail
@@ -159,7 +159,7 @@ Requires:         h2
 Requires:         hibernate-jpa-2.0-api
 Requires:         hibernate-validator >= 4.2.0
 Requires:         infinispan >= 5.1.1-1
-Requires:         ironjacamar >= 1.0.7-1
+Requires:         ironjacamar >= 1.0.7-2
 Requires:         jandex >= 1.0.3
 Requires:         java
 Requires:         javamail

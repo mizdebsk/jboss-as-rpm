@@ -68,7 +68,7 @@ BuildRequires:    ant-apache-bsf
 BuildRequires:    apache-commons-logging
 BuildRequires:    apache-james-project
 BuildRequires:    atinject
-BuildRequires:    bean-validation-api
+BuildRequires:    bean-validation-api >= 1.0.0-4
 BuildRequires:    bsf >= 2.4.0-10
 BuildRequires:    cdi-api
 BuildRequires:    dom4j
@@ -80,24 +80,25 @@ BuildRequires:    hibernate-jpa-2.0-api
 BuildRequires:    hibernate-validator >= 4.2.0
 BuildRequires:    infinispan >= 5.1.1-1
 BuildRequires:    ironjacamar >= 1.0.7-2
-BuildRequires:    jandex >= 1.0.3
+BuildRequires:    jandex >= 1.0.3-3
 BuildRequires:    java-devel
 BuildRequires:    javamail
 BuildRequires:    jgroups
 BuildRequires:    jboss-annotations-1.1-api
+BuildRequires:    jboss-common-core >= 2.2.18-5
 BuildRequires:    jboss-connector-1.6-api
-BuildRequires:    jboss-dmr >= 1.1.1-1
-BuildRequires:    jboss-ejb-3.1-api
+BuildRequires:    jboss-dmr >= 1.1.1-3
+BuildRequires:    jboss-ejb-3.1-api >= 1.0.2
 BuildRequires:    jboss-el-2.2-api
 BuildRequires:    jboss-httpserver >= 1.0.0-1
 BuildRequires:    jboss-invocation
 BuildRequires:    jboss-interceptor >= 2.0.0-1
-BuildRequires:    jboss-interceptors-1.1-api
-BuildRequires:    jboss-jad-1.2-api
+BuildRequires:    jboss-interceptors-1.1-api >= 1.0.1
+BuildRequires:    jboss-jad-1.2-api >= 1.0.1
 BuildRequires:    jboss-jaxb-2.2-api
-BuildRequires:    jboss-jaxrpc-1.1-api
-BuildRequires:    jboss-jaspi-1.0-api
-BuildRequires:    jboss-jms-1.1-api >= 1.0.0-2
+BuildRequires:    jboss-jaxrpc-1.1-api >= 1.0.1
+BuildRequires:    jboss-jaspi-1.0-api >= 1.0.1
+BuildRequires:    jboss-jms-1.1-api >= 1.0.1
 BuildRequires:    jboss-jts
 BuildRequires:    jboss-jsf-2.1-api
 BuildRequires:    jboss-jsp-2.2-api
@@ -106,11 +107,11 @@ BuildRequires:    jboss-parent
 BuildRequires:    jboss-logging >= 3.1.0-2
 BuildRequires:    jboss-logging-tools >= 1.0.0-1
 BuildRequires:    jboss-logmanager >= 1.2.2-1
-BuildRequires:    jboss-logmanager-log4j >= 1.0.0
+BuildRequires:    jboss-logmanager-log4j >= 1.0.0-3
 BuildRequires:    jboss-marshalling >= 1.3.9-2
 BuildRequires:    jboss-metadata >= 7.0.0-1
 BuildRequires:    jboss-modules >= 1.1.1-2
-BuildRequires:    jboss-msc >= 1.0.1
+BuildRequires:    jboss-msc >= 1.0.2
 BuildRequires:    jboss-negotiation
 BuildRequires:    jboss-remoting >= 3.2.2-2
 BuildRequires:    jboss-remoting-jmx
@@ -118,13 +119,13 @@ BuildRequires:    jboss-remote-naming >= 1.0.1
 BuildRequires:    jboss-sasl >= 1.0.0-2
 BuildRequires:    jboss-saaj-1.3-api
 BuildRequires:    jboss-servlet-3.0-api >= 1.0.0-1
-BuildRequires:    jboss-stdio >= 1.0.1
+BuildRequires:    jboss-stdio >= 1.0.1-3
 BuildRequires:    jboss-specs-parent
 BuildRequires:    jboss-threads >= 2.0.0-4
-BuildRequires:    jboss-transaction-1.1-api
+BuildRequires:    jboss-transaction-1.1-api >= 1.0.1
 BuildRequires:    jboss-transaction-spi
 BuildRequires:    jboss-web >= 7.0.10-1
-BuildRequires:    jboss-vfs >= 3.1.0-0.1.CR1
+BuildRequires:    jboss-vfs >= 3.1.0-1
 BuildRequires:    jbossws-api
 BuildRequires:    jcip-annotations
 BuildRequires:    jline
@@ -148,7 +149,7 @@ BuildRequires:    xnio >= 3.0.1-2
 
 Requires:         atinject
 Requires:         apache-commons-logging
-Requires:         bean-validation-api
+Requires:         bean-validation-api >= 1.0.0-4
 Requires:         cdi-api
 Requires:         dom4j
 # TODO: ecj dependency tree is big and ugly...
@@ -159,23 +160,24 @@ Requires:         hibernate-jpa-2.0-api
 Requires:         hibernate-validator >= 4.2.0
 Requires:         infinispan >= 5.1.1-1
 Requires:         ironjacamar >= 1.0.7-2
-Requires:         jandex >= 1.0.3
+Requires:         jandex >= 1.0.3-3
 Requires:         java
 Requires:         javamail
 Requires:         jboss-annotations-1.1-api
+Requires:         jboss-common-core >= 2.2.18-5
 Requires:         jboss-connector-1.6-api
-Requires:         jboss-dmr >= 1.1.1-1
-Requires:         jboss-ejb-3.1-api
+Requires:         jboss-dmr >= 1.1.1-3
+Requires:         jboss-ejb-3.1-api >= 1.0.2
 Requires:         jboss-el-2.2-api
 Requires:         jboss-httpserver >= 1.0.0-1
 Requires:         jboss-interceptor >= 2.0.0-1
-Requires:         jboss-interceptors-1.1-api
+Requires:         jboss-interceptors-1.1-api >= 1.0.1
 Requires:         jboss-invocation
-Requires:         jboss-jad-1.2-api
+Requires:         jboss-jad-1.2-api >= 1.0.1
 Requires:         jboss-jaxb-2.2-api
-Requires:         jboss-jaxrpc-1.1-api
-Requires:         jboss-jaspi-1.0-api
-Requires:         jboss-jms-1.1-api >= 1.0.0-2
+Requires:         jboss-jaxrpc-1.1-api >= 1.0.1
+Requires:         jboss-jaspi-1.0-api >= 1.0.1
+Requires:         jboss-jms-1.1-api >= 1.0.1
 Requires:         jboss-jsf-2.1-api
 Requires:         jboss-jsp-2.2-api
 Requires:         jboss-jstl-1.2-api
@@ -183,11 +185,11 @@ Requires:         jboss-jts
 Requires:         jboss-logging >= 3.1.0-2
 Requires:         jboss-logging-tools >= 1.0.0-1
 Requires:         jboss-logmanager >= 1.2.2-1
-Requires:         jboss-logmanager-log4j >= 1.0.0
+Requires:         jboss-logmanager-log4j >= 1.0.0-3
 Requires:         jboss-marshalling >= 1.3.9-2
 Requires:         jboss-metadata >= 7.0.0-1
 Requires:         jboss-modules >= 1.1.1-2
-Requires:         jboss-msc >= 1.0.1
+Requires:         jboss-msc >= 1.0.2
 Requires:         jboss-negotiation
 Requires:         jboss-remoting >= 3.2.2-2
 Requires:         jboss-remoting-jmx
@@ -195,12 +197,12 @@ Requires:         jboss-remote-naming >= 1.0.1
 Requires:         jboss-sasl >= 1.0.0-2
 Requires:         jboss-saaj-1.3-api
 Requires:         jboss-servlet-3.0-api >= 1.0.0-1
-Requires:         jboss-stdio >= 1.0.1
+Requires:         jboss-stdio >= 1.0.1-3
 Requires:         jboss-threads >= 2.0.0-4
-Requires:         jboss-transaction-1.1-api
+Requires:         jboss-transaction-1.1-api >= 1.0.1
 Requires:         jboss-transaction-spi
 Requires:         jboss-web >= 7.0.10-1
-Requires:         jboss-vfs >= 3.1.0-0.1.CR1
+Requires:         jboss-vfs >= 3.1.0-1
 Requires:         jbossws-api
 Requires:         jcip-annotations
 Requires:         jgroups
@@ -436,21 +438,21 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
     ln -s $(build-classpath javamail/mail) javax/mail/api/main/mail.jar
     ln -s $(build-classpath jcip-annotations) net/jcip/main/jcip-annotations.jar
-    ln -s $(build-classpath jboss/jandex) org/jboss/jandex/main/jandex.jar
+    ln -s $(build-classpath jandex) org/jboss/jandex/main/jandex.jar
     ln -s $(build-classpath jboss/jboss-annotations-1.1-api) javax/annotation/api/main/jboss-annotations-1.1-api.jar
-    ln -s $(build-classpath jboss/jboss-common-core) org/jboss/common-core/main/jboss-common-core.jar
+    ln -s $(build-classpath jboss-common-core) org/jboss/common-core/main/jboss-common-core.jar
     ln -s $(build-classpath jboss/jboss-connector-1.6-api) javax/resource/api/main/jboss-connector-1.6-api.jar
-    ln -s $(build-classpath jboss/jboss-dmr) org/jboss/dmr/main/jboss-dmr.jar
-    ln -s $(build-classpath jboss/jboss-ejb-3.1-api) javax/ejb/api/main/jboss-ejb-3.1-api.jar
+    ln -s $(build-classpath jboss-dmr) org/jboss/dmr/main/jboss-dmr.jar
+    ln -s $(build-classpath jboss-ejb-3.1-api) javax/ejb/api/main/jboss-ejb-3.1-api.jar
     ln -s $(build-classpath jboss/jboss-ejb3-ext-api) org/jboss/ejb3/main/jboss-ejb3-ext-api.jar
     ln -s $(build-classpath jboss-el-2.2-api) javax/el/api/main/jboss-el-2.2-api.jar
     ln -s $(build-classpath jboss-httpserver) org/jboss/com/sun/httpserver/main/jboss-httpserver.jar
-    ln -s $(build-classpath jboss/jboss-interceptors-1.1-api) javax/interceptor/api/main/jboss-interceptors-1.1-api.jar
+    ln -s $(build-classpath jboss-interceptors-1.1-api) javax/interceptor/api/main/jboss-interceptors-1.1-api.jar
     ln -s $(build-classpath jboss/jboss-invocation) org/jboss/invocation/main/jboss-invocation.jar
     ln -s $(build-classpath jboss/jboss-jacc-1.4-api) javax/security/jacc/api/main/jboss-jacc-1.4-api.jar
-    ln -s $(build-classpath jboss/jboss-jad-1.2-api) javax/enterprise/deploy/api/main/jboss-jad-1.2-api.jar
+    ln -s $(build-classpath jboss-jad-1.2-api) javax/enterprise/deploy/api/main/jboss-jad-1.2-api.jar
     ln -s $(build-classpath jboss-jaxb-2.2-api) javax/xml/bind/api/main/jboss-jaxb-2.2-api.jar
-    ln -s $(build-classpath jboss/jboss-jaxrpc-1.1-api) javax/xml/rpc/api/main/jboss-jaxrpc-1.1-api.jar
+    ln -s $(build-classpath jboss-jaxrpc-1.1-api) javax/xml/rpc/api/main/jboss-jaxrpc-1.1-api.jar
     ln -s $(build-classpath jboss-jaspi-1.0-api) javax/security/auth/message/api/main/jboss-jaspi-1.0-api.jar
     ln -s $(build-classpath jboss-jms-1.1-api) javax/jms/api/main/jboss-jms-1.1-api.jar
     ln -s $(build-classpath jboss-jsf-2.1-api) javax/faces/api/main/jboss-jsf-2.1-api.jar
@@ -461,7 +463,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath log4j) org/apache/log4j/main/log4j.jar
     ln -s $(build-classpath jboss-logging) org/jboss/logging/main/jboss-logging.jar
     ln -s $(build-classpath jboss-logmanager) org/jboss/logmanager/main/jboss-logmanager.jar
-    ln -s $(build-classpath jboss/jboss-logmanager-log4j) org/jboss/logmanager/log4j/main/jboss-logmanager-log4j.jar
+    ln -s $(build-classpath jboss-logmanager-log4j) org/jboss/logmanager/log4j/main/jboss-logmanager-log4j.jar
     ln -s $(build-classpath jboss-marshalling) org/jboss/marshalling/main/jboss-marshalling.jar
     ln -s $(build-classpath jboss-marshalling-river) org/jboss/marshalling/river/main/jboss-marshalling-river.jar
     ln -s $(build-classpath jboss/jboss-metadata-appclient) org/jboss/metadata/main/jboss-metadata-appclient.jar
@@ -469,7 +471,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss/jboss-metadata-ear) org/jboss/metadata/main/jboss-metadata-ear.jar
     ln -s $(build-classpath jboss/jboss-metadata-ejb) org/jboss/metadata/main/jboss-metadata-ejb.jar
     ln -s $(build-classpath jboss/jboss-metadata-web) org/jboss/metadata/main/jboss-metadata-web.jar
-    ln -s $(build-classpath jboss/jboss-msc) org/jboss/msc/main/jboss-msc.jar
+    ln -s $(build-classpath jboss-msc) org/jboss/msc/main/jboss-msc.jar
     ln -s $(build-classpath jboss-remoting) org/jboss/remoting3/main/jboss-remoting.jar
     ln -s $(build-classpath jboss-remote-naming) org/jboss/remote-naming/main/jboss-remote-naming.jar
     ln -s $(build-classpath jboss-remoting-jmx) org/jboss/remoting3/remoting-jmx/main/jboss-remoting-jmx.jar
@@ -484,11 +486,11 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-negotiation/spnego) org/jboss/security/negotiation/main/spnego.jar
 
     ln -s $(build-classpath jboss-servlet-3.0-api) javax/servlet/api/main/jboss-servlet-3.0-api.jar
-    ln -s $(build-classpath jboss/jboss-stdio) org/jboss/stdio/main/jboss-stdio.jar
+    ln -s $(build-classpath jboss-stdio) org/jboss/stdio/main/jboss-stdio.jar
     ln -s $(build-classpath jboss-threads) org/jboss/threads/main/jboss-threads.jar
-    ln -s $(build-classpath jboss/jboss-transaction-1.1-api) ./javax/transaction/api/main/jboss-transaction-1.1-api.jar
+    ln -s $(build-classpath jboss-transaction-1.1-api) ./javax/transaction/api/main/jboss-transaction-1.1-api.jar
     ln -s $(build-classpath jboss-transaction-spi) org/jboss/jboss-transaction-spi/main/jboss-transaction-spi.jar
-    ln -s $(build-classpath jboss/jboss-vfs) org/jboss/vfs/main/jboss-vfs.jar
+    ln -s $(build-classpath jboss-vfs) org/jboss/vfs/main/jboss-vfs.jar
     ln -s $(build-classpath jboss-web) org/jboss/as/web/main/jboss-web.jar
     ln -s $(build-classpath jgroups) org/jgroups/main/jgroups.jar
     ln -s $(build-classpath joda-time) org/joda/time/main/joda-time.jar

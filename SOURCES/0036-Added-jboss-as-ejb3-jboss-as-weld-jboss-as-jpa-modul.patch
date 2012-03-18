@@ -1,0 +1,536 @@
+From 1409395b14fc30ad22a6d59349b149a8e90b8e31 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 13 Mar 2012 10:12:43 +0100
+Subject: [PATCH 36/36] Added jboss-as-ejb3, jboss-as-weld, jboss-as-jpa
+ modules
+
+---
+ build/build.xml    |   95 +++++++++++++++++----------------
+ build/pom.xml      |  150 ++++++++++++++++++++++++++--------------------------
+ clustering/pom.xml |    4 +-
+ jpa/pom.xml        |    4 +-
+ pom.xml            |    6 +--
+ 5 files changed, 130 insertions(+), 129 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index b31ba53..0fbfee7 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -295,6 +295,10 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-web-spi"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.clustering.registry">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-registry"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.connector">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-connector"/>
+         </module-def>
+@@ -335,6 +339,10 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-ee-deployment"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.ejb3">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-ejb3"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.embedded">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-embedded"/>
+         </module-def>
+@@ -343,6 +351,18 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jmx"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.jpa">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-jpa"/>
++        </module-def>
++
++        <module-def name="org.jboss.as.jpa.spi">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-jpa-spi"/>
++        </module-def>
++
++        <module-def name="org.jboss.as.jpa.util">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-jpa-util"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.logging">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-logging"/>
+         </module-def>
+@@ -391,6 +411,10 @@
+             <maven-resource group="org.jboss.web" artifact="jbossweb"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.weld">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-weld"/>
++        </module-def>
++
+         <module-def name="org.jboss.com.sun.httpserver">
+             <maven-resource group="org.jboss.com.sun.httpserver" artifact="httpserver"/>
+         </module-def>
+@@ -409,6 +433,18 @@
+             <maven-resource group="org.jboss.ejb3" artifact="jboss-ejb3-ext-api"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.iiop-client">
++            <maven-resource group="org.jboss" artifact="jboss-iiop-client"/>
++        </module-def>
++
++        <module-def name="org.jboss.interceptor">
++            <maven-resource group="org.jboss.interceptor" artifact="jboss-interceptor-core"/>
++        </module-def>
++
++        <module-def name="org.jboss.interceptor.spi">
++            <maven-resource group="org.jboss.interceptor" artifact="jboss-interceptor-spi"/>
++        </module-def>
++
+         <module-def name="org.jboss.invocation">
+             <maven-resource group="org.jboss.invocation" artifact="jboss-invocation"/>
+         </module-def>
+@@ -508,6 +544,18 @@
+             <maven-resource group="org.jboss" artifact="jboss-vfs"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.weld.core">
++            <maven-resource group="org.jboss.weld" artifact="weld-core"/>
++        </module-def>
++
++        <module-def name="org.jboss.weld.api">
++            <maven-resource group="org.jboss.weld" artifact="weld-api"/>
++        </module-def>
++
++        <module-def name="org.jboss.weld.spi">
++            <maven-resource group="org.jboss.weld" artifact="weld-spi"/>
++        </module-def>
++
+         <module-def name="org.jboss.xnio">
+             <maven-resource group="org.jboss.xnio" artifact="xnio-api"/>
+         </module-def>
+@@ -830,10 +878,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-impl"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.clustering.registry">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-registry"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.clustering.service">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-service"/>
+         </module-def>
+@@ -856,10 +900,6 @@
+ 
+     	<module-def name="org.jboss.as.domain-add-user" />
+ 
+-        <module-def name="org.jboss.as.ejb3">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-ejb3"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.host-controller">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-host-controller"/>
+         </module-def>
+@@ -887,10 +927,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-sos"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.jpa">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-jpa"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.jpa.hibernate" slot="3">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jpa-hibernate3"/>
+         </module-def>
+@@ -907,14 +943,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jpa-openjpa"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.jpa.spi">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-jpa-spi"/>
+-        </module-def>
+-
+-        <module-def name="org.jboss.as.jpa.util">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-jpa-util"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.mail">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-mail"/>
+         </module-def>
+@@ -960,9 +988,6 @@
+             <!-- this is a dependencies only module for JAXRPC functionalities provided by JBossWS Native stack -->
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.weld">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-weld"/>
+-        </module-def>
+         <module-def name="org.jboss.as.xts">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-xts"/>
+         </module-def>
+@@ -979,18 +1004,6 @@
+             <!-- Bundling external content into deployments -->
+         </module-def>
+ 
+-        <module-def name="org.jboss.iiop-client">
+-            <maven-resource group="org.jboss" artifact="jboss-iiop-client"/>
+-        </module-def>
+-
+-        <module-def name="org.jboss.interceptor">
+-            <maven-resource group="org.jboss.interceptor" artifact="jboss-interceptor-core"/>
+-        </module-def>
+-
+-        <module-def name="org.jboss.interceptor.spi">
+-            <maven-resource group="org.jboss.interceptor" artifact="jboss-interceptor-spi"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.jaxbintros">
+             <maven-resource group="jboss.jaxbintros" artifact="jboss-jaxb-intros"/>
+         </module-def>
+@@ -1069,18 +1082,6 @@
+             <maven-resource group="org.jboss.shrinkwrap" artifact="shrinkwrap-impl-base"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.weld.core">
+-            <maven-resource group="org.jboss.weld" artifact="weld-core"/>
+-        </module-def>
+-
+-        <module-def name="org.jboss.weld.api">
+-            <maven-resource group="org.jboss.weld" artifact="weld-api"/>
+-        </module-def>
+-
+-        <module-def name="org.jboss.weld.spi">
+-            <maven-resource group="org.jboss.weld" artifact="weld-spi"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.ws.common">
+             <maven-resource group="org.jboss.ws" artifact="jbossws-common"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index 6451832..8e7caf1 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -181,6 +181,11 @@
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-clustering-registry</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-connector</artifactId>
+         </dependency>
+ 
+@@ -211,11 +216,31 @@
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-ejb3</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-jmx</artifactId>
+         </dependency>
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-jpa</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-jpa-spi</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-jpa-util</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-server</artifactId>
+         </dependency>
+ 
+@@ -245,6 +270,11 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-weld</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>org.jboss.ejb3</groupId>
+             <artifactId>jboss-ejb3-ext-api</artifactId>
+         </dependency>
+@@ -255,6 +285,21 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>org.jboss</groupId>
++            <artifactId>jboss-common-core</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss</groupId>
++            <artifactId>jboss-iiop-client</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss</groupId>
++            <artifactId>jboss-vfs</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>org.jboss.logging</groupId>
+             <artifactId>jboss-logging</artifactId>
+         </dependency>
+@@ -420,6 +465,21 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>org.jboss.weld</groupId>
++            <artifactId>weld-api</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.weld</groupId>
++            <artifactId>weld-core</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.weld</groupId>
++            <artifactId>weld-spi</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>org.jgroups</groupId>
+             <artifactId>jgroups</artifactId>
+         </dependency>
+@@ -445,6 +505,21 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>org.jboss</groupId>
++            <artifactId>jboss-transaction-spi</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.interceptor</groupId>
++            <artifactId>jboss-interceptor-core</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.interceptor</groupId>
++            <artifactId>jboss-interceptor-spi</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>joda-time</groupId>
+             <artifactId>joda-time</artifactId>
+         </dependency>
+@@ -931,21 +1006,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.jboss</groupId>
+-                    <artifactId>jboss-common-core</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss</groupId>
+-                    <artifactId>jboss-iiop-client</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss</groupId>
+-                    <artifactId>jboss-vfs</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-appclient</artifactId>
+                 </dependency>
+@@ -973,11 +1033,6 @@
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-clustering-registry</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-clustering-service</artifactId>
+                 </dependency>
+ 
+@@ -1029,11 +1084,6 @@
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-ejb3</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-embedded</artifactId>
+                 </dependency>
+ 
+@@ -1141,11 +1191,6 @@
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-weld</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-webservices-server-integration</artifactId>
+                 </dependency>
+ 
+@@ -1173,11 +1218,6 @@
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-jpa</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-jpa-hibernate3</artifactId>
+                 </dependency>
+ 
+@@ -1197,31 +1237,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-jpa-spi</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-jpa-util</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss</groupId>
+-                    <artifactId>jboss-transaction-spi</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.interceptor</groupId>
+-                    <artifactId>jboss-interceptor-core</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.interceptor</groupId>
+-                    <artifactId>jboss-interceptor-spi</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.jboss.ironjacamar</groupId>
+                     <artifactId>ironjacamar-core-api</artifactId>
+                 </dependency>
+@@ -1519,21 +1534,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.jboss.weld</groupId>
+-                    <artifactId>weld-api</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.weld</groupId>
+-                    <artifactId>weld-core</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.weld</groupId>
+-                    <artifactId>weld-spi</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.jboss.ws</groupId>
+                     <artifactId>jbossws-api</artifactId>
+                 </dependency>
+diff --git a/clustering/pom.xml b/clustering/pom.xml
+index f1f9014..6962ea4 100644
+--- a/clustering/pom.xml
++++ b/clustering/pom.xml
+@@ -43,8 +43,8 @@
+         <!-- <module>impl</module> -->
+         <module>jgroups</module>
+         <module>infinispan</module>
+-        <!-- <module>registry</module>
+-        <module>service</module>
++        <module>registry</module>
++        <!--<module>service</module>
+         <module>singleton</module>-->
+         <module>web-spi</module>
+         <!--<module>web-infinispan</module>
+diff --git a/jpa/pom.xml b/jpa/pom.xml
+index 0aa76b7..2451a48 100644
+--- a/jpa/pom.xml
++++ b/jpa/pom.xml
+@@ -44,10 +44,10 @@
+         <module>core</module>
+         <module>util</module>
+         <module>spi</module>
+-        <module>hibernate-infinispan</module>
++<!--        <module>hibernate-infinispan</module>
+         <module>hibernate4</module>
+         <module>hibernate3</module>
+-        <module>openjpa</module>
++        <module>openjpa</module>-->
+     </modules>
+ 
+     <dependencies>
+diff --git a/pom.xml b/pom.xml
+index a724747..b6b3f0d 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -275,8 +275,10 @@
+         <module>domain-management</module>
+         <module>ee</module>
+         <module>ee-deployment</module>
++        <module>ejb3</module>
+         <module>embedded</module>
+         <module>jmx</module>
++        <module>jpa</module>
+         <module>management-client-content</module>
+         <module>logging</module>
+         <module>naming</module>
+@@ -291,6 +293,7 @@
+         <module>threads</module>
+         <module>transactions</module>
+         <module>web</module>
++        <module>weld</module>
+     </modules>
+ 
+     <build>
+@@ -5926,7 +5929,6 @@
+                 <module>configadmin</module>
+                 <module>demos</module>
+                 <module>dist</module>
+-                <module>ejb3</module>
+                 <module>host-controller</module>
+                 <!--
+                 <module>jacorb</module>
+@@ -5934,7 +5936,6 @@
+                 <module>jaxr</module>
+                 <module>jaxrs</module>
+                 <module>jdr</module>
+-                <module>jpa</module>
+                 <module>jsr77</module>
+                 <module>mail</module>
+                 <module>messaging</module>
+@@ -5945,7 +5946,6 @@
+                 <module>sar</module>
+                 <module>spec-api</module>
+                 <module>webservices</module>
+-                <module>weld</module>
+                 <!--
+                 <module>xts</module>
+                 -->
+-- 
+1.7.9.3
+

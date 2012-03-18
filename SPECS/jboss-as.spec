@@ -9,7 +9,7 @@
 
 %global jbuid 92
 
-%global modules connector controller-client controller deployment-repository deployment-scanner domain-management ee embedded jmx logging naming network platform-mbean process-controller protocol remoting security server threads transactions web
+%global modules connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded jmx logging naming network platform-mbean process-controller protocol remoting security server threads transactions web weld
 
 Name:             jboss-as
 Version:          7.1.0
@@ -60,37 +60,48 @@ Patch31:          0032-Added-jboss-as-connector-AS7-module.patch
 Patch32:          0033-Added-jboss-as-web-jboss-as-clustering-api-jboss-as-.patch
 Patch33:          0034-Added-net.jcip-org.jboss.ironjacamar-javax.resource..patch
 Patch34:          0035-Make-some-modules-optional.patch
+Patch35:          0036-Added-jboss-as-ejb3-jboss-as-weld-jboss-as-jpa-modul.patch
+Patch36:          0037-Exludes-cleanup.patch
+Patch37:          0038-Added-additional-modules-required-on-runtime.patch
 
 BuildArch:        noarch
 
 # Please keep alphabetically
 BuildRequires:    ant-apache-bsf
 BuildRequires:    apache-commons-logging
+BuildRequires:    apache-commons-collections
 BuildRequires:    apache-james-project
 BuildRequires:    atinject
 BuildRequires:    bean-validation-api >= 1.0.0-4
 BuildRequires:    bsf >= 2.4.0-10
+BuildRequires:    cal10n
 BuildRequires:    cdi-api
 BuildRequires:    dom4j
 # TODO: ecj dependency tree is big and ugly...
 BuildRequires:    ecj
 BuildRequires:    geronimo-annotation
+BuildRequires:    guava
 BuildRequires:    h2
-BuildRequires:    hibernate-jpa-2.0-api
+BuildRequires:    hibernate-jpa-2.0-api >= 1.0.1-5
 BuildRequires:    hibernate-validator >= 4.2.0
 BuildRequires:    infinispan >= 5.1.1-1
 BuildRequires:    ironjacamar >= 1.0.7-2
 BuildRequires:    jandex >= 1.0.3-3
-BuildRequires:    java-devel
+BuildRequires:    java-devel >= 1:1.7.0
 BuildRequires:    javamail
+BuildRequires:    javassist
 BuildRequires:    jgroups
 BuildRequires:    jboss-annotations-1.1-api
+BuildRequires:    jboss-classfilewriter
 BuildRequires:    jboss-common-core >= 2.2.18-5
 BuildRequires:    jboss-connector-1.6-api
 BuildRequires:    jboss-dmr >= 1.1.1-3
 BuildRequires:    jboss-ejb-3.1-api >= 1.0.2
+BuildRequires:    jboss-ejb3-ext-api >= 2.0.0-2
+BuildRequires:    jboss-ejb-client
 BuildRequires:    jboss-el-2.2-api
 BuildRequires:    jboss-httpserver >= 1.0.0-1
+BuildRequires:    jboss-iiop-client
 BuildRequires:    jboss-invocation
 BuildRequires:    jboss-interceptor >= 2.0.0-1
 BuildRequires:    jboss-interceptors-1.1-api >= 1.0.1
@@ -143,33 +154,44 @@ BuildRequires:    rhq-plugin-annotations
 BuildRequires:    slf4j
 BuildRequires:    slf4j-jboss-logmanager
 BuildRequires:    staxmapper >= 1.1.0-2
+BuildRequires:    weld-api
+BuildRequires:    weld-core
+BuildRequires:    weld-parent
 BuildRequires:    xalan-j2
 BuildRequires:    xerces-j2
 BuildRequires:    xnio >= 3.0.1-2
 
 Requires:         atinject
 Requires:         apache-commons-logging
+Requires:         apache-commons-collections
 Requires:         bean-validation-api >= 1.0.0-4
+Requires:         cal10n
 Requires:         cdi-api
 Requires:         dom4j
 # TODO: ecj dependency tree is big and ugly...
 Requires:         ecj
+Requires:         guava
 Requires:         geronimo-annotation
 Requires:         h2
-Requires:         hibernate-jpa-2.0-api
+Requires:         hibernate-jpa-2.0-api >= 1.0.1-5
 Requires:         hibernate-validator >= 4.2.0
 Requires:         infinispan >= 5.1.1-1
 Requires:         ironjacamar >= 1.0.7-2
 Requires:         jandex >= 1.0.3-3
 Requires:         java
 Requires:         javamail
+Requires:         javassist
 Requires:         jboss-annotations-1.1-api
+Requires:         jboss-classfilewriter
 Requires:         jboss-common-core >= 2.2.18-5
 Requires:         jboss-connector-1.6-api
 Requires:         jboss-dmr >= 1.1.1-3
 Requires:         jboss-ejb-3.1-api >= 1.0.2
+Requires:         jboss-ejb3-ext-api >= 2.0.0-2
+Requires:         jboss-ejb-client
 Requires:         jboss-el-2.2-api
 Requires:         jboss-httpserver >= 1.0.0-1
+Requires:         jboss-iiop-client
 Requires:         jboss-interceptor >= 2.0.0-1
 Requires:         jboss-interceptors-1.1-api >= 1.0.1
 Requires:         jboss-invocation
@@ -216,6 +238,8 @@ Requires:         rhq-plugin-annotations
 Requires:         slf4j
 Requires:         slf4j-jboss-logmanager
 Requires:         staxmapper >= 1.1.0-2
+Requires:         weld-api
+Requires:         weld-core
 Requires:         xalan-j2
 Requires:         xerces-j2
 Requires:         xnio >= 3.0.1-2
@@ -273,10 +297,13 @@ This package contains the API documentation for %{name}.
 %patch32 -p1
 %patch33 -p1
 %patch34 -p1
+%patch35 -p1
+%patch36 -p1
+%patch37 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
-mvn-rpmbuild -Dmaven.test.skip=true -Dminimalistic -e install javadoc:aggregate
+mvn-rpmbuild -X -Dmaven.test.skip=true -Dminimalistic -e install javadoc:aggregate
 
 %install
 
@@ -307,9 +334,10 @@ for m in %{modules} build-config ee-deployment; do
 done
 
 # Definition of submodules
-multimodules="domain-http clustering"
+multimodules="domain-http clustering jpa"
 # If a submodule contains hyphen in the name, just skip it, e.g. domain-http => domainhttp
-modules_clustering="common infinispan jgroups api web-spi"
+modules_clustering="common infinispan jgroups api web-spi registry"
+modules_jpa="util spi"
 modules_domainhttp="interface error-context"
 
 for m in ${multimodules}; do
@@ -325,6 +353,15 @@ for m in ${multimodules}; do
     %add_maven_depmap JPP.%{name}-%{name}-${m}-${sm}.pom %{name}/%{name}-${m}-${sm}.jar
   done
 done
+
+# Excpetions...
+
+# JAR
+cp -a jpa/core/target/jboss-as-jpa-%{namedversion}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jpa.jar
+# POM
+cp -a jpa/core/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-%{name}-jpa.pom
+# DEPMAP
+%add_maven_depmap JPP.%{name}-%{name}-jpa.pom %{name}/%{name}-jpa.jar
 
 # Parent POM
 cp -a pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-%{name}-parent.pom
@@ -414,13 +451,19 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s %{_javadir}/jboss-as/jboss-as-ee-deployment.jar org/jboss/as/ee/deployment/main/jboss-as-ee-deployment-%{namedversion}.jar
     ln -s %{_javadir}/jboss-as/jboss-as-clustering-web-spi.jar org/jboss/as/clustering/web/spi/main/jboss-as-clustering-web-spi-%{namedversion}.jar
 
+    # And some other expcetions...
+    ln -s %{_javadir}/jboss-as/jboss-as-jpa.jar org/jboss/as/jpa/main/jboss-as-jpa-%{namedversion}.jar
+
     # Please keep alphabetic by jar name
+    ln -s $(build-classpath apache-commons-collections) org/apache/commons/collections/main/apache-commons-collections.jar
     ln -s $(build-classpath atinject) javax/inject/api/main/atinject.jar
+    ln -s $(build-classpath cal10n/cal10n-api) ch/qos/cal10n/main/cal10n-api.jar
     ln -s $(build-classpath cdi-api) javax/enterprise/api/main/cdi-api.jar
     ln -s $(build-classpath ecj) org/jboss/as/web/main/ecj.jar
+    ln -s $(build-classpath guava) com/google/guava/main/guava.jar
     ln -s $(build-classpath geronimo-validation) javax/validation/api/main/geronimo-validation.jar
     ln -s $(build-classpath hibernate-validator) org/hibernate/validator/main/hibernate-validator.jar
-    ln -s $(build-classpath hibernate/hibernate-jpa-2.0-api) javax/persistence/api/main/hibernate-jpa-2.0-api.jar
+    ln -s $(build-classpath hibernate-jpa-2.0-api) javax/persistence/api/main/hibernate-jpa-2.0-api.jar
 
     ln -s $(build-classpath infinispan/cachestore-jdbc) org/infinispan/cachestore/jdbc/main/cachestore-jdbc.jar
     ln -s $(build-classpath infinispan/cachestore-remote) org/infinispan/cachestore/remote/main/cachestore-remote.jar
@@ -437,16 +480,22 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath ironjacamar/jdbc) org/jboss/ironjacamar/jdbcadapters/main/jdbc.jar
 
     ln -s $(build-classpath javamail/mail) javax/mail/api/main/mail.jar
+    ln -s $(build-classpath javassist) org/javassist/main/javassist.jar
     ln -s $(build-classpath jcip-annotations) net/jcip/main/jcip-annotations.jar
     ln -s $(build-classpath jandex) org/jboss/jandex/main/jandex.jar
-    ln -s $(build-classpath jboss/jboss-annotations-1.1-api) javax/annotation/api/main/jboss-annotations-1.1-api.jar
+    ln -s $(build-classpath jboss-annotations-1.1-api) javax/annotation/api/main/jboss-annotations-1.1-api.jar
+    ln -s $(build-classpath jboss-classfilewriter) org/jboss/classfilewriter/main/jboss-classfilewriter.jar
     ln -s $(build-classpath jboss-common-core) org/jboss/common-core/main/jboss-common-core.jar
-    ln -s $(build-classpath jboss/jboss-connector-1.6-api) javax/resource/api/main/jboss-connector-1.6-api.jar
+    ln -s $(build-classpath jboss-connector-1.6-api) javax/resource/api/main/jboss-connector-1.6-api.jar
     ln -s $(build-classpath jboss-dmr) org/jboss/dmr/main/jboss-dmr.jar
     ln -s $(build-classpath jboss-ejb-3.1-api) javax/ejb/api/main/jboss-ejb-3.1-api.jar
-    ln -s $(build-classpath jboss/jboss-ejb3-ext-api) org/jboss/ejb3/main/jboss-ejb3-ext-api.jar
+    ln -s $(build-classpath jboss-ejb3-ext-api) org/jboss/ejb3/main/jboss-ejb3-ext-api.jar
+    ln -s $(build-classpath jboss-ejb-client) org/jboss/ejb-client/main/jboss-ejb-client.jar
     ln -s $(build-classpath jboss-el-2.2-api) javax/el/api/main/jboss-el-2.2-api.jar
     ln -s $(build-classpath jboss-httpserver) org/jboss/com/sun/httpserver/main/jboss-httpserver.jar
+    ln -s $(build-classpath jboss-iiop-client) org/jboss/iiop-client/main/jboss-iiop-client.jar
+    ln -s $(build-classpath jboss-interceptor-core) org/jboss/interceptor/main/jboss-interceptor-core.jar
+    ln -s $(build-classpath jboss-interceptor-spi) org/jboss/interceptor/spi/main/jboss-interceptor-spi.jar
     ln -s $(build-classpath jboss-interceptors-1.1-api) javax/interceptor/api/main/jboss-interceptors-1.1-api.jar
     ln -s $(build-classpath jboss/jboss-invocation) org/jboss/invocation/main/jboss-invocation.jar
     ln -s $(build-classpath jboss/jboss-jacc-1.4-api) javax/security/jacc/api/main/jboss-jacc-1.4-api.jar
@@ -480,7 +529,6 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
     ln -s $(build-classpath jboss-negotiation/common) org/jboss/security/negotiation/main/common.jar
     ln -s $(build-classpath jboss-negotiation/extras) org/jboss/security/negotiation/main/extras.jar
-    ln -s $(build-classpath jboss-negotiation/main) org/jboss/security/negotiation/main/main.jar
     ln -s $(build-classpath jboss-negotiation/net) org/jboss/security/negotiation/main/net.jar
     ln -s $(build-classpath jboss-negotiation/ntlm) org/jboss/security/negotiation/main/ntlm.jar
     ln -s $(build-classpath jboss-negotiation/spnego) org/jboss/security/negotiation/main/spnego.jar
@@ -495,14 +543,17 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jgroups) org/jgroups/main/jgroups.jar
     ln -s $(build-classpath joda-time) org/joda/time/main/joda-time.jar
     ln -s $(build-classpath mojarra/jsf-impl) com/sun/jsf-impl/main/jsf-impl.jar
-    # TODO: This needs investigation on why AS7 build picks up bare.jar name instead of picketbox.jar
-    ln -s $(build-classpath picketbox/picketbox) org/picketbox/main/bare.jar
+    ln -s $(build-classpath picketbox/picketbox) org/picketbox/main/picketbox.jar
     ln -s $(build-classpath picketbox/infinispan) org/picketbox/main/infinispan.jar
-    ln -s $(build-classpath jboss/picketbox-commons) org/picketbox/main/picketbox-commons.jar
+    ln -s $(build-classpath picketbox-commons) org/picketbox/main/picketbox-commons.jar
     ln -s $(build-classpath slf4j/api) org/slf4j/main/api.jar
+    ln -s $(build-classpath slf4j/ext) org/slf4j/ext/main/ext.jar
     ln -s $(build-classpath slf4j/jcl-over-slf4j) org/slf4j/jcl-over-slf4j/main/jcl-over-slf4j.jar
     ln -s $(build-classpath slf4j-jboss-logmanager) org/slf4j/impl/main/slf4j-jboss-logmanager.jar
     ln -s $(build-classpath staxmapper) org/jboss/staxmapper/main/staxmapper.jar
+    ln -s $(build-classpath weld-api/api) org/jboss/weld/api/main/api.jar
+    ln -s $(build-classpath weld-api/spi) org/jboss/weld/spi/main/spi.jar
+    ln -s $(build-classpath weld-core) org/jboss/weld/core/main/weld-core.jar
     ln -s $(build-classpath xalan-j2) org/apache/xalan/main/xalan-j2.jar
     ln -s $(build-classpath xalan-j2-serializer) org/apache/xalan/main/xalan-j2-serializer.jar
     ln -s $(build-classpath xerces-j2) org/apache/xerces/main/xerces-j2.jar

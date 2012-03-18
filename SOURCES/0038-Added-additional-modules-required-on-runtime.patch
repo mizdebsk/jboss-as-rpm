@@ -1,0 +1,301 @@
+From 557ebae6bda5eaf691a3c8857e223a194af52b49 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Fri, 16 Mar 2012 16:08:19 +0100
+Subject: [PATCH 38/38] Added additional modules required on runtime
+
+---
+ build/build.xml |   56 +++++++++++++++++++--------------------
+ build/pom.xml   |   79 +++++++++++++++++++++++++++----------------------------
+ 2 files changed, 67 insertions(+), 68 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 0fbfee7..87e840a 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -121,6 +121,14 @@
+           ~ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+           -->
+ 
++        <module-def name="ch.qos.cal10n">
++            <maven-resource group="ch.qos.cal10n" artifact="cal10n-api"/>
++        </module-def>
++
++        <module-def name="com.google.guava">
++            <maven-resource group="com.google.guava" artifact="guava" />
++        </module-def>
++
+         <module-def name="com.sun.jsf-impl">
+             <maven-resource group="com.sun.faces" artifact="jsf-impl"/>
+         </module-def>
+@@ -239,6 +247,10 @@
+ 
+         <module-def name="javaee.api"/>
+ 
++        <module-def name="org.apache.commons.collections">
++            <maven-resource group="commons-collections" artifact="commons-collections" />
++        </module-def>
++
+         <module-def name="org.apache.commons.logging"/>
+ 
+         <module-def name="org.apache.log4j">
+@@ -258,6 +270,14 @@
+             <maven-resource group="org.hibernate" artifact="hibernate-validator"/>
+         </module-def>
+ 
++        <module-def name="org.javassist">
++            <maven-resource group="org.javassist" artifact="javassist"/>
++        </module-def>
++
++        <module-def name="org.jboss.ejb-client">
++            <maven-resource group="org.jboss" artifact="jboss-ejb-client"/>
++        </module-def>
++
+         <module-def name="org.jboss.ironjacamar.api">
+             <maven-resource group="org.jboss.ironjacamar" artifact="ironjacamar-common-api"/>
+             <maven-resource group="org.jboss.ironjacamar" artifact="ironjacamar-common-spi"/>
+@@ -419,6 +439,10 @@
+             <maven-resource group="org.jboss.com.sun.httpserver" artifact="httpserver"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.classfilewriter">
++            <maven-resource group="org.jboss.classfilewriter" artifact="jboss-classfilewriter"/>
++        </module-def>
++
+         <module-def name="org.jboss.common-core">
+             <maven-resource group="org.jboss" artifact="jboss-common-core"/>
+         </module-def>
+@@ -592,6 +616,10 @@
+             <maven-resource group="org.jboss.slf4j" artifact="slf4j-jboss-logmanager"/>
+         </module-def>
+ 
++        <module-def name="org.slf4j.ext">
++            <maven-resource group="org.slf4j" artifact="slf4j-ext"/>
++        </module-def>
++
+         <module-def name="sun.jdk"/>
+     </target>
+ 
+@@ -612,14 +640,6 @@
+             <maven-resource group="asm" artifact="asm" />
+         </module-def>
+ 
+-        <module-def name="ch.qos.cal10n">
+-            <maven-resource group="ch.qos.cal10n" artifact="cal10n-api"/>
+-        </module-def>
+-
+-        <module-def name="com.google.guava">
+-            <maven-resource group="com.google.guava" artifact="guava" />
+-        </module-def>
+-
+         <module-def name="com.h2database.h2">
+             <maven-resource group="com.h2database" artifact="h2"/>
+         </module-def>
+@@ -703,10 +723,6 @@
+             <maven-resource group="commons-codec" artifact="commons-codec"/>
+         </module-def>
+ 
+-        <module-def name="org.apache.commons.collections">
+-            <maven-resource group="commons-collections" artifact="commons-collections" />
+-        </module-def>
+-
+         <module-def name="org.apache.commons.io">
+             <maven-resource group="commons-io" artifact="commons-io"/>
+         </module-def>
+@@ -844,10 +860,6 @@
+         </module-def>
+         -->
+ 
+-        <module-def name="org.javassist">
+-            <maven-resource group="org.javassist" artifact="javassist"/>
+-        </module-def>
+-
+         <module-def name="org.jaxen">
+             <maven-resource group="jaxen" artifact="jaxen"/>
+         </module-def>
+@@ -992,14 +1004,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-xts"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.classfilewriter">
+-            <maven-resource group="org.jboss.classfilewriter" artifact="jboss-classfilewriter"/>
+-        </module-def>
+-
+-        <module-def name="org.jboss.ejb-client">
+-            <maven-resource group="org.jboss" artifact="jboss-ejb-client"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.integration.ext-content">
+             <!-- Bundling external content into deployments -->
+         </module-def>
+@@ -1174,10 +1178,6 @@
+             <maven-resource group="org.scannotation" artifact="scannotation"/>
+         </module-def>
+ 
+-        <module-def name="org.slf4j.ext">
+-            <maven-resource group="org.slf4j" artifact="slf4j-ext"/>
+-        </module-def>
+-
+         <module-def name="org.w3c.css.sac">
+             <maven-resource group="org.w3c.css" artifact="sac"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index 8e7caf1..179c1b9 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -82,6 +82,20 @@
+     </build>
+ 
+     <dependencies>
++        <dependency>
++            <groupId>ch.qos.cal10n</groupId>
++            <artifactId>cal10n-api</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>com.google.guava</groupId>
++            <artifactId>guava</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>commons-collections</groupId>
++            <artifactId>commons-collections</artifactId>
++        </dependency>
+ 
+         <dependency>
+             <groupId>com.sun.faces</groupId>
+@@ -138,6 +152,11 @@
+             <artifactId>core</artifactId>
+         </dependency>
+ 
++        <dependency>
++            <groupId>org.javassist</groupId>
++            <artifactId>javassist</artifactId>
++        </dependency>
++
+         <!-- TODO: why do we need jandex in minimal? -->
+         <dependency>
+             <groupId>org.jboss</groupId>
+@@ -155,6 +174,11 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>org.jboss</groupId>
++            <artifactId>jboss-ejb-client</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-clustering-common</artifactId>
+         </dependency>
+@@ -280,6 +304,16 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>org.jboss.classfilewriter</groupId>
++            <artifactId>jboss-classfilewriter</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.com.sun.httpserver</groupId>
++            <artifactId>httpserver</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>org.jboss.invocation</groupId>
+             <artifactId>jboss-invocation</artifactId>
+         </dependency>
+@@ -535,6 +569,11 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>org.slf4j</groupId>
++            <artifactId>slf4j-ext</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>xalan</groupId>
+             <artifactId>serializer</artifactId>
+         </dependency>
+@@ -569,21 +608,11 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>ch.qos.cal10n</groupId>
+-                    <artifactId>cal10n-api</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>com.h2database</groupId>
+                     <artifactId>h2</artifactId>
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>com.google.guava</groupId>
+-                    <artifactId>guava</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>com.sun.xml.bind</groupId>
+                     <artifactId>jaxb-impl</artifactId>
+                 </dependency>
+@@ -614,11 +643,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>commons-collections</groupId>
+-                    <artifactId>commons-collections</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>commons-io</groupId>
+                     <artifactId>commons-io</artifactId>
+                 </dependency>
+@@ -1001,11 +1025,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.javassist</groupId>
+-                    <artifactId>javassist</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-appclient</artifactId>
+                 </dependency>
+@@ -1202,21 +1221,6 @@
+                 -->
+ 
+                 <dependency>
+-                    <groupId>org.jboss.classfilewriter</groupId>
+-                    <artifactId>jboss-classfilewriter</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.com.sun.httpserver</groupId>
+-                    <artifactId>httpserver</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss</groupId>
+-                    <artifactId>jboss-ejb-client</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-jpa-hibernate3</artifactId>
+                 </dependency>
+@@ -1665,11 +1669,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.slf4j</groupId>
+-                    <artifactId>slf4j-ext</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.w3c.css</groupId>
+                     <artifactId>sac</artifactId>
+                 </dependency>
+-- 
+1.7.9.3
+

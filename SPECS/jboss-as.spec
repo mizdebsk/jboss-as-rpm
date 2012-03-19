@@ -102,7 +102,7 @@ BuildRequires:    jboss-ejb-client
 BuildRequires:    jboss-el-2.2-api
 BuildRequires:    jboss-httpserver >= 1.0.0-1
 BuildRequires:    jboss-iiop-client
-BuildRequires:    jboss-invocation
+BuildRequires:    jboss-invocation >= 1.1.1-1
 BuildRequires:    jboss-interceptor >= 2.0.0-1
 BuildRequires:    jboss-interceptors-1.1-api >= 1.0.1
 BuildRequires:    jboss-jad-1.2-api >= 1.0.1
@@ -194,7 +194,7 @@ Requires:         jboss-httpserver >= 1.0.0-1
 Requires:         jboss-iiop-client
 Requires:         jboss-interceptor >= 2.0.0-1
 Requires:         jboss-interceptors-1.1-api >= 1.0.1
-Requires:         jboss-invocation
+Requires:         jboss-invocation >= 1.1.1-1
 Requires:         jboss-jad-1.2-api >= 1.0.1
 Requires:         jboss-jaxb-2.2-api
 Requires:         jboss-jaxrpc-1.1-api >= 1.0.1
@@ -497,8 +497,8 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-interceptor-core) org/jboss/interceptor/main/jboss-interceptor-core.jar
     ln -s $(build-classpath jboss-interceptor-spi) org/jboss/interceptor/spi/main/jboss-interceptor-spi.jar
     ln -s $(build-classpath jboss-interceptors-1.1-api) javax/interceptor/api/main/jboss-interceptors-1.1-api.jar
-    ln -s $(build-classpath jboss/jboss-invocation) org/jboss/invocation/main/jboss-invocation.jar
-    ln -s $(build-classpath jboss/jboss-jacc-1.4-api) javax/security/jacc/api/main/jboss-jacc-1.4-api.jar
+    ln -s $(build-classpath jboss-invocation) org/jboss/invocation/main/jboss-invocation.jar
+    ln -s $(build-classpath jboss-jacc-1.4-api) javax/security/jacc/api/main/jboss-jacc-1.4-api.jar
     ln -s $(build-classpath jboss-jad-1.2-api) javax/enterprise/deploy/api/main/jboss-jad-1.2-api.jar
     ln -s $(build-classpath jboss-jaxb-2.2-api) javax/xml/bind/api/main/jboss-jaxb-2.2-api.jar
     ln -s $(build-classpath jboss-jaxrpc-1.1-api) javax/xml/rpc/api/main/jboss-jaxrpc-1.1-api.jar

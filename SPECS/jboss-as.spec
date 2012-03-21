@@ -63,6 +63,7 @@ Patch34:          0035-Make-some-modules-optional.patch
 Patch35:          0036-Added-jboss-as-ejb3-jboss-as-weld-jboss-as-jpa-modul.patch
 Patch36:          0037-Exludes-cleanup.patch
 Patch37:          0038-Added-additional-modules-required-on-runtime.patch
+Patch38:          0039-Enabled-rest-of-clustering-submodules.patch
 
 BuildArch:        noarch
 
@@ -300,10 +301,11 @@ This package contains the API documentation for %{name}.
 %patch35 -p1
 %patch36 -p1
 %patch37 -p1
+%patch38 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
-mvn-rpmbuild -X -Dmaven.test.skip=true -Dminimalistic -e install javadoc:aggregate
+mvn-rpmbuild -Dmaven.test.skip=true -Dminimalistic -e install javadoc:aggregate
 
 %install
 
@@ -336,7 +338,7 @@ done
 # Definition of submodules
 multimodules="domain-http clustering jpa"
 # If a submodule contains hyphen in the name, just skip it, e.g. domain-http => domainhttp
-modules_clustering="common infinispan jgroups api web-spi registry"
+modules_clustering="api common impl jgroups infinispan registry service web-spi web-infinispan ejb3-infinispan"
 modules_jpa="util spi"
 modules_domainhttp="interface error-context"
 
@@ -354,7 +356,7 @@ for m in ${multimodules}; do
   done
 done
 
-# Excpetions...
+# Exceptions START
 
 # JAR
 cp -a jpa/core/target/jboss-as-jpa-%{namedversion}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}/%{name}-jpa.jar
@@ -362,6 +364,8 @@ cp -a jpa/core/target/jboss-as-jpa-%{namedversion}.jar $RPM_BUILD_ROOT%{_javadir
 cp -a jpa/core/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-%{name}-jpa.pom
 # DEPMAP
 %add_maven_depmap JPP.%{name}-%{name}-jpa.pom %{name}/%{name}-jpa.jar
+
+# Exceptions END
 
 # Parent POM
 cp -a pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-%{name}-parent.pom
@@ -450,12 +454,14 @@ pushd $RPM_BUILD_ROOT%{homedir}
     # And don't forget this module which should be a submodule...
     ln -s %{_javadir}/jboss-as/jboss-as-ee-deployment.jar org/jboss/as/ee/deployment/main/jboss-as-ee-deployment-%{namedversion}.jar
     ln -s %{_javadir}/jboss-as/jboss-as-clustering-web-spi.jar org/jboss/as/clustering/web/spi/main/jboss-as-clustering-web-spi-%{namedversion}.jar
+    ln -s %{_javadir}/jboss-as/jboss-as-clustering-web-infinispan.jar org/jboss/as/clustering/impl/main/jboss-as-clustering-web-infinispan-%{namedversion}.jar
+    ln -s %{_javadir}/jboss-as/jboss-as-clustering-ejb3-infinispan.jar org/jboss/as/clustering/impl/main/jboss-as-clustering-ejb3-infinispan-%{namedversion}.jar
 
     # And some other expcetions...
     ln -s %{_javadir}/jboss-as/jboss-as-jpa.jar org/jboss/as/jpa/main/jboss-as-jpa-%{namedversion}.jar
 
     # Please keep alphabetic by jar name
-    ln -s $(build-classpath apache-commons-collections) org/apache/commons/collections/main/apache-commons-collections.jar
+    ln -s $(build-classpath apache-commons-collections) org/apache/commons/collections/main/commons-collections.jar
     ln -s $(build-classpath atinject) javax/inject/api/main/atinject.jar
     ln -s $(build-classpath cal10n/cal10n-api) ch/qos/cal10n/main/cal10n-api.jar
     ln -s $(build-classpath cdi-api) javax/enterprise/api/main/cdi-api.jar

@@ -454,8 +454,8 @@ pushd $RPM_BUILD_ROOT%{homedir}
     # And don't forget this module which should be a submodule...
     ln -s %{_javadir}/jboss-as/jboss-as-ee-deployment.jar org/jboss/as/ee/deployment/main/jboss-as-ee-deployment-%{namedversion}.jar
     ln -s %{_javadir}/jboss-as/jboss-as-clustering-web-spi.jar org/jboss/as/clustering/web/spi/main/jboss-as-clustering-web-spi-%{namedversion}.jar
-    ln -s %{_javadir}/jboss-as/jboss-as-clustering-web-infinispan.jar org/jboss/as/clustering/impl/main/jboss-as-clustering-web-infinispan-%{namedversion}.jar
-    ln -s %{_javadir}/jboss-as/jboss-as-clustering-ejb3-infinispan.jar org/jboss/as/clustering/impl/main/jboss-as-clustering-ejb3-infinispan-%{namedversion}.jar
+    ln -s %{_javadir}/jboss-as/jboss-as-clustering-web-infinispan.jar org/jboss/as/clustering/web/infinispan/main/jboss-as-clustering-web-infinispan-%{namedversion}.jar
+    ln -s %{_javadir}/jboss-as/jboss-as-clustering-ejb3-infinispan.jar org/jboss/as/clustering/ejb3/infinispan/main/jboss-as-clustering-ejb3-infinispan-%{namedversion}.jar
 
     # And some other expcetions...
     ln -s %{_javadir}/jboss-as/jboss-as-jpa.jar org/jboss/as/jpa/main/jboss-as-jpa-%{namedversion}.jar

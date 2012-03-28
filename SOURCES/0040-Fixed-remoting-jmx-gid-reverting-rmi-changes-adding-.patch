@@ -1,0 +1,160 @@
+From 47f7ee808a2db06ccf99980c4963362bb11e0712 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Wed, 28 Mar 2012 13:26:18 +0200
+Subject: [PATCH 40/41] Fixed remoting-jmx gid, reverting rmi changes, adding
+ jboss-rmi-1.0-api dep
+
+---
+ build/build.xml                                    |    8 ++++----
+ build/pom.xml                                      |   20 ++++++++++----------
+ .../resources/modules/javaee/api/main/module.xml   |    2 +-
+ .../modules/javax/ejb/api/main/module.xml          |    2 +-
+ .../modules/org/jboss/as/ejb3/main/module.xml      |    2 +-
+ jmx/pom.xml                                        |    2 +-
+ pom.xml                                            |    6 +++---
+ 7 files changed, 21 insertions(+), 21 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 0eb6970..6c47f99 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -203,6 +203,10 @@
+             <maven-resource group="org.jboss.spec.javax.jms" artifact="jboss-jms-api_1.1_spec"/>
+         </module-def>
+ 
++        <module-def name="javax.rmi.api">
++            <maven-resource group="org.jboss.spec.javax.rmi" artifact="jboss-rmi-api_1.0_spec"/>
++        </module-def>
++
+         <module-def name="javax.mail.api">
+             <maven-resource group="javax.mail" artifact="mail"/>
+         </module-def>
+@@ -701,10 +705,6 @@
+             <maven-resource group="org.jboss.spec.javax.management.j2ee" artifact="jboss-j2eemgmt-api_1.1_spec"/>
+         </module-def>
+ 
+-        <module-def name="javax.rmi.api">
+-            <maven-resource group="org.jboss.spec.javax.rmi" artifact="jboss-rmi-api_1.0_spec"/>
+-        </module-def>
+-
+         <module-def name="javax.ws.rs.api">
+             <maven-resource group="org.jboss.spec.javax.ws.rs" artifact="jboss-jaxrs-api_1.1_spec"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index 76c3a41..fa28a32 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -524,6 +524,16 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>org.jboss.spec.javax.resource</groupId>
++            <artifactId>jboss-connector-api_1.6_spec</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.spec.javax.rmi</groupId>
++            <artifactId>jboss-rmi-api_1.0_spec</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>org.jboss.weld</groupId>
+             <artifactId>weld-api</artifactId>
+         </dependency>
+@@ -1498,16 +1508,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.jboss.spec.javax.resource</groupId>
+-                    <artifactId>jboss-connector-api_1.6_spec</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.spec.javax.rmi</groupId>
+-                    <artifactId>jboss-rmi-api_1.0_spec</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.jboss.spec.javax.ws.rs</groupId>
+                     <artifactId>jboss-jaxrs-api_1.1_spec</artifactId>
+                 </dependency>
+diff --git a/build/src/main/resources/modules/javaee/api/main/module.xml b/build/src/main/resources/modules/javaee/api/main/module.xml
+index 657eb47..40c62e4 100644
+--- a/build/src/main/resources/modules/javaee/api/main/module.xml
++++ b/build/src/main/resources/modules/javaee/api/main/module.xml
+@@ -42,7 +42,7 @@
+         <module name="javax.management.j2ee.api" export="true" optional="true"/>
+         <module name="javax.persistence.api" export="true"/>
+         <module name="javax.resource.api" export="true"/>
+-        <module name="javax.rmi.api" export="true" optional="true"/>
++        <module name="javax.rmi.api" export="true"/>
+         <module name="javax.security.auth.message.api" export="true"/>
+         <module name="javax.security.jacc.api" export="true"/>
+         <module name="javax.servlet.api" export="true"/>
+diff --git a/build/src/main/resources/modules/javax/ejb/api/main/module.xml b/build/src/main/resources/modules/javax/ejb/api/main/module.xml
+index fe5f6e9..57a2fd1 100644
+--- a/build/src/main/resources/modules/javax/ejb/api/main/module.xml
++++ b/build/src/main/resources/modules/javax/ejb/api/main/module.xml
+@@ -28,7 +28,7 @@
+         <module name="javax.api" export="true"/>
+         <module name="javax.transaction.api" export="true"/>
+         <module name="javax.xml.rpc.api" export="true"/>
+-        <module name="javax.rmi.api" export="true" optional="true"/>
++        <module name="javax.rmi.api" export="true"/>
+         <module name="org.omg.api" export="true"/>
+     </dependencies>
+ 
+diff --git a/build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml b/build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml
+index de651d6..1a660fb 100644
+--- a/build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml
+@@ -40,7 +40,7 @@
+         <!-- For message inflow -->
+         <module name="javax.resource.api"/>
+         <module name="javax.rmi.api"/>
+-        <module name="org.hibernate"/>
++        <module name="org.hibernate" optional="true"/>
+         <module name="org.jacorb" optional="true"/>
+         <module name="org.jboss.as.clustering.api"/>
+         <module name="org.jboss.as.clustering.ejb3.infinispan" services="import" optional="true"/>
+diff --git a/jmx/pom.xml b/jmx/pom.xml
+index 9038bd4..8db2b1e 100644
+--- a/jmx/pom.xml
++++ b/jmx/pom.xml
+@@ -76,7 +76,7 @@
+             <artifactId>jboss-as-server</artifactId>
+         </dependency>
+         <dependency>
+-            <groupId>org.jboss.remoting3</groupId>
++            <groupId>org.jboss.remotingjmx</groupId>
+             <artifactId>remoting-jmx</artifactId>
+         </dependency>
+         <dependency>
+diff --git a/pom.xml b/pom.xml
+index 500788d..b9e503d 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -179,7 +179,7 @@
+         <version.org.jboss.osgi.spi>2.0.4</version.org.jboss.osgi.spi>
+         <version.org.jboss.remote-naming>1.0.1.Final</version.org.jboss.remote-naming>
+         <version.org.jboss.remoting3>3.2.2.GA</version.org.jboss.remoting3>
+-        <version.org.jboss.remoting3.remoting-jmx>1.0.0.Final</version.org.jboss.remoting3.remoting-jmx>
++        <version.org.jboss.remotingjmx.remoting-jmx>1.0.2.Final</version.org.jboss.remotingjmx.remoting-jmx>
+         <version.org.jboss.resteasy>2.3.1.GA</version.org.jboss.resteasy>
+         <version.org.jboss.sasl>1.0.0.Final</version.org.jboss.sasl>
+         <version.org.jboss.seam.int>6.0.0.GA</version.org.jboss.seam.int>
+@@ -4365,9 +4365,9 @@
+             </dependency>
+ 
+             <dependency>
+-                <groupId>org.jboss.remoting3</groupId>
++                <groupId>org.jboss.remotingjmx</groupId>
+                 <artifactId>remoting-jmx</artifactId>
+-                <version>${version.org.jboss.remoting3.remoting-jmx}</version>
++                <version>${version.org.jboss.remotingjmx.remoting-jmx}</version>
+             </dependency>
+ 
+             <dependency>
+-- 
+1.7.9.3
+

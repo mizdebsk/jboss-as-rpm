@@ -64,6 +64,8 @@ Patch35:          0036-Added-jboss-as-ejb3-jboss-as-weld-jboss-as-jpa-modul.patc
 Patch36:          0037-Exludes-cleanup.patch
 Patch37:          0038-Added-additional-modules-required-on-runtime.patch
 Patch38:          0039-Enabled-rest-of-clustering-submodules.patch
+Patch39:          0040-Fixed-remoting-jmx-gid-reverting-rmi-changes-adding-.patch
+Patch40:          0041-AS7-3921-Upgrade-to-Remoting-JMX-1.0.2-including-swi.patch
 
 BuildArch:        noarch
 
@@ -121,13 +123,14 @@ BuildRequires:    jboss-logging-tools >= 1.0.0-1
 BuildRequires:    jboss-logmanager >= 1.2.2-1
 BuildRequires:    jboss-logmanager-log4j >= 1.0.0-3
 BuildRequires:    jboss-marshalling >= 1.3.9-2
-BuildRequires:    jboss-metadata >= 7.0.0-1
+BuildRequires:    jboss-metadata >= 7.0.1-1
 BuildRequires:    jboss-modules >= 1.1.1-2
 BuildRequires:    jboss-msc >= 1.0.2
 BuildRequires:    jboss-negotiation
 BuildRequires:    jboss-remoting >= 3.2.2-2
 BuildRequires:    jboss-remoting-jmx
 BuildRequires:    jboss-remote-naming >= 1.0.1
+BuildRequires:    jboss-rmi-1.0-api
 BuildRequires:    jboss-sasl >= 1.0.0-2
 BuildRequires:    jboss-saaj-1.3-api
 BuildRequires:    jboss-servlet-3.0-api >= 1.0.0-1
@@ -210,13 +213,14 @@ Requires:         jboss-logging-tools >= 1.0.0-1
 Requires:         jboss-logmanager >= 1.2.2-1
 Requires:         jboss-logmanager-log4j >= 1.0.0-3
 Requires:         jboss-marshalling >= 1.3.9-2
-Requires:         jboss-metadata >= 7.0.0-1
+Requires:         jboss-metadata >= 7.0.1-1
 Requires:         jboss-modules >= 1.1.1-2
 Requires:         jboss-msc >= 1.0.2
 Requires:         jboss-negotiation
 Requires:         jboss-remoting >= 3.2.2-2
 Requires:         jboss-remoting-jmx
 Requires:         jboss-remote-naming >= 1.0.1
+Requires:         jboss-rmi-1.0-api
 Requires:         jboss-sasl >= 1.0.0-2
 Requires:         jboss-saaj-1.3-api
 Requires:         jboss-servlet-3.0-api >= 1.0.0-1
@@ -302,6 +306,8 @@ This package contains the API documentation for %{name}.
 %patch36 -p1
 %patch37 -p1
 %patch38 -p1
+%patch39 -p1
+%patch40 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -521,15 +527,16 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-logmanager-log4j) org/jboss/logmanager/log4j/main/jboss-logmanager-log4j.jar
     ln -s $(build-classpath jboss-marshalling) org/jboss/marshalling/main/jboss-marshalling.jar
     ln -s $(build-classpath jboss-marshalling-river) org/jboss/marshalling/river/main/jboss-marshalling-river.jar
-    ln -s $(build-classpath jboss/jboss-metadata-appclient) org/jboss/metadata/main/jboss-metadata-appclient.jar
-    ln -s $(build-classpath jboss/jboss-metadata-common) org/jboss/metadata/main/jboss-metadata-common.jar
-    ln -s $(build-classpath jboss/jboss-metadata-ear) org/jboss/metadata/main/jboss-metadata-ear.jar
-    ln -s $(build-classpath jboss/jboss-metadata-ejb) org/jboss/metadata/main/jboss-metadata-ejb.jar
-    ln -s $(build-classpath jboss/jboss-metadata-web) org/jboss/metadata/main/jboss-metadata-web.jar
+    ln -s $(build-classpath jboss-metadata/jboss-metadata-appclient) org/jboss/metadata/main/jboss-metadata-appclient.jar
+    ln -s $(build-classpath jboss-metadata/jboss-metadata-common) org/jboss/metadata/main/jboss-metadata-common.jar
+    ln -s $(build-classpath jboss-metadata/jboss-metadata-ear) org/jboss/metadata/main/jboss-metadata-ear.jar
+    ln -s $(build-classpath jboss-metadata/jboss-metadata-ejb) org/jboss/metadata/main/jboss-metadata-ejb.jar
+    ln -s $(build-classpath jboss-metadata/jboss-metadata-web) org/jboss/metadata/main/jboss-metadata-web.jar
     ln -s $(build-classpath jboss-msc) org/jboss/msc/main/jboss-msc.jar
     ln -s $(build-classpath jboss-remoting) org/jboss/remoting3/main/jboss-remoting.jar
     ln -s $(build-classpath jboss-remote-naming) org/jboss/remote-naming/main/jboss-remote-naming.jar
     ln -s $(build-classpath jboss-remoting-jmx) org/jboss/remoting3/remoting-jmx/main/jboss-remoting-jmx.jar
+    ln -s $(build-classpath jboss-rmi-1.0-api) javax/rmi/api/main/jboss-rmi-1.0-api.jar
     ln -s $(build-classpath jboss-saaj-1.3-api) javax/xml/soap/api/main/jboss-saaj-1.3-api.jar
     ln -s $(build-classpath jboss-sasl) org/jboss/sasl/main/jboss-sasl.jar
 

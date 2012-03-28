@@ -1,7 +1,7 @@
 From 6ebfcbf2ca25da8860a9ea888a0a71c08a2b1e9a Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Wed, 21 Mar 2012 09:55:07 +0100
-Subject: [PATCH 39/39] Enabled rest of clustering submodules
+Subject: [PATCH 39/41] Enabled rest of clustering submodules
 
 ---
  build/build.xml    |   40 ++++++++++++++++++++--------------------

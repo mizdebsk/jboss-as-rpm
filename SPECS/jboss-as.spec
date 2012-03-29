@@ -87,7 +87,7 @@ BuildRequires:    guava
 BuildRequires:    h2
 BuildRequires:    hibernate-jpa-2.0-api >= 1.0.1-5
 BuildRequires:    hibernate-validator >= 4.2.0
-BuildRequires:    infinispan >= 5.1.1-1
+BuildRequires:    infinispan >= 5.1.2-1
 BuildRequires:    ironjacamar >= 1.0.7-2
 BuildRequires:    jandex >= 1.0.3-3
 BuildRequires:    java-devel >= 1:1.7.0
@@ -180,7 +180,7 @@ Requires:         geronimo-annotation
 Requires:         h2
 Requires:         hibernate-jpa-2.0-api >= 1.0.1-5
 Requires:         hibernate-validator >= 4.2.0
-Requires:         infinispan >= 5.1.1-1
+Requires:         infinispan >= 5.1.2-1
 Requires:         ironjacamar >= 1.0.7-2
 Requires:         jandex >= 1.0.3-3
 Requires:         java
@@ -479,10 +479,10 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath hibernate-validator) org/hibernate/validator/main/hibernate-validator.jar
     ln -s $(build-classpath hibernate-jpa-2.0-api) javax/persistence/api/main/hibernate-jpa-2.0-api.jar
 
-    ln -s $(build-classpath infinispan/cachestore-jdbc) org/infinispan/cachestore/jdbc/main/cachestore-jdbc.jar
-    ln -s $(build-classpath infinispan/cachestore-remote) org/infinispan/cachestore/remote/main/cachestore-remote.jar
-    ln -s $(build-classpath infinispan/client-hotrod) org/infinispan/client/hotrod/main/client-hotrod.jar
-    ln -s $(build-classpath infinispan/core) org/infinispan/main/core.jar
+    ln -s $(build-classpath infinispan/infinispan-cachestore-jdbc) org/infinispan/cachestore/jdbc/main/cachestore-jdbc.jar
+    ln -s $(build-classpath infinispan/infinispan-cachestore-remote) org/infinispan/cachestore/remote/main/cachestore-remote.jar
+    ln -s $(build-classpath infinispan/infinispan-client-hotrod) org/infinispan/client/hotrod/main/client-hotrod.jar
+    ln -s $(build-classpath infinispan/infinispan-core) org/infinispan/main/core.jar
 
     ln -s $(build-classpath ironjacamar/common-api) org/jboss/ironjacamar/api/main/common-api.jar
     ln -s $(build-classpath ironjacamar/common-spi) org/jboss/ironjacamar/api/main/common-spi.jar

@@ -88,7 +88,7 @@ BuildRequires:    h2
 BuildRequires:    hibernate-jpa-2.0-api >= 1.0.1-5
 BuildRequires:    hibernate-validator >= 4.2.0
 BuildRequires:    infinispan >= 5.1.2-1
-BuildRequires:    ironjacamar >= 1.0.7-2
+BuildRequires:    ironjacamar >= 1.0.9-3
 BuildRequires:    jandex >= 1.0.3-3
 BuildRequires:    java-devel >= 1:1.7.0
 BuildRequires:    javamail
@@ -181,7 +181,7 @@ Requires:         h2
 Requires:         hibernate-jpa-2.0-api >= 1.0.1-5
 Requires:         hibernate-validator >= 4.2.0
 Requires:         infinispan >= 5.1.2-1
-Requires:         ironjacamar >= 1.0.7-2
+Requires:         ironjacamar >= 1.0.9-3
 Requires:         jandex >= 1.0.3-3
 Requires:         java
 Requires:         javamail
@@ -484,14 +484,14 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath infinispan/infinispan-client-hotrod) org/infinispan/client/hotrod/main/client-hotrod.jar
     ln -s $(build-classpath infinispan/infinispan-core) org/infinispan/main/core.jar
 
-    ln -s $(build-classpath ironjacamar/common-api) org/jboss/ironjacamar/api/main/common-api.jar
-    ln -s $(build-classpath ironjacamar/common-spi) org/jboss/ironjacamar/api/main/common-spi.jar
-    ln -s $(build-classpath ironjacamar/core-api) org/jboss/ironjacamar/api/main/core-api.jar
-    ln -s $(build-classpath ironjacamar/common-impl) org/jboss/ironjacamar/impl/main/common-impl.jar
-    ln -s $(build-classpath ironjacamar/core-impl) org/jboss/ironjacamar/impl/main/core-impl.jar
-    ln -s $(build-classpath ironjacamar/deployers-common) org/jboss/ironjacamar/impl/main/deployers-common.jar
-    ln -s $(build-classpath ironjacamar/validator) org/jboss/ironjacamar/impl/main/validator.jar
-    ln -s $(build-classpath ironjacamar/jdbc) org/jboss/ironjacamar/jdbcadapters/main/jdbc.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-common-api) org/jboss/ironjacamar/api/main/common-api.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-common-spi) org/jboss/ironjacamar/api/main/common-spi.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-core-api) org/jboss/ironjacamar/api/main/core-api.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-common-impl) org/jboss/ironjacamar/impl/main/common-impl.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-core-impl) org/jboss/ironjacamar/impl/main/core-impl.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-deployers-common) org/jboss/ironjacamar/impl/main/deployers-common.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-validator) org/jboss/ironjacamar/impl/main/validator.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-jdbc) org/jboss/ironjacamar/jdbcadapters/main/jdbc.jar
 
     ln -s $(build-classpath javamail/mail) javax/mail/api/main/mail.jar
     ln -s $(build-classpath javassist) org/javassist/main/javassist.jar

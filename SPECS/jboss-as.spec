@@ -108,6 +108,7 @@ BuildRequires:    jboss-iiop-client
 BuildRequires:    jboss-invocation >= 1.1.1-1
 BuildRequires:    jboss-interceptor >= 2.0.0-1
 BuildRequires:    jboss-interceptors-1.1-api >= 1.0.1
+BuildRequires:    jboss-jacc-1.4-api >= 1.0.2
 BuildRequires:    jboss-jad-1.2-api >= 1.0.1
 BuildRequires:    jboss-jaxb-2.2-api
 BuildRequires:    jboss-jaxrpc-1.1-api >= 1.0.1
@@ -199,6 +200,7 @@ Requires:         jboss-iiop-client
 Requires:         jboss-interceptor >= 2.0.0-1
 Requires:         jboss-interceptors-1.1-api >= 1.0.1
 Requires:         jboss-invocation >= 1.1.1-1
+Requires:         jboss-jacc-1.4-api >= 1.0.2
 Requires:         jboss-jad-1.2-api >= 1.0.1
 Requires:         jboss-jaxb-2.2-api
 Requires:         jboss-jaxrpc-1.1-api >= 1.0.1

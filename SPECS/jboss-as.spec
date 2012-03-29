@@ -97,7 +97,7 @@ BuildRequires:    jgroups
 BuildRequires:    jboss-annotations-1.1-api
 BuildRequires:    jboss-classfilewriter
 BuildRequires:    jboss-common-core >= 2.2.18-5
-BuildRequires:    jboss-connector-1.6-api
+BuildRequires:    jboss-connector-1.6-api >= 1.0.1
 BuildRequires:    jboss-dmr >= 1.1.1-3
 BuildRequires:    jboss-ejb-3.1-api >= 1.0.2
 BuildRequires:    jboss-ejb3-ext-api >= 2.0.0-2
@@ -189,7 +189,7 @@ Requires:         javassist
 Requires:         jboss-annotations-1.1-api
 Requires:         jboss-classfilewriter
 Requires:         jboss-common-core >= 2.2.18-5
-Requires:         jboss-connector-1.6-api
+Requires:         jboss-connector-1.6-api >= 1.0.1
 Requires:         jboss-dmr >= 1.1.1-3
 Requires:         jboss-ejb-3.1-api >= 1.0.2
 Requires:         jboss-ejb3-ext-api >= 2.0.0-2

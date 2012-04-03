@@ -14,9 +14,9 @@
 Name:             jboss-as
 Version:          7.1.0
 Release:          1%{?dist}
-Summary:          JBoss Application Server 7
+Summary:          JBoss Application Server
 Group:            System Environment/Daemons
-License:          LGPLv2+ and ASL 2.0
+License:          LGPLv2
 URL:              http://www.jboss.org/jbossas
 
 # git clone git://github.com/jbossas/jboss-as.git

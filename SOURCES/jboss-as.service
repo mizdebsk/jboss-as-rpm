@@ -1,0 +1,12 @@
+[Unit]
+Description=The JBoss Application Server
+After=syslog.target network.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/jboss-as/jboss-as.pid
+ExecStart=/usr/bin/jboss-as start
+ExecStop=/usr/bin/jboss-as stop
+
+[Install]
+WantedBy=multi-user.target

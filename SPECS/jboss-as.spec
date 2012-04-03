@@ -24,6 +24,11 @@ URL:              http://www.jboss.org/jbossas
 # find jboss-as-7.1.0.Final/ -name '*.jar' -type f -delete
 # tar -cJf jboss-as-7.1.0.Final-CLEAN.tar.xz jboss-as-7.1.0.Final
 Source0:          jboss-as-%{namedversion}-CLEAN.tar.xz
+# Systemd service file
+Source1:          jboss-as.service
+# Systemd jboss-as launch file
+Source2:          jboss-as-systemd.sh
+
 Patch0:           0001-Disable-checkstyle.patch
 Patch1:           0002-Fix-initd-script.patch
 Patch2:           0003-Build-additional-modules.patch
@@ -117,7 +122,7 @@ BuildRequires:    jboss-jms-1.1-api >= 1.0.1
 BuildRequires:    jboss-jts
 BuildRequires:    jboss-jsf-2.1-api
 BuildRequires:    jboss-jsp-2.2-api
-BuildRequires:    jboss-jstl-1.2-api
+BuildRequires:    jboss-jstl-1.2-api >= 1.0.3
 BuildRequires:    jboss-parent
 BuildRequires:    jboss-logging >= 3.1.0-2
 BuildRequires:    jboss-logging-tools >= 1.0.0-1
@@ -127,7 +132,7 @@ BuildRequires:    jboss-marshalling >= 1.3.9-2
 BuildRequires:    jboss-metadata >= 7.0.1-1
 BuildRequires:    jboss-modules >= 1.1.1-2
 BuildRequires:    jboss-msc >= 1.0.2
-BuildRequires:    jboss-negotiation
+BuildRequires:    jboss-negotiation >= 2.2.0-3.SP1
 BuildRequires:    jboss-remoting >= 3.2.2-2
 BuildRequires:    jboss-remoting-jmx
 BuildRequires:    jboss-remote-naming >= 1.0.1
@@ -159,7 +164,8 @@ BuildRequires:    rhq-plugin-annotations
 BuildRequires:    slf4j
 BuildRequires:    slf4j-jboss-logmanager
 BuildRequires:    staxmapper >= 1.1.0-2
-BuildRequires:    weld-api
+BuildRequires:    systemd-units
+BuildRequires:    weld-api >= 1.1-3
 BuildRequires:    weld-core
 BuildRequires:    weld-parent
 BuildRequires:    xalan-j2
@@ -208,7 +214,7 @@ Requires:         jboss-jaspi-1.0-api >= 1.0.1
 Requires:         jboss-jms-1.1-api >= 1.0.1
 Requires:         jboss-jsf-2.1-api
 Requires:         jboss-jsp-2.2-api
-Requires:         jboss-jstl-1.2-api
+Requires:         jboss-jstl-1.2-api >= 1.0.3
 Requires:         jboss-jts
 Requires:         jboss-logging >= 3.1.0-2
 Requires:         jboss-logging-tools >= 1.0.0-1
@@ -218,7 +224,7 @@ Requires:         jboss-marshalling >= 1.3.9-2
 Requires:         jboss-metadata >= 7.0.1-1
 Requires:         jboss-modules >= 1.1.1-2
 Requires:         jboss-msc >= 1.0.2
-Requires:         jboss-negotiation
+Requires:         jboss-negotiation >= 2.2.0-3.SP1
 Requires:         jboss-remoting >= 3.2.2-2
 Requires:         jboss-remoting-jmx
 Requires:         jboss-remote-naming >= 1.0.1
@@ -245,7 +251,7 @@ Requires:         rhq-plugin-annotations
 Requires:         slf4j
 Requires:         slf4j-jboss-logmanager
 Requires:         staxmapper >= 1.1.0-2
-Requires:         weld-api
+Requires:         weld-api >= 1.1-3
 Requires:         weld-core
 Requires:         xalan-j2
 Requires:         xerces-j2
@@ -319,11 +325,13 @@ mvn-rpmbuild -Dmaven.test.skip=true -Dminimalistic -e install javadoc:aggregate
 
 install -d -m 755 $RPM_BUILD_ROOT%{_javadir}/%{name}
 install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/init.d
 install -d -m 755 $RPM_BUILD_ROOT%{homedir}
 install -d -m 755 $RPM_BUILD_ROOT%{confdir}
 install -d -m 770 $RPM_BUILD_ROOT%{cachedir}/auth
 install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
+install -d -m 755 $RPM_BUILD_ROOT%{_unitdir}
+install -d -m 755 $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig
+install -d -m 755 $RPM_BUILD_ROOT%{_bindir}
 
 for mode in standalone domain; do
   install -d -m 755 $RPM_BUILD_ROOT%{homedir}/${mode}
@@ -388,9 +396,11 @@ pushd build/target/jboss-as-%{namedversion}
   # We don't need Windows files
   find bin/ -type f -name "*.bat" -delete
 
-  # init.d
-  mv bin/init.d/jboss-as.conf $RPM_BUILD_ROOT%{confdir}
-  mv bin/init.d/jboss-as-standalone.sh $RPM_BUILD_ROOT%{_sysconfdir}/init.d/%{name}
+  # Install systemd files
+  mv bin/init.d/jboss-as.conf $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/%{name}
+  cp %{SOURCE1} $RPM_BUILD_ROOT%{_unitdir}/%{name}.service
+  cp %{SOURCE2} $RPM_BUILD_ROOT%{_bindir}/%{name}
+
   rm -rf bin/init.d
 
   # standalone
@@ -479,19 +489,19 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath hibernate-validator) org/hibernate/validator/main/hibernate-validator.jar
     ln -s $(build-classpath hibernate-jpa-2.0-api) javax/persistence/api/main/hibernate-jpa-2.0-api.jar
 
-    ln -s $(build-classpath infinispan/infinispan-cachestore-jdbc) org/infinispan/cachestore/jdbc/main/cachestore-jdbc.jar
-    ln -s $(build-classpath infinispan/infinispan-cachestore-remote) org/infinispan/cachestore/remote/main/cachestore-remote.jar
-    ln -s $(build-classpath infinispan/infinispan-client-hotrod) org/infinispan/client/hotrod/main/client-hotrod.jar
-    ln -s $(build-classpath infinispan/infinispan-core) org/infinispan/main/core.jar
+    ln -s $(build-classpath infinispan/infinispan-cachestore-jdbc) org/infinispan/cachestore/jdbc/main/infinispan-cachestore-jdbc.jar
+    ln -s $(build-classpath infinispan/infinispan-cachestore-remote) org/infinispan/cachestore/remote/main/infinispan-cachestore-remote.jar
+    ln -s $(build-classpath infinispan/infinispan-client-hotrod) org/infinispan/client/hotrod/main/infinispan-client-hotrod.jar
+    ln -s $(build-classpath infinispan/infinispan-core) org/infinispan/main/infinispan-core.jar
 
-    ln -s $(build-classpath ironjacamar/ironjacamar-common-api) org/jboss/ironjacamar/api/main/common-api.jar
-    ln -s $(build-classpath ironjacamar/ironjacamar-common-spi) org/jboss/ironjacamar/api/main/common-spi.jar
-    ln -s $(build-classpath ironjacamar/ironjacamar-core-api) org/jboss/ironjacamar/api/main/core-api.jar
-    ln -s $(build-classpath ironjacamar/ironjacamar-common-impl) org/jboss/ironjacamar/impl/main/common-impl.jar
-    ln -s $(build-classpath ironjacamar/ironjacamar-core-impl) org/jboss/ironjacamar/impl/main/core-impl.jar
-    ln -s $(build-classpath ironjacamar/ironjacamar-deployers-common) org/jboss/ironjacamar/impl/main/deployers-common.jar
-    ln -s $(build-classpath ironjacamar/ironjacamar-validator) org/jboss/ironjacamar/impl/main/validator.jar
-    ln -s $(build-classpath ironjacamar/ironjacamar-jdbc) org/jboss/ironjacamar/jdbcadapters/main/jdbc.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-common-api) org/jboss/ironjacamar/api/main/ironjacamar-common-api.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-common-spi) org/jboss/ironjacamar/api/main/ironjacamar-common-spi.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-core-api) org/jboss/ironjacamar/api/main/ironjacamar-core-api.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-common-impl) org/jboss/ironjacamar/impl/main/ironjacamar-common-impl.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-core-impl) org/jboss/ironjacamar/impl/main/ironjacamar-core-impl.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-deployers-common) org/jboss/ironjacamar/impl/main/ironjacamar-deployers-common.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-validator) org/jboss/ironjacamar/impl/main/ironjacamar-validator.jar
+    ln -s $(build-classpath ironjacamar/ironjacamar-jdbc) org/jboss/ironjacamar/jdbcadapters/main/ironjacamar-jdbc.jar
 
     ln -s $(build-classpath javamail/mail) javax/mail/api/main/mail.jar
     ln -s $(build-classpath javassist) org/javassist/main/javassist.jar
@@ -520,7 +530,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-jms-1.1-api) javax/jms/api/main/jboss-jms-1.1-api.jar
     ln -s $(build-classpath jboss-jsf-2.1-api) javax/faces/api/main/jboss-jsf-2.1-api.jar
     ln -s $(build-classpath jboss-jsp-2.2-api) javax/servlet/jsp/api/main/jboss-jsp-2.2-api.jar
-    ln -s $(build-classpath jboss/jboss-jstl-1.2-api) javax/servlet/jstl/api/main/jboss-jstl-1.2-api.jar
+    ln -s $(build-classpath jboss-jstl-1.2-api) javax/servlet/jstl/api/main/jboss-jstl-1.2-api.jar
     ln -s $(build-classpath jboss-jts/jbossjta) org/jboss/jts/main/jbossjta.jar
     ln -s $(build-classpath jboss-jts/jbossjta-integration) org/jboss/jts/integration/main/jbossjta-integration.jar
     ln -s $(build-classpath log4j) org/apache/log4j/main/log4j.jar
@@ -542,11 +552,11 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-saaj-1.3-api) javax/xml/soap/api/main/jboss-saaj-1.3-api.jar
     ln -s $(build-classpath jboss-sasl) org/jboss/sasl/main/jboss-sasl.jar
 
-    ln -s $(build-classpath jboss-negotiation/common) org/jboss/security/negotiation/main/common.jar
-    ln -s $(build-classpath jboss-negotiation/extras) org/jboss/security/negotiation/main/extras.jar
-    ln -s $(build-classpath jboss-negotiation/net) org/jboss/security/negotiation/main/net.jar
-    ln -s $(build-classpath jboss-negotiation/ntlm) org/jboss/security/negotiation/main/ntlm.jar
-    ln -s $(build-classpath jboss-negotiation/spnego) org/jboss/security/negotiation/main/spnego.jar
+    ln -s $(build-classpath jboss-negotiation/jboss-negotiation-common) org/jboss/security/negotiation/main/jboss-negotiation-common.jar
+    ln -s $(build-classpath jboss-negotiation/jboss-negotiation-extras) org/jboss/security/negotiation/main/jboss-negotiation-extras.jar
+    ln -s $(build-classpath jboss-negotiation/jboss-negotiation-net) org/jboss/security/negotiation/main/jboss-negotiation-net.jar
+    ln -s $(build-classpath jboss-negotiation/jboss-negotiation-ntlm) org/jboss/security/negotiation/main/jboss-negotiation-ntlm.jar
+    ln -s $(build-classpath jboss-negotiation/jboss-negotiation-spnego) org/jboss/security/negotiation/main/jboss-negotiation-spnego.jar
 
     ln -s $(build-classpath jboss-servlet-3.0-api) javax/servlet/api/main/jboss-servlet-3.0-api.jar
     ln -s $(build-classpath jboss-stdio) org/jboss/stdio/main/jboss-stdio.jar
@@ -566,8 +576,8 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath slf4j/jcl-over-slf4j) org/slf4j/jcl-over-slf4j/main/jcl-over-slf4j.jar
     ln -s $(build-classpath slf4j-jboss-logmanager) org/slf4j/impl/main/slf4j-jboss-logmanager.jar
     ln -s $(build-classpath staxmapper) org/jboss/staxmapper/main/staxmapper.jar
-    ln -s $(build-classpath weld-api/api) org/jboss/weld/api/main/api.jar
-    ln -s $(build-classpath weld-api/spi) org/jboss/weld/spi/main/spi.jar
+    ln -s $(build-classpath weld-api/weld-api) org/jboss/weld/api/main/weld-api.jar
+    ln -s $(build-classpath weld-api/weld-spi) org/jboss/weld/spi/main/weld-spi.jar
     ln -s $(build-classpath weld-core) org/jboss/weld/core/main/weld-core.jar
     ln -s $(build-classpath xalan-j2) org/apache/xalan/main/xalan-j2.jar
     ln -s $(build-classpath xalan-j2-serializer) org/apache/xalan/main/xalan-j2-serializer.jar
@@ -588,6 +598,7 @@ getent passwd %{name} >/dev/null || \
 %{homedir}/appclient
 %{bindir}/*.conf
 %attr(0755,root,root) %{bindir}/*.sh
+%attr(0755,root,root) %{_bindir}/%{name}
 %dir %{homedir}/bin
 %{homedir}/auth
 %{homedir}/domain
@@ -605,12 +616,12 @@ getent passwd %{name} >/dev/null || \
 %attr(0770,root,jboss-as) %dir %{logdir}/domain
 %attr(0775,root,jboss-as) %dir %{confdir}/standalone
 %attr(0775,root,jboss-as) %dir %{confdir}/domain
-%attr(0664,jboss-as,jboss-as) %config(noreplace) %{confdir}/%{name}.conf
 %attr(0664,jboss-as,jboss-as) %config(noreplace) %{confdir}/standalone/*.properties
 %attr(0664,jboss-as,jboss-as) %config(noreplace) %{confdir}/standalone/*.xml
 %attr(0664,jboss-as,jboss-as) %config(noreplace) %{confdir}/domain/*.properties
 %attr(0664,jboss-as,jboss-as) %config(noreplace) %{confdir}/domain/*.xml
-%attr(0755,root,root) %config(noreplace) %{_sysconfdir}/init.d/%{name}
+%config(noreplace) %{_sysconfdir}/sysconfig/%{name}
+%{_unitdir}/%{name}.service
 %doc %{homedir}/docs
 %doc %{homedir}/copyright.txt
 %doc %{homedir}/LICENSE.txt
@@ -624,9 +635,6 @@ getent passwd %{name} >/dev/null || \
 %{_javadocdir}/%{name}
 
 %changelog
-* Thu Feb 16 2012 Carlo de Wolf <cdewolf@redhat.com> 7.1.0-1
-- Package 7.1.0.Final
-
-* Mon Jan 09 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.0-0.1.CR1b
+* Mon Apr 02 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.0-1
 - Initial packaging
 

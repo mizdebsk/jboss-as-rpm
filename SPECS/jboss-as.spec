@@ -7,7 +7,7 @@
 %global logdir %{_var}/log/%{name}
 %global confdir %{_sysconfdir}/%{name}
 
-%global jbuid 92
+%global jbuid 185
 
 %global modules connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded jmx logging naming network platform-mbean process-controller protocol remoting security server threads transactions web weld
 

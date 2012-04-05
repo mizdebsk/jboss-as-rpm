@@ -13,10 +13,10 @@
 
 Name:             jboss-as
 Version:          7.1.0
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
-License:          LGPLv2
+License:          LGPLv2 and ASL 2.0
 URL:              http://www.jboss.org/jbossas
 
 # git clone git://github.com/jbossas/jboss-as.git
@@ -24,10 +24,6 @@ URL:              http://www.jboss.org/jbossas
 # find jboss-as-7.1.0.Final/ -name '*.jar' -type f -delete
 # tar -cJf jboss-as-7.1.0.Final-CLEAN.tar.xz jboss-as-7.1.0.Final
 Source0:          jboss-as-%{namedversion}-CLEAN.tar.xz
-# Systemd service file
-Source1:          jboss-as.service
-# Systemd jboss-as launch file
-Source2:          jboss-as-systemd.sh
 
 Patch0:           0001-Disable-checkstyle.patch
 Patch1:           0002-Fix-initd-script.patch
@@ -71,6 +67,9 @@ Patch37:          0038-Added-additional-modules-required-on-runtime.patch
 Patch38:          0039-Enabled-rest-of-clustering-submodules.patch
 Patch39:          0040-Fixed-remoting-jmx-gid-reverting-rmi-changes-adding-.patch
 Patch40:          0041-AS7-3921-Upgrade-to-Remoting-JMX-1.0.2-including-swi.patch
+Patch41:          0042-Added-standalone-web.xml-example-configuration.-Use-.patch
+Patch42:          0043-Add-systemd-files-re-arrange-directory-with-init-scr.patch
+Patch43:          0044-Fixed-systemd-service-file.patch
 
 BuildArch:        noarch
 
@@ -316,6 +315,9 @@ This package contains the API documentation for %{name}.
 %patch38 -p1
 %patch39 -p1
 %patch40 -p1
+%patch41 -p1
+%patch42 -p1
+%patch43 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -397,17 +399,19 @@ pushd build/target/jboss-as-%{namedversion}
   find bin/ -type f -name "*.bat" -delete
 
   # Install systemd files
-  mv bin/init.d/jboss-as.conf $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/%{name}
-  cp %{SOURCE1} $RPM_BUILD_ROOT%{_unitdir}/%{name}.service
-  cp %{SOURCE2} $RPM_BUILD_ROOT%{_bindir}/%{name}
+  mv bin/initscripts/jboss-as.conf $RPM_BUILD_ROOT%{_sysconfdir}/sysconfig/%{name}
+  mv bin/initscripts/systemd/jboss-as.service $RPM_BUILD_ROOT%{_unitdir}/%{name}.service
+  mv bin/initscripts/systemd/jboss-as.sh $RPM_BUILD_ROOT%{_bindir}/%{name}
 
-  rm -rf bin/init.d
+  # We don't need legacy init scripts
+  rm -rf bin/initscripts
 
   # standalone
   mv standalone/configuration $RPM_BUILD_ROOT%{confdir}/standalone
   mv standalone/deployments $RPM_BUILD_ROOT%{cachedir}/standalone
-  # enable standalone-minimalistic.xml
-  mv docs/examples/configs/standalone-minimalistic.xml $RPM_BUILD_ROOT%{confdir}/standalone/
+
+  # Install standalone-web.xml
+  cp docs/examples/configs/standalone-web.xml $RPM_BUILD_ROOT%{confdir}/standalone/standalone-web.xml
 
   # domain
   mv domain/configuration $RPM_BUILD_ROOT%{confdir}/domain
@@ -594,12 +598,11 @@ getent passwd %{name} >/dev/null || \
     useradd -c "JBoss AS" -u %{jbuid} -g %{name} -s /bin/nologin -r -d %{homedir} %{name}
 
 %files
-%defattr(0664,root,jboss-as,0755)
 %{homedir}/appclient
+%dir %{bindir}
 %{bindir}/*.conf
-%attr(0755,root,root) %{bindir}/*.sh
-%attr(0755,root,root) %{_bindir}/%{name}
-%dir %{homedir}/bin
+%{bindir}/*.sh
+%{_bindir}/%{name}
 %{homedir}/auth
 %{homedir}/domain
 %{homedir}/standalone
@@ -633,8 +636,15 @@ getent passwd %{name} >/dev/null || \
 
 %files javadoc
 %{_javadocdir}/%{name}
+%doc %{homedir}/LICENSE.txt
 
 %changelog
+* Wed Apr 04 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.0-2
+- Fixed rpmlint issues
+- Fixed license
+- Added LICENSE.txt file to javadoc subpackage
+- Use standalone-web.xml config from docs as default
+
 * Mon Apr 02 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.0-1
 - Initial packaging
 

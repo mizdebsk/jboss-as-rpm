@@ -1,0 +1,67 @@
+From b17ecc9919cdc9547ab7c69a6b767d87e0e09961 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Wed, 22 Feb 2012 19:29:03 +0100
+Subject: [PATCH 25/25] Add jgroups module
+
+---
+ build/build.xml |    8 ++++----
+ build/pom.xml   |   10 +++++-----
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 412fe03..1bd86ac 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -360,6 +360,10 @@
+             <maven-resource group="org.jboss.xnio" artifact="xnio-nio"/>
+         </module-def>
+ 
++        <module-def name="org.jgroups">
++            <maven-resource group="org.jgroups" artifact="jgroups"/>
++        </module-def>
++
+         <module-def name="org.omg.api" />
+ 
+     </target>
+@@ -1124,10 +1128,6 @@
+             <maven-resource group="org.jboss.jbossts" artifact="jbosstxbridge"/>
+         </module-def>
+ 
+-        <module-def name="org.jgroups">
+-            <maven-resource group="org.jgroups" artifact="jgroups"/>
+-        </module-def>
+-
+         <module-def name="org.joda.time">
+             <maven-resource group="joda-time" artifact="joda-time"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index e4d9894..016f899 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -233,6 +233,11 @@
+             <groupId>org.jboss.msc</groupId>
+             <artifactId>jboss-msc</artifactId>
+         </dependency>
++
++        <dependency>
++            <groupId>org.jgroups</groupId>
++            <artifactId>jgroups</artifactId>
++        </dependency>
+     </dependencies>
+ 
+     <profiles>
+@@ -1574,11 +1579,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.jgroups</groupId>
+-                    <artifactId>jgroups</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.osgi</groupId>
+                     <artifactId>org.osgi.core</artifactId>
+                 </dependency>
+-- 
+1.7.9.1
+

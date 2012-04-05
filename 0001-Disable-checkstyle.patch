@@ -1,0 +1,63 @@
+From 153bc9a20315293f4d954a20e46ce14387f6ebe0 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <goldmann@fedoraproject.org>
+Date: Thu, 26 Jan 2012 08:58:21 -0500
+Subject: [PATCH 01/15] Disable checkstyle
+
+---
+ pom.xml |   33 ---------------------------------
+ 1 files changed, 0 insertions(+), 33 deletions(-)
+
+diff --git a/pom.xml b/pom.xml
+index f2358fa..5b7b314 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -286,10 +286,6 @@
+     <build>
+         <plugins>
+             <plugin>
+-                <groupId>org.apache.maven.plugins</groupId>
+-                <artifactId>maven-checkstyle-plugin</artifactId>
+-            </plugin>
+-            <plugin>
+                 <groupId>org.codehaus.mojo</groupId>
+                 <artifactId>buildnumber-maven-plugin</artifactId>
+                 <executions>
+@@ -345,35 +341,6 @@
+                     </configuration>
+                 </plugin>
+ 
+-                <!-- Checkstyle -->
+-                <plugin>
+-                    <groupId>org.apache.maven.plugins</groupId>
+-                    <artifactId>maven-checkstyle-plugin</artifactId>
+-                    <version>${version.checkstyle.plugin}</version>
+-                    <configuration>
+-                        <configLocation>jboss-as-checkstyle/checkstyle.xml</configLocation>
+-                        <consoleOutput>true</consoleOutput>
+-                        <failsOnError>true</failsOnError>
+-                        <useFile/>
+-                    </configuration>
+-                    <dependencies>
+-                        <dependency>
+-                            <groupId>org.jboss.as</groupId>
+-                            <artifactId>jboss-as-build-config</artifactId>
+-                            <version>${project.version}</version>
+-                        </dependency>
+-                    </dependencies>
+-                    <executions>
+-                        <execution>
+-                            <id>check-style</id>
+-                            <phase>compile</phase>
+-                            <goals>
+-                                <goal>checkstyle</goal>
+-                            </goals>
+-                        </execution>
+-                    </executions>
+-                </plugin>
+-
+                 <!-- Ban bad dependencies -->
+                 <plugin>
+                     <groupId>org.apache.maven.plugins</groupId>
+-- 
+1.7.9
+

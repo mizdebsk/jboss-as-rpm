@@ -1,0 +1,31 @@
+From 65d80242031d8541935b9c924cc024357b5348fc Mon Sep 17 00:00:00 2001
+From: Patryk Obara <dreamer.tan@gmail.com>
+Date: Thu, 5 Apr 2012 18:42:05 +0200
+Subject: [PATCH 46/46] Fix JBOSS_HOME when jboss-cli.sh is executed through
+ symbolic link
+
+---
+ build/src/main/resources/bin/jboss-cli.sh |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/build/src/main/resources/bin/jboss-cli.sh b/build/src/main/resources/bin/jboss-cli.sh
+index a9d1c5d..a1108f5 100755
+--- a/build/src/main/resources/bin/jboss-cli.sh
++++ b/build/src/main/resources/bin/jboss-cli.sh
+@@ -1,6 +1,12 @@
+ #!/bin/sh
+ 
+-DIRNAME=`dirname "$0"`
++# Set proper dirname if script is executed through symlink
++LINK=`readlink "$0"`
++if [ "x$LINK" = "x" ]; then
++    DIRNAME=`dirname "$0"`
++else
++    DIRNAME=`dirname "$LINK"`
++fi
+ 
+ # OS specific support (must be 'true' or 'false').
+ cygwin=false;
+-- 
+1.7.9.3
+

@@ -71,6 +71,7 @@ Patch41:          0042-Added-standalone-web.xml-example-configuration.-Use-.patc
 Patch42:          0043-Add-systemd-files-re-arrange-directory-with-init-scr.patch
 Patch43:          0044-Fixed-systemd-service-file.patch
 Patch44:          0045-Added-jboss-as-cli-module.patch
+Patch45:          0046-Fix-JBOSS_HOME-when-jboss-cli.sh-is-executed-through.patch
 
 BuildArch:        noarch
 
@@ -320,6 +321,7 @@ This package contains the API documentation for %{name}.
 %patch42 -p1
 %patch43 -p1
 %patch44 -p1
+%patch45 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -439,7 +441,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
   # Symlink jboss-modules
   ln -s $(build-classpath jboss-modules) jboss-modules.jar
-  
+
   # Symlinks to log dirs
   ln -s %{logdir}/standalone standalone/log
   ln -s %{logdir}/domain domain/log
@@ -454,7 +456,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
   # auth dir
   ln -s %{cachedir}/auth auth
-  
+
   # Create symlinks to jars
   pushd modules
     # JBoss AS modules
@@ -594,6 +596,13 @@ pushd $RPM_BUILD_ROOT%{homedir}
   popd
 popd
 
+pushd $RPM_BUILD_ROOT%{_bindir}
+
+  # jboss-cli
+  ln -s %{bindir}/jboss-cli.sh jboss-cli
+
+popd
+
 %pre
 # Add jboss-as user and group
 getent group %{name} >/dev/null || groupadd -r %{name}
@@ -605,7 +614,7 @@ getent passwd %{name} >/dev/null || \
 %dir %{bindir}
 %{bindir}/*.conf
 %{bindir}/*.sh
-%{_bindir}/%{name}
+%{_bindir}/*
 %{homedir}/auth
 %{homedir}/domain
 %{homedir}/standalone

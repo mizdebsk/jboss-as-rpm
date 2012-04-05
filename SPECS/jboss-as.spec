@@ -9,7 +9,7 @@
 
 %global jbuid 185
 
-%global modules connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded jmx logging naming network platform-mbean process-controller protocol remoting security server threads transactions web weld
+%global modules cli connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded jmx logging naming network platform-mbean process-controller protocol remoting security server threads transactions web weld
 
 Name:             jboss-as
 Version:          7.1.0
@@ -70,6 +70,7 @@ Patch40:          0041-AS7-3921-Upgrade-to-Remoting-JMX-1.0.2-including-swi.patc
 Patch41:          0042-Added-standalone-web.xml-example-configuration.-Use-.patch
 Patch42:          0043-Add-systemd-files-re-arrange-directory-with-init-scr.patch
 Patch43:          0044-Fixed-systemd-service-file.patch
+Patch44:          0045-Added-jboss-as-cli-module.patch
 
 BuildArch:        noarch
 
@@ -318,6 +319,7 @@ This package contains the API documentation for %{name}.
 %patch41 -p1
 %patch42 -p1
 %patch43 -p1
+%patch44 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -511,6 +513,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath javassist) org/javassist/main/javassist.jar
     ln -s $(build-classpath jcip-annotations) net/jcip/main/jcip-annotations.jar
     ln -s $(build-classpath jandex) org/jboss/jandex/main/jandex.jar
+    ln -s $(build-classpath jline) jline/main/jline.jar
     ln -s $(build-classpath jboss-annotations-1.1-api) javax/annotation/api/main/jboss-annotations-1.1-api.jar
     ln -s $(build-classpath jboss-classfilewriter) org/jboss/classfilewriter/main/jboss-classfilewriter.jar
     ln -s $(build-classpath jboss-common-core) org/jboss/common-core/main/jboss-common-core.jar

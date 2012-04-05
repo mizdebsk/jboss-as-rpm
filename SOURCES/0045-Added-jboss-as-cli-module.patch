@@ -1,0 +1,135 @@
+From 43fbef5e2027b413c956326582a297da57a8bed1 Mon Sep 17 00:00:00 2001
+From: Patryk Obara <dreamer.tan@gmail.com>
+Date: Thu, 5 Apr 2012 12:54:16 +0200
+Subject: [PATCH 45/45] Added-jboss-as-cli-module
+
+With jline as dependency.
+---
+ build/build.xml |   16 ++++++++--------
+ build/pom.xml   |   20 ++++++++++----------
+ pom.xml         |    2 +-
+ 3 files changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 529af0e..04c2e76 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -145,6 +145,10 @@
+             <maven-resource group="org.hibernate.javax.persistence" artifact="hibernate-jpa-2.0-api"/>
+         </module-def>
+ 
++        <module-def name="jline">
++            <maven-resource group="jline" artifact="jline"/>
++        </module-def>
++
+         <module-def name="org.infinispan">
+             <maven-resource group="org.infinispan" artifact="infinispan-core"/>
+         </module-def>
+@@ -299,6 +303,10 @@
+             <maven-resource group="org.jboss.ironjacamar" artifact="ironjacamar-jdbc"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.cli">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-cli"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.clustering.api">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-api"/>
+         </module-def>
+@@ -719,10 +727,6 @@
+             <maven-resource group="org.jboss.spec.javax.xml.ws" artifact="jboss-jaxws-api_2.2_spec"/>
+         </module-def>
+ 
+-        <module-def name="jline">
+-            <maven-resource group="jline" artifact="jline"/>
+-        </module-def>
+-
+         <module-def name="net.sourceforge.cssparser">
+             <maven-resource group="net.sourceforge.cssparser" artifact="cssparser"/>
+         </module-def>
+@@ -898,10 +902,6 @@
+             <maven-resource-with-classifier group="org.jboss.as" artifact="jboss-as-console" classifier="resources"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.cli">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-cli"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.configadmin">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-configadmin"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index 499f542..bd882b7 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -180,6 +180,11 @@
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-cli</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-clustering-common</artifactId>
+         </dependency>
+ 
+@@ -589,6 +594,11 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>jline</groupId>
++            <artifactId>jline</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>joda-time</groupId>
+             <artifactId>joda-time</artifactId>
+         </dependency>
+@@ -745,11 +755,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>jline</groupId>
+-                    <artifactId>jline</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>junit</groupId>
+                     <artifactId>junit</artifactId>
+                 </dependency>
+@@ -1066,11 +1071,6 @@
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-cli</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-client-all</artifactId>
+                     <scope>provided</scope>
+                 </dependency>
+diff --git a/pom.xml b/pom.xml
+index b9e503d..13ba795 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -265,6 +265,7 @@
+     <modules>
+         <module>build</module>
+         <module>build-config</module>
++        <module>cli</module>
+         <module>clustering</module>
+         <module>connector</module>
+         <module>controller</module>
+@@ -5921,7 +5922,6 @@
+                 <module>build</module>
+                 <module>build-config</module>
+                 <module>arquillian</module>
+-                <module>cli</module>
+                 <module>client/ejb</module>
+                 <module>client/jms</module>
+                 <module>client/shade</module>
+-- 
+1.7.9.3
+

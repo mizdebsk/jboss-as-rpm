@@ -1,0 +1,30 @@
+From e098d57c28c63922e1f6a78c741f2a8cea5cd86a Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Mon, 16 Apr 2012 15:39:32 +0200
+Subject: [PATCH 51/51] Changed the systemd config file location + we want to
+ start JBoss AS before httpd
+
+---
+ build/src/main/resources/bin/initscripts/systemd/jboss-as.service |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/build/src/main/resources/bin/initscripts/systemd/jboss-as.service b/build/src/main/resources/bin/initscripts/systemd/jboss-as.service
+index 41e54e6..32c1c10 100644
+--- a/build/src/main/resources/bin/initscripts/systemd/jboss-as.service
++++ b/build/src/main/resources/bin/initscripts/systemd/jboss-as.service
+@@ -1,10 +1,11 @@
+ [Unit]
+ Description=The JBoss Application Server
+ After=syslog.target network.target
++Before=httpd.service
+ 
+ [Service]
+ Environment=LAUNCH_JBOSS_IN_BACKGROUND=1
+-EnvironmentFile=-/etc/jboss-as.conf
++EnvironmentFile=-/etc/jboss-as/jboss-as.conf
+ User=jboss-as
+ LimitNOFILE=102642
+ PIDFile=/var/run/jboss-as/jboss-as.pid
+-- 
+1.7.10
+

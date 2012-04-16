@@ -1,0 +1,121 @@
+From 54fd06a9919fd5bd40a6a5ebc7cf212edffc90d2 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Fri, 13 Apr 2012 16:37:06 +0200
+Subject: [PATCH 50/50] Discard logs from systemd service, we don't need
+ duplication
+
+---
+ .../bin/initscripts/systemd/jboss-as.service       |    1 +
+ .../resources/bin/initscripts/systemd/jboss-as.sh  |   88 --------------------
+ 2 files changed, 1 insertion(+), 88 deletions(-)
+ delete mode 100755 build/src/main/resources/bin/initscripts/systemd/jboss-as.sh
+
+diff --git a/build/src/main/resources/bin/initscripts/systemd/jboss-as.service b/build/src/main/resources/bin/initscripts/systemd/jboss-as.service
+index 1542968..41e54e6 100644
+--- a/build/src/main/resources/bin/initscripts/systemd/jboss-as.service
++++ b/build/src/main/resources/bin/initscripts/systemd/jboss-as.service
+@@ -9,6 +9,7 @@ User=jboss-as
+ LimitNOFILE=102642
+ PIDFile=/var/run/jboss-as/jboss-as.pid
+ ExecStart=/usr/share/jboss-as/bin/standalone.sh -c $JBOSS_CONFIG
++StandardOutput=null
+ 
+ [Install]
+ WantedBy=multi-user.target
+diff --git a/build/src/main/resources/bin/initscripts/systemd/jboss-as.sh b/build/src/main/resources/bin/initscripts/systemd/jboss-as.sh
+deleted file mode 100755
+index da57af6..0000000
+--- a/build/src/main/resources/bin/initscripts/systemd/jboss-as.sh
++++ /dev/null
+@@ -1,88 +0,0 @@
+-#!/bin/sh
+-
+-# Load Java configuration.
+-[ -r /etc/java/java.conf ] && . /etc/java/java.conf
+-
+-export JAVA_HOME
+-
+-# Load JBoss AS configuration.
+-if [ -z "$JBOSS_CONF" ]; then
+-  JBOSS_CONF="/etc/sysconfig/jboss-as"
+-fi
+-
+-[ -r "$JBOSS_CONF" ] && . "${JBOSS_CONF}"
+-
+-if [ -z "$JBOSS_HOME" ]; then
+-  JBOSS_HOME=/usr/share/jboss-as
+-fi
+-
+-export JBOSS_HOME
+-
+-if [ -z "$JBOSS_PIDFILE" ]; then
+-  JBOSS_PIDFILE=/var/run/jboss-as/jboss-as.pid
+-fi
+-
+-if [ -z "$JBOSS_CONSOLE_LOG" ]; then
+-  JBOSS_CONSOLE_LOG=/var/log/jboss-as/console.log
+-fi
+-
+-if [ -z "$JBOSS_CONFIG" ]; then
+-  JBOSS_CONFIG=standalone.xml
+-fi
+-
+-if [ -z "$JBOSS_SCRIPT" ]; then
+-  JBOSS_SCRIPT=$JBOSS_HOME/bin/standalone.sh
+-fi
+-
+-# For SELinux we need to use 'runuser' not 'su'
+-if [ -x "/sbin/runuser" ]; then
+-  SU="/sbin/runuser -s /bin/sh"
+-else
+-  SU="/bin/su -s /bin/sh"
+-fi
+-
+-start() {
+-  if [ -f $JBOSS_PIDFILE ]; then
+-    read ppid < $JBOSS_PIDFILE
+-    if [ `ps --pid $ppid 2> /dev/null | grep -c $ppid 2> /dev/null` -eq '1' ]; then
+-      failure
+-      echo
+-      return 1 
+-    else
+-      rm -f $JBOSS_PIDFILE
+-    fi
+-  fi
+-  mkdir -p $(dirname $JBOSS_CONSOLE_LOG)
+-  cat /dev/null > $JBOSS_CONSOLE_LOG
+-
+-  mkdir -p $(dirname $JBOSS_PIDFILE)
+-  chown $JBOSS_USER $(dirname $JBOSS_PIDFILE) || true
+-
+-  $SU - $JBOSS_USER -c "LAUNCH_JBOSS_IN_BACKGROUND=1 JBOSS_PIDFILE=$JBOSS_PIDFILE $JBOSS_SCRIPT -c $JBOSS_CONFIG" 2>&1 > $JBOSS_CONSOLE_LOG &
+-}
+-
+-stop() {
+-  if [ -f $JBOSS_PIDFILE ]; then
+-    read kpid < $JBOSS_PIDFILE
+-    kill -15 $kpid
+-    rm -f $JBOSS_PIDFILE
+-  fi
+-}
+-
+-case "$1" in
+-  start)
+-      start
+-      ;;
+-  stop)
+-      stop
+-      ;;
+-  restart)
+-      $0 stop
+-      $0 start
+-      ;;
+-  *)
+-      echo "Usage: $0 {start|stop|restart}"
+-      exit 1
+-      ;;
+-esac
+-
+-- 
+1.7.10
+

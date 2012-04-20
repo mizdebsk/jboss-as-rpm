@@ -34,7 +34,7 @@ Patch0:           0001-Disable-checkstyle.patch
 Patch1:           0002-Fix-initd-script.patch
 Patch2:           0003-Build-additional-modules.patch
 # Modifications here are purely temporary until we solve issues in the Right Way (tm)
-Patch3:           0004-Ugly-patch-nuff-said.patch
+#Patch3:           0004-Ugly-patch-nuff-said.patch
 Patch4:           0005-Adding-javax.transaction-to-the-minimal-build.patch
 Patch5:           0006-adding-javax.validation-to-build.xml.patch
 Patch6:           0007-Only-copy-schemas-and-create-client-all-jar-on-norma.patch
@@ -159,6 +159,7 @@ BuildRequires:    jboss-threads >= 2.0.0-4
 BuildRequires:    jboss-transaction-1.1-api >= 1.0.1
 BuildRequires:    jboss-transaction-spi
 BuildRequires:    jboss-web >= 7.0.10-1
+BuildRequires:    jboss-web-native
 BuildRequires:    jboss-vfs >= 3.1.0-1
 BuildRequires:    jbossws-api
 BuildRequires:    jcip-annotations
@@ -250,6 +251,7 @@ Requires:         jboss-threads >= 2.0.0-4
 Requires:         jboss-transaction-1.1-api >= 1.0.1
 Requires:         jboss-transaction-spi
 Requires:         jboss-web >= 7.0.10-1
+Requires:         jboss-web-native
 Requires:         jboss-vfs >= 3.1.0-1
 Requires:         jbossws-api
 Requires:         jcip-annotations
@@ -291,7 +293,7 @@ This package contains the API documentation for %{name}.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
+#%patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1

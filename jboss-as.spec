@@ -15,7 +15,7 @@
 
 Name:             jboss-as
 Version:          7.1.0
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -84,6 +84,7 @@ Patch49:          0050-Discard-logs-from-systemd-service-we-don-t-need-dupl.patc
 Patch50:          0051-Changed-the-systemd-config-file-location-we-want-to-.patch
 Patch51:          0052-Remove-activation-module.patch
 Patch52:          0053-Use-properties-in-add-user-AS7-module.patch
+Patch53:          0054-AS7-4536-add-user.sh-mangles-permissions-of-mgmt-use.patch
 
 BuildArch:        noarch
 
@@ -169,6 +170,7 @@ BuildRequires:    maven-jar-plugin
 BuildRequires:    maven-checkstyle-plugin
 BuildRequires:    maven-resources-plugin
 BuildRequires:    maven-surefire-plugin
+BuildRequires:    maven-dependency-plugin
 BuildRequires:    mojarra
 BuildRequires:    picketbox
 BuildRequires:    picketbox-commons
@@ -339,6 +341,7 @@ This package contains the API documentation for %{name}.
 %patch50 -p1
 %patch51 -p1
 %patch52 -p1
+%patch53 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -658,9 +661,9 @@ exit 0
 %attr(0775,root,jboss-as) %dir %{confdir}/standalone
 %attr(0775,root,jboss-as) %dir %{confdir}/domain
 %attr(0700,jboss-as,jboss-as) %dir %{cachedir}/auth
-%attr(0664,jboss-as,jboss-as) %config(noreplace) %{confdir}/standalone/*.properties
+%attr(0600,jboss-as,jboss-as) %config(noreplace) %{confdir}/standalone/*.properties
 %attr(0664,jboss-as,jboss-as) %config(noreplace) %{confdir}/standalone/*.xml
-%attr(0664,jboss-as,jboss-as) %config(noreplace) %{confdir}/domain/*.properties
+%attr(0600,jboss-as,jboss-as) %config(noreplace) %{confdir}/domain/*.properties
 %attr(0664,jboss-as,jboss-as) %config(noreplace) %{confdir}/domain/*.xml
 %config(noreplace) %{confdir}/%{name}.conf
 %{_unitdir}/%{name}.service
@@ -678,6 +681,9 @@ exit 0
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Tue Apr 17 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.0-4
+- [AS7-4536] add-user.sh mangles permissions of mgmt-users.properties
+
 * Mon Apr 16 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.0-3
 - Simplified systemd files
 - Added jboss-as-cli module

@@ -1,0 +1,91 @@
+From b14f5e1ef0a720dc6ec11a39b6149e22b60560fa Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Thu, 23 Feb 2012 15:33:39 +0100
+Subject: [PATCH 24/43] Added org.picketbox module
+
+---
+ build/build.xml |   12 ++++++------
+ build/pom.xml   |   30 +++++++++++++++---------------
+ 2 files changed, 21 insertions(+), 21 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index d8427fc..daa0c46 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -406,6 +406,12 @@
+ 
+         <module-def name="org.omg.api" />
+ 
++        <module-def name="org.picketbox">
++            <maven-resource group="org.picketbox" artifact="picketbox"/>
++            <maven-resource group="org.picketbox" artifact="picketbox-infinispan"/>
++            <maven-resource group="org.picketbox" artifact="picketbox-commons"/>
++        </module-def>
++
+     </target>
+ 
+     <target name="modules" depends="modules-minimalistic">
+@@ -1163,12 +1169,6 @@
+             <maven-resource group="org.picketlink" artifact="picketlink-bindings-jboss"/>
+         </module-def>
+ 
+-        <module-def name="org.picketbox">
+-            <maven-resource group="org.picketbox" artifact="picketbox"/>
+-            <maven-resource group="org.picketbox" artifact="picketbox-infinispan"/>
+-            <maven-resource group="org.picketbox" artifact="picketbox-commons"/>
+-        </module-def>
+-
+         <module-def name="org.python.jython.standalone">
+             <maven-resource group="org.python" artifact="jython-standalone"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index 934782f..2addb10 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -352,6 +352,21 @@
+             <groupId>org.jgroups</groupId>
+             <artifactId>jgroups</artifactId>
+         </dependency>
++
++        <dependency>
++            <groupId>org.picketbox</groupId>
++            <artifactId>picketbox</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.picketbox</groupId>
++            <artifactId>picketbox-commons</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.picketbox</groupId>
++            <artifactId>picketbox-infinispan</artifactId>
++        </dependency>
+     </dependencies>
+ 
+     <profiles>
+@@ -1619,21 +1634,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.picketbox</groupId>
+-                    <artifactId>picketbox</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.picketbox</groupId>
+-                    <artifactId>picketbox-commons</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.picketbox</groupId>
+-                    <artifactId>picketbox-infinispan</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.python</groupId>
+                     <artifactId>jython-standalone</artifactId>
+                 </dependency>
+-- 
+1.7.10
+

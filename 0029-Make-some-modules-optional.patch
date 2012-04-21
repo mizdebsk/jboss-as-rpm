@@ -1,0 +1,133 @@
+From 71c3ac3378087f9513159ac18221b3c19bf7e96c Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 6 Mar 2012 14:03:25 +0100
+Subject: [PATCH 29/43] Make some modules optional
+
+---
+ .../main/resources/modules/javaee/api/main/module.xml  |   16 ++++++++--------
+ .../resources/modules/javax/ejb/api/main/module.xml    |    2 +-
+ .../resources/modules/javax/mail/api/main/module.xml   |    2 +-
+ .../modules/javax/xml/bind/api/main/module.xml         |    2 +-
+ .../resources/modules/org/jboss/jts/main/module.xml    |    2 +-
+ .../modules/org/jboss/metadata/main/module.xml         |    4 ++--
+ 6 files changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/build/src/main/resources/modules/javaee/api/main/module.xml b/build/src/main/resources/modules/javaee/api/main/module.xml
+index 5f599df..657eb47 100644
+--- a/build/src/main/resources/modules/javaee/api/main/module.xml
++++ b/build/src/main/resources/modules/javaee/api/main/module.xml
+@@ -28,7 +28,7 @@
+     </resources>
+ 
+     <dependencies>
+-        <module name="javax.activation.api" export="true"/>
++       <!--  <module name="javax.activation.api" export="true"/> is in JDK -->
+         <module name="javax.annotation.api" export="true"/>
+         <module name="javax.ejb.api" export="true"/>
+         <module name="javax.el.api" export="true"/>
+@@ -37,24 +37,24 @@
+         <module name="javax.inject.api" export="true"/>
+         <module name="javax.interceptor.api" export="true"/>
+         <module name="javax.jms.api" export="true"/>
+-        <module name="javax.jws.api" export="true"/>
++        <module name="javax.jws.api" export="true" optional="true"/>
+         <module name="javax.mail.api" export="true"/>
+-        <module name="javax.management.j2ee.api" export="true"/>
++        <module name="javax.management.j2ee.api" export="true" optional="true"/>
+         <module name="javax.persistence.api" export="true"/>
+         <module name="javax.resource.api" export="true"/>
+-        <module name="javax.rmi.api" export="true"/>
++        <module name="javax.rmi.api" export="true" optional="true"/>
+         <module name="javax.security.auth.message.api" export="true"/>
+         <module name="javax.security.jacc.api" export="true"/>
+         <module name="javax.servlet.api" export="true"/>
+         <module name="javax.servlet.jsp.api" export="true"/>
+         <module name="javax.transaction.api" export="true"/>
+         <module name="javax.validation.api" export="true"/>
+-        <module name="javax.ws.rs.api" export="true"  services="export"/>
++        <module name="javax.ws.rs.api" export="true"  services="export" optional="true"/>
+         <module name="javax.xml.bind.api" export="true"/>
+-        <module name="javax.xml.registry.api" export="true"/>
++        <module name="javax.xml.registry.api" export="true" optional="true"/>
+         <module name="javax.xml.soap.api" export="true"/>
+-        <module name="javax.xml.ws.api" export="true"/>
+-        <module name="org.apache.santuario.xmlsec" export="true">
++        <module name="javax.xml.ws.api" export="true" optional="true"/>
++        <module name="org.apache.santuario.xmlsec" export="true" optional="true">
+             <exports>
+                 <include-set>
+                     <path name="javax/xml/crypto"/>
+diff --git a/build/src/main/resources/modules/javax/ejb/api/main/module.xml b/build/src/main/resources/modules/javax/ejb/api/main/module.xml
+index 57a2fd1..fe5f6e9 100644
+--- a/build/src/main/resources/modules/javax/ejb/api/main/module.xml
++++ b/build/src/main/resources/modules/javax/ejb/api/main/module.xml
+@@ -28,7 +28,7 @@
+         <module name="javax.api" export="true"/>
+         <module name="javax.transaction.api" export="true"/>
+         <module name="javax.xml.rpc.api" export="true"/>
+-        <module name="javax.rmi.api" export="true"/>
++        <module name="javax.rmi.api" export="true" optional="true"/>
+         <module name="org.omg.api" export="true"/>
+     </dependencies>
+ 
+diff --git a/build/src/main/resources/modules/javax/mail/api/main/module.xml b/build/src/main/resources/modules/javax/mail/api/main/module.xml
+index 12a0c85..1b60ac1 100644
+--- a/build/src/main/resources/modules/javax/mail/api/main/module.xml
++++ b/build/src/main/resources/modules/javax/mail/api/main/module.xml
+@@ -24,7 +24,7 @@
+ 
+ <module xmlns="urn:jboss:module:1.1" name="javax.mail.api">
+     <dependencies>
+-        <module name="javax.activation.api" />
++        <module name="javax.activation.api" optional="true"/>
+         <module name="javax.api"/>
+     </dependencies>
+ 
+diff --git a/build/src/main/resources/modules/javax/xml/bind/api/main/module.xml b/build/src/main/resources/modules/javax/xml/bind/api/main/module.xml
+index ccb597c..6376d6f 100644
+--- a/build/src/main/resources/modules/javax/xml/bind/api/main/module.xml
++++ b/build/src/main/resources/modules/javax/xml/bind/api/main/module.xml
+@@ -26,7 +26,7 @@
+ 
+ 
+     <dependencies>
+-        <module name="javax.activation.api" export="true"/>
++        <!-- <module name="javax.activation.api" export="true"/> is in JDK -->
+         <module name="javax.xml.stream.api"/>
+         <module name="com.sun.xml.bind" services="import"/>
+         <module name="javax.api"/>
+diff --git a/build/src/main/resources/modules/org/jboss/jts/main/module.xml b/build/src/main/resources/modules/org/jboss/jts/main/module.xml
+index eaee13e..943f621 100644
+--- a/build/src/main/resources/modules/org/jboss/jts/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/jts/main/module.xml
+@@ -40,7 +40,7 @@
+         <module name="javax.api"/>
+         <module name="javax.transaction.api"/>
+         <module name="javax.resource.api"/>
+-        <module name="org.hornetq"/>
++        <module name="org.hornetq" optional="true"/>
+         <module name="org.jacorb" optional="true"/>
+     </dependencies>
+ </module>
+diff --git a/build/src/main/resources/modules/org/jboss/metadata/main/module.xml b/build/src/main/resources/modules/org/jboss/metadata/main/module.xml
+index 4d41ac8..871d6ff 100644
+--- a/build/src/main/resources/modules/org/jboss/metadata/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/metadata/main/module.xml
+@@ -36,12 +36,12 @@
+         <module name="javax.api"/>
+         <module name="javax.ejb.api"/>
+         <module name="javax.interceptor.api"/>
+-        <module name="javax.jws.api"/>
++        <module name="javax.jws.api" optional="true"/>
+         <module name="javax.persistence.api"/>
+         <module name="javax.servlet.api"/>
+         <module name="javax.servlet.jsp.api"/>
+         <module name="javax.xml.bind.api"/>
+-        <module name="javax.xml.ws.api"/>
++        <module name="javax.xml.ws.api" optional="true"/>
+         <module name="org.jboss.ejb3"/>
+         <module name="org.jboss.staxmapper"/>
+         <module name="org.jboss.logging"/>
+-- 
+1.7.10
+

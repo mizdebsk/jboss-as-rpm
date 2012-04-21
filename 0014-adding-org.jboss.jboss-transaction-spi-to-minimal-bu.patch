@@ -1,0 +1,68 @@
+From 213b67701a47ce466f9acb878f434b1e0156fa2a Mon Sep 17 00:00:00 2001
+From: Oved Ourfali <ovedo@redhat.com>
+Date: Tue, 21 Feb 2012 09:44:57 +0200
+Subject: [PATCH 14/43] adding org.jboss.jboss-transaction-spi to minimal
+ build
+
+---
+ build/build.xml |    8 ++++----
+ build/pom.xml   |   10 +++++-----
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 2abd87f..095070e 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -300,6 +300,10 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-naming"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.jboss-transaction-spi">
++            <maven-resource group="org.jboss" artifact="jboss-transaction-spi"/>
++        </module-def>
++
+         <module-def name="org.jboss.remoting3">
+             <maven-resource group="org.jboss.remoting3" artifact="jboss-remoting"/>
+         </module-def>
+@@ -928,10 +932,6 @@
+             <!-- Bundling external content into deployments -->
+         </module-def>
+ 
+-        <module-def name="org.jboss.jboss-transaction-spi">
+-            <maven-resource group="org.jboss" artifact="jboss-transaction-spi"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.iiop-client">
+             <maven-resource group="org.jboss" artifact="jboss-iiop-client"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index 65626c0..9d6e680 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -257,6 +257,11 @@
+             <groupId>org.jboss</groupId>
+             <artifactId>jboss-remote-naming</artifactId>
+         </dependency>
++
++        <dependency>
++            <groupId>org.jboss</groupId>
++            <artifactId>jboss-transaction-spi</artifactId>
++        </dependency>
+     </dependencies>
+ 
+     <profiles>
+@@ -1081,11 +1086,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.jboss</groupId>
+-                    <artifactId>jboss-transaction-spi</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.jboss.interceptor</groupId>
+                     <artifactId>jboss-interceptor-core</artifactId>
+                 </dependency>
+-- 
+1.7.10
+

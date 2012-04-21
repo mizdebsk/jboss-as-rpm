@@ -11,80 +11,72 @@
 
 %global jbuid 185
 
-%global modules cli connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded jmx logging naming network platform-mbean process-controller protocol remoting security server threads transactions web weld
+%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded jmx logging naming network platform-mbean process-controller protocol remoting security server threads transactions web weld
 
 Name:             jboss-as
-Version:          7.1.0
-Release:          4%{?dist}
+Version:          7.1.1
+Release:          1%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
 URL:              http://www.jboss.org/jbossas
 
 # git clone git://github.com/jbossas/jboss-as.git
-# cd jboss-as && git checkout 7.1.0.Final && git checkout-index -f -a --prefix=jboss-as-7.1.0.Final/
-# find jboss-as-7.1.0.Final/ -name '*.jar' -type f -delete
-# tar -cJf jboss-as-7.1.0.Final-CLEAN.tar.xz jboss-as-7.1.0.Final
+# cd jboss-as && git checkout 7.1.1.Final && git checkout-index -f -a --prefix=jboss-as-7.1.1.Final/
+# find jboss-as-7.1.1.Final/ -name '*.jar' -type f -delete
+# tar -cJf jboss-as-7.1.1.Final-CLEAN.tar.xz jboss-as-7.1.1.Final
 Source0:          jboss-as-%{namedversion}-CLEAN.tar.xz
 
 # Makes possible to run JBoss AS in different directory by creating the structure and copying required configuration files
 Source1:          jboss-as-cp.sh
 
-Patch0:           0001-Disable-checkstyle.patch
-Patch1:           0002-Fix-initd-script.patch
-Patch2:           0003-Build-additional-modules.patch
-# Modifications here are purely temporary until we solve issues in the Right Way (tm)
-#Patch3:           0004-Ugly-patch-nuff-said.patch
+Patch0:           0001-AS7-3724-DO-NOT-UPSTREAM-an-ugly-patch-to-remove-IIO.patch
+Patch1:           0002-Disable-checkstyle.patch
+Patch2:           0003-Fix-initd-script.patch
+Patch3:           0004-Build-additional-modules.patch
 Patch4:           0005-Adding-javax.transaction-to-the-minimal-build.patch
 Patch5:           0006-adding-javax.validation-to-build.xml.patch
-Patch6:           0007-Only-copy-schemas-and-create-client-all-jar-on-norma.patch
-Patch7:           0008-Make-the-dependency-on-dom4j-optional.patch
-Patch8:           0009-AS7-3724-DO-NOT-UPSTREAM-an-ugly-patch-to-remove-IIO.patch
-Patch9:           0010-adding-org.jboss.metadata-to-minimal-build.patch
-Patch10:          0011-adding-org.jboss.ejb3-module-to-minimal-build.patch
-Patch11:          0012-adding-org.jboss.as.logging.patch
-Patch12:          0013-Removing-logging-module-from-the-normal-profile-as-i.patch
-Patch13:          0014-making-the-dependency-in-javax.xml.ws.api-optional-i.patch
-Patch14:          0015-adding-org.hibernate.validator.patch
-Patch15:          0016-adding-org.jboss.remote-naming-to-minimal-build.patch
-Patch16:          0017-Enable-org.jboss.as.transactions-module.patch
-Patch17:          0018-Removing-use-of-HornetqJournalEnvironmentBean-in-Arj.patch
-Patch18:          0019-adding-org.jboss.jboss-transaction-spi-to-minimal-bu.patch
-Patch19:          0020-adding-jts-modules-to-minimal-build.patch
-Patch20:          0021-adding-org.omg.api-to-minimal-build.patch
-Patch21:          0022-Enable-org.jboss.as.security-module.patch
-Patch22:          0023-Enable-part-of-org.jboss.as.clustering-module-infini.patch
-Patch23:          0024-Removing-some-banned-deps-as-in-Fedora-those-are-jus.patch
-Patch24:          0025-Add-jgroups-module.patch
-Patch25:          0026-Add-infinispan-modules.patch
-Patch26:          0027-Added-jboss-jacc-api-module.patch
-Patch27:          0028-Added-javax.servlet.api-module.patch
-Patch28:          0029-Added-org.jboss.security.negotiation-module.patch
-Patch29:          0030-Added-org.picketbox-module.patch
-Patch30:          0031-Added-sun.jdk-module.patch
-Patch31:          0032-Added-jboss-as-connector-AS7-module.patch
-Patch32:          0033-Added-jboss-as-web-jboss-as-clustering-api-jboss-as-.patch
-Patch33:          0034-Added-net.jcip-org.jboss.ironjacamar-javax.resource..patch
-Patch34:          0035-Make-some-modules-optional.patch
-Patch35:          0036-Added-jboss-as-ejb3-jboss-as-weld-jboss-as-jpa-modul.patch
-Patch36:          0037-Exludes-cleanup.patch
-Patch37:          0038-Added-additional-modules-required-on-runtime.patch
-Patch38:          0039-Enabled-rest-of-clustering-submodules.patch
-Patch39:          0040-Fixed-remoting-jmx-gid-reverting-rmi-changes-adding-.patch
-Patch40:          0041-AS7-3921-Upgrade-to-Remoting-JMX-1.0.2-including-swi.patch
-Patch41:          0042-Added-standalone-web.xml-example-configuration.-Use-.patch
-Patch42:          0043-Add-systemd-files-re-arrange-directory-with-init-scr.patch
-Patch43:          0044-Fixed-systemd-service-file.patch
-Patch44:          0045-Added-jboss-as-cli-module.patch
-Patch45:          0046-Fix-JBOSS_HOME-when-jboss-cli.sh-is-executed-through.patch
-Patch46:          0047-Simplified-systemd-files.patch
-Patch47:          0048-AS7-3800-JBOSS_BASE_DIR-is-checked-in-standalone.sh-.patch
-Patch48:          0049-Added-domain-add-user-module.patch
-Patch49:          0050-Discard-logs-from-systemd-service-we-don-t-need-dupl.patch
-Patch50:          0051-Changed-the-systemd-config-file-location-we-want-to-.patch
-Patch51:          0052-Remove-activation-module.patch
-Patch52:          0053-Use-properties-in-add-user-AS7-module.patch
-Patch53:          0054-AS7-4536-add-user.sh-mangles-permissions-of-mgmt-use.patch
+Patch6:           0007-adding-org.jboss.metadata-to-minimal-build.patch
+Patch7:           0008-adding-org.jboss.ejb3-module-to-minimal-build.patch
+Patch8:           0009-adding-org.jboss.as.logging.patch
+Patch9:           0010-adding-org.hibernate.validator.patch
+Patch10:          0011-adding-org.jboss.remote-naming-to-minimal-build.patch
+Patch11:          0012-Enable-org.jboss.as.transactions-module.patch
+Patch12:          0013-Removing-use-of-HornetqJournalEnvironmentBean-in-Arj.patch
+Patch13:          0014-adding-org.jboss.jboss-transaction-spi-to-minimal-bu.patch
+Patch14:          0015-adding-jta-modules-to-minimal-build.patch
+Patch15:          0016-adding-org.omg.api-to-minimal-build.patch
+Patch16:          0017-Enable-org.jboss.as.security-module.patch
+Patch17:          0018-Enable-part-of-org.jboss.as.clustering-module-infini.patch
+Patch18:          0019-Add-jgroups-module.patch
+Patch19:          0020-Add-infinispan-modules.patch
+Patch20:          0021-Added-jboss-jacc-api-module.patch
+Patch21:          0022-Added-javax.servlet.api-module.patch
+Patch22:          0023-Added-org.jboss.security.negotiation-module.patch
+Patch23:          0024-Added-org.picketbox-module.patch
+Patch24:          0025-Added-sun.jdk-module.patch
+Patch25:          0026-Added-jboss-as-connector-AS7-module.patch
+Patch26:          0027-Added-jboss-as-web-jboss-as-clustering-api-jboss-as-.patch
+Patch27:          0028-Added-net.jcip-org.jboss.ironjacamar-javax.resource..patch
+Patch28:          0029-Make-some-modules-optional.patch
+Patch29:          0030-Added-jboss-as-ejb3-jboss-as-weld-jboss-as-jpa-modul.patch
+Patch30:          0031-Added-additional-modules-required-on-runtime.patch
+Patch31:          0032-Enabled-rest-of-clustering-submodules.patch
+Patch32:          0033-Fixed-remoting-jmx-gid-reverting-rmi-changes-adding-.patch
+Patch33:          0034-Added-standalone-web.xml-example-configuration.-Use-.patch
+Patch34:          0035-Add-systemd-files-re-arrange-directory-with-init-scr.patch
+Patch35:          0036-Added-jboss-as-cli-module.patch
+Patch36:          0037-Fix-JBOSS_HOME-when-jboss-cli.sh-is-executed-through.patch
+Patch37:          0038-AS7-3800-JBOSS_BASE_DIR-is-checked-in-standalone.sh-.patch
+Patch38:          0039-Added-domain-add-user-module.patch
+Patch39:          0040-Remove-activation-module.patch
+Patch40:          0041-Use-properties-in-add-user-AS7-module.patch
+Patch41:          0042-added-support-for-overriding-the-user-and-roles-prop.patch
+Patch42:          0043-AS7-4536-add-user.sh-mangles-permissions-of-mgmt-use.patch
+Patch43:          0044-Removing-some-banned-deps-as-in-Fedora-those-are-jus.patch
+Patch44:          0045-Add-org.jboss.as.config-assembly-module.patch
+Patch45:          0046-Added-org.jboss.as.cmp-module.patch
+Patch46:          0047-AS7-4286-Fix-JavaCC-grammars-for-version-5.patch
 
 BuildArch:        noarch
 
@@ -164,6 +156,7 @@ BuildRequires:    jboss-vfs >= 3.1.0-1
 BuildRequires:    jbossws-api
 BuildRequires:    jcip-annotations
 BuildRequires:    jline
+BuildRequires:    jul-to-slf4j-stub
 BuildRequires:    joda-time
 BuildRequires:    jpackage-utils
 BuildRequires:    maven
@@ -172,6 +165,7 @@ BuildRequires:    maven-checkstyle-plugin
 BuildRequires:    maven-resources-plugin
 BuildRequires:    maven-surefire-plugin
 BuildRequires:    maven-dependency-plugin
+BuildRequires:    javacc-maven-plugin
 BuildRequires:    mojarra
 BuildRequires:    picketbox
 BuildRequires:    picketbox-commons
@@ -257,6 +251,7 @@ Requires:         jbossws-api
 Requires:         jcip-annotations
 Requires:         jgroups
 Requires:         jline
+Requires:         jul-to-slf4j-stub
 Requires:         joda-time
 Requires:         jpackage-utils
 Requires:         mojarra
@@ -293,7 +288,7 @@ This package contains the API documentation for %{name}.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-#%patch3 -p1
+%patch3 -p1
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
@@ -337,13 +332,6 @@ This package contains the API documentation for %{name}.
 %patch44 -p1
 %patch45 -p1
 %patch46 -p1
-%patch47 -p1
-%patch48 -p1
-%patch49 -p1
-%patch50 -p1
-%patch51 -p1
-%patch52 -p1
-%patch53 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -605,6 +593,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-web) org/jboss/as/web/main/jboss-web.jar
     ln -s $(build-classpath jgroups) org/jgroups/main/jgroups.jar
     ln -s $(build-classpath jline) jline/main/jline.jar
+    ln -s $(build-classpath jul-to-slf4j-stub) org/jboss/logging/jul-to-slf4j-stub/main/jul-to-slf4j-stub.jar
     ln -s $(build-classpath joda-time) org/joda/time/main/joda-time.jar
     ln -s $(build-classpath log4j) org/apache/log4j/main/log4j.jar
     ln -s $(build-classpath mojarra/jsf-impl) com/sun/jsf-impl/main/jsf-impl.jar
@@ -646,6 +635,7 @@ exit 0
 %dir %{bindir}
 %{bindir}/*.conf
 %{bindir}/*.sh
+%{bindir}/*.xml
 %{_bindir}
 %{homedir}/auth
 %{homedir}/domain
@@ -683,8 +673,9 @@ exit 0
 %doc %{homedir}/LICENSE.txt
 
 %changelog
-* Tue Apr 17 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.0-4
-- [AS7-4536] add-user.sh mangles permissions of mgmt-users.properties
+* Fri Apr 20 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-1
+- Upstream release 7.1.1.Final
+- Added jboss-as-cmp module
 
 * Mon Apr 16 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.0-3
 - Simplified systemd files

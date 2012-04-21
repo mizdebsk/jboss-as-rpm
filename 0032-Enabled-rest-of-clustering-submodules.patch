@@ -1,0 +1,165 @@
+From 5d10f0549280ceba4d245a42cc6fe9cf9ef9eec4 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Wed, 21 Mar 2012 09:55:07 +0100
+Subject: [PATCH 32/43] Enabled rest of clustering submodules
+
+---
+ build/build.xml    |   40 ++++++++++++++++++++--------------------
+ build/pom.xml      |   50 +++++++++++++++++++++++++-------------------------
+ clustering/pom.xml |   10 +++++-----
+ 3 files changed, 50 insertions(+), 50 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index b3a2797..bebd962 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -323,6 +323,26 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-registry"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.clustering.ejb3.infinispan">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-ejb3-infinispan"/>
++        </module-def>
++
++        <module-def name="org.jboss.as.clustering.impl">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-impl"/>
++        </module-def>
++
++        <module-def name="org.jboss.as.clustering.service">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-service"/>
++        </module-def>
++
++        <module-def name="org.jboss.as.clustering.singleton">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-singleton"/>
++        </module-def>
++
++        <module-def name="org.jboss.as.clustering.web.infinispan">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-web-infinispan"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.connector">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-connector"/>
+         </module-def>
+@@ -904,26 +924,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-cli"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.clustering.ejb3.infinispan">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-ejb3-infinispan"/>
+-        </module-def>
+-
+-        <module-def name="org.jboss.as.clustering.impl">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-impl"/>
+-        </module-def>
+-
+-        <module-def name="org.jboss.as.clustering.service">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-service"/>
+-        </module-def>
+-
+-        <module-def name="org.jboss.as.clustering.singleton">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-singleton"/>
+-        </module-def>
+-
+-        <module-def name="org.jboss.as.clustering.web.infinispan">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-web-infinispan"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.configadmin">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-configadmin"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index 41c616d..ed9ff92 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -239,6 +239,31 @@
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-clustering-ejb3-infinispan</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-clustering-impl</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-clustering-service</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-clustering-singleton</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-clustering-web-infinispan</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-connector</artifactId>
+         </dependency>
+ 
+@@ -1105,31 +1130,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-clustering-ejb3-infinispan</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-clustering-impl</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-clustering-service</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-clustering-singleton</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-clustering-web-infinispan</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                    <groupId>org.jboss.as</groupId>
+                    <artifactId>jboss-as-cmp</artifactId>
+                 </dependency>
+diff --git a/clustering/pom.xml b/clustering/pom.xml
+index e533d7e..71efd3b 100644
+--- a/clustering/pom.xml
++++ b/clustering/pom.xml
+@@ -40,15 +40,15 @@
+     <modules>
+         <module>api</module>
+         <module>common</module>
+-        <!-- <module>impl</module> -->
++        <module>impl</module>
+         <module>jgroups</module>
+         <module>infinispan</module>
+         <module>registry</module>
+-        <!--<module>service</module>
+-        <module>singleton</module>-->
++        <module>service</module>
++        <module>singleton</module>
+         <module>web-spi</module>
+-        <!--<module>web-infinispan</module>
+-        <module>ejb3-infinispan</module>-->
++        <module>web-infinispan</module>
++        <module>ejb3-infinispan</module>
+     </modules>
+ 
+     <dependencies>
+-- 
+1.7.10
+

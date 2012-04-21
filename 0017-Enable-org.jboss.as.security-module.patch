@@ -1,0 +1,88 @@
+From 83d35d722226a0f696cbce17d169e6a2e85e08d0 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Mon, 20 Feb 2012 16:51:16 +0100
+Subject: [PATCH 17/43] Enable org.jboss.as.security module
+
+---
+ build/build.xml |    8 ++++----
+ build/pom.xml   |   10 +++++-----
+ pom.xml         |    2 +-
+ 3 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 7479348..9263fb2 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -217,6 +217,10 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-remoting"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.security">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-security"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.server">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-server"/>
+         </module-def>
+@@ -899,10 +903,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-sar"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.security">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-security"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.web">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-web"/>
+             <maven-resource group="org.jboss.web" artifact="jasper-jdt"/>
+diff --git a/build/pom.xml b/build/pom.xml
+index 095f273..02ac14c 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -170,6 +170,11 @@
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-security</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-transactions</artifactId>
+         </dependency>
+ 
+@@ -1010,11 +1015,6 @@
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-security</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-sos</artifactId>
+                 </dependency>
+ 
+diff --git a/pom.xml b/pom.xml
+index 5f816ce..bc3fe79 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -289,6 +289,7 @@
+         <module>process-controller</module>
+         <module>protocol</module>
+         <module>remoting</module>
++        <module>security</module>
+         <module>server</module>
+         <module>subsystem-test</module>
+         <module>threads</module>
+@@ -5989,7 +5990,6 @@
+                 <module>pojo</module>
+                 <module>remoting-test</module>
+                 <module>sar</module>
+-                <module>security</module>
+                 <module>spec-api</module>
+                 <module>web</module>
+                 <module>webservices</module>
+-- 
+1.7.10
+

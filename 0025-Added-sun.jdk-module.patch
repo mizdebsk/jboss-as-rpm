@@ -1,0 +1,33 @@
+From 031b70a4b2a8a23f377542faf0fc70b1cb327613 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Thu, 23 Feb 2012 16:26:14 +0100
+Subject: [PATCH 25/43] Added sun.jdk module
+
+---
+ build/build.xml |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index daa0c46..8043422 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -412,6 +412,7 @@
+             <maven-resource group="org.picketbox" artifact="picketbox-commons"/>
+         </module-def>
+ 
++        <module-def name="sun.jdk"/>
+     </target>
+ 
+     <target name="modules" depends="modules-minimalistic">
+@@ -1209,8 +1210,6 @@
+             <maven-resource group="xom" artifact="xom"/>
+         </module-def>
+ 
+-        <module-def name="sun.jdk"/>
+-
+     </target>
+ 
+     <target name="bundles">
+-- 
+1.7.10
+

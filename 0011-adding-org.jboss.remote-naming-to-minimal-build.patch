@@ -1,0 +1,67 @@
+From aad0b503d6a840fbc8ddfa9a054224959f5ef106 Mon Sep 17 00:00:00 2001
+From: Oved Ourfali <ovedo@redhat.com>
+Date: Sun, 19 Feb 2012 16:10:01 +0200
+Subject: [PATCH 11/43] adding org.jboss.remote-naming to minimal build
+
+---
+ build/build.xml |    8 ++++----
+ build/pom.xml   |   10 +++++-----
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 1de5496..6584ab8 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -300,6 +300,10 @@
+             <maven-resource group="org.jboss.remoting3" artifact="jboss-remoting"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.remote-naming">
++            <maven-resource group="org.jboss" artifact="jboss-remote-naming"/>
++        </module-def>
++
+         <module-def name="org.jboss.remoting3.remoting-jmx">
+             <maven-resource group="org.jboss.remotingjmx" artifact="remoting-jmx"/>
+         </module-def>
+@@ -999,10 +1003,6 @@
+             <maven-resource group="org.jboss.osgi.vfs" artifact="jbosgi-vfs30"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.remote-naming">
+-            <maven-resource group="org.jboss" artifact="jboss-remote-naming"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.resteasy.resteasy-atom-provider">
+             <maven-resource group="org.jboss.resteasy" artifact="resteasy-atom-provider"  jandex="true"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index cd0aa75..355703d 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -247,6 +247,11 @@
+             <groupId>org.jboss.msc</groupId>
+             <artifactId>jboss-msc</artifactId>
+         </dependency>
++
++        <dependency>
++            <groupId>org.jboss</groupId>
++            <artifactId>jboss-remote-naming</artifactId>
++        </dependency>
+     </dependencies>
+ 
+     <profiles>
+@@ -1232,11 +1237,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.jboss</groupId>
+-                    <artifactId>jboss-remote-naming</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.jboss.resteasy</groupId>
+                     <artifactId>resteasy-jaxrs</artifactId>
+                 </dependency>
+-- 
+1.7.10
+

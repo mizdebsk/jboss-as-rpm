@@ -1,0 +1,125 @@
+From 61d66078a0503f474cf1e580ad122a36906cf020 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Thu, 23 Feb 2012 14:34:28 +0100
+Subject: [PATCH 23/43] Added org.jboss.security.negotiation module
+
+---
+ build/build.xml |   16 ++++++++--------
+ build/pom.xml   |   53 +++++++++++++++++++++++++++--------------------------
+ 2 files changed, 35 insertions(+), 34 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 9553248..d8427fc 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -368,6 +368,14 @@
+             <maven-resource group="org.jboss.sasl" artifact="jboss-sasl" />
+         </module-def>
+ 
++        <module-def name="org.jboss.security.negotiation">
++            <maven-resource group="org.jboss.security" artifact="jboss-negotiation-common"/>
++            <maven-resource group="org.jboss.security" artifact="jboss-negotiation-extras"/>
++            <maven-resource group="org.jboss.security" artifact="jboss-negotiation-net"/>
++            <maven-resource group="org.jboss.security" artifact="jboss-negotiation-ntlm"/>
++            <maven-resource group="org.jboss.security" artifact="jboss-negotiation-spnego"/>
++        </module-def>
++
+         <module-def name="org.jboss.staxmapper">
+             <maven-resource group="org.jboss" artifact="staxmapper"/>
+         </module-def>
+@@ -1046,14 +1054,6 @@
+             <maven-resource group="org.jboss.resteasy" artifact="resteasy-yaml-provider" jandex="true"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.security.negotiation">
+-            <maven-resource group="org.jboss.security" artifact="jboss-negotiation-common"/>
+-        	<maven-resource group="org.jboss.security" artifact="jboss-negotiation-extras"/>
+-            <maven-resource group="org.jboss.security" artifact="jboss-negotiation-net"/>
+-        	<maven-resource group="org.jboss.security" artifact="jboss-negotiation-ntlm"/>
+-        	<maven-resource group="org.jboss.security" artifact="jboss-negotiation-spnego"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.security.xacml">
+             <maven-resource group="org.jboss.security" artifact="jbossxacml"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index 55c96d8..934782f 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -205,6 +205,11 @@
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-naming</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-security</artifactId>
+         </dependency>
+ 
+@@ -294,8 +299,28 @@
+         </dependency>
+ 
+         <dependency>
+-            <groupId>org.jboss.as</groupId>
+-            <artifactId>jboss-as-naming</artifactId>
++            <groupId>org.jboss.security</groupId>
++            <artifactId>jboss-negotiation-common</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.security</groupId>
++            <artifactId>jboss-negotiation-extras</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.security</groupId>
++            <artifactId>jboss-negotiation-net</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.security</groupId>
++            <artifactId>jboss-negotiation-ntlm</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.security</groupId>
++            <artifactId>jboss-negotiation-spnego</artifactId>
+         </dependency>
+ 
+         <dependency>
+@@ -1311,30 +1336,6 @@
+                     <artifactId>jboss-seam-int-jbossas</artifactId>
+                 </dependency>
+ 
+-                <dependency>
+-                    <groupId>org.jboss.security</groupId>
+-                    <artifactId>jboss-negotiation-common</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.security</groupId>
+-                    <artifactId>jboss-negotiation-extras</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.security</groupId>
+-                    <artifactId>jboss-negotiation-net</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.security</groupId>
+-                    <artifactId>jboss-negotiation-ntlm</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.security</groupId>
+-                    <artifactId>jboss-negotiation-spnego</artifactId>
+-                </dependency>
+ 
+                 <dependency>
+                     <groupId>org.jboss.security</groupId>
+-- 
+1.7.10
+

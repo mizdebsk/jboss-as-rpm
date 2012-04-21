@@ -1,0 +1,67 @@
+From e21983724d68ec507f2d462b0a4a4f9f7fae0074 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Wed, 22 Feb 2012 19:29:03 +0100
+Subject: [PATCH 19/43] Add jgroups module
+
+---
+ build/build.xml |    8 ++++----
+ build/pom.xml   |   10 +++++-----
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 7a4a531..36a12c8 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -368,6 +368,10 @@
+             <maven-resource group="org.jboss.xnio" artifact="xnio-nio"/>
+         </module-def>
+ 
++        <module-def name="org.jgroups">
++            <maven-resource group="org.jgroups" artifact="jgroups"/>
++        </module-def>
++
+         <module-def name="org.omg.api" />
+ 
+     </target>
+@@ -1141,10 +1145,6 @@
+             <maven-resource group="org.jboss.jbossts" artifact="jbosstxbridge"/>
+         </module-def>
+ 
+-        <module-def name="org.jgroups">
+-            <maven-resource group="org.jgroups" artifact="jgroups"/>
+-        </module-def>
+-
+         <module-def name="org.joda.time">
+             <maven-resource group="joda-time" artifact="joda-time"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index 69db7ae..5154d26 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -292,6 +292,11 @@
+             <groupId>org.jboss</groupId>
+             <artifactId>jboss-transaction-spi</artifactId>
+         </dependency>
++
++        <dependency>
++            <groupId>org.jgroups</groupId>
++            <artifactId>jgroups</artifactId>
++        </dependency>
+     </dependencies>
+ 
+     <profiles>
+@@ -1578,11 +1583,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.jgroups</groupId>
+-                    <artifactId>jgroups</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.osgi</groupId>
+                     <artifactId>org.osgi.core</artifactId>
+                 </dependency>
+-- 
+1.7.10
+

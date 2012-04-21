@@ -1,0 +1,88 @@
+From f24e54f7ebfca982b470d90fa512a4ec5081f051 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Mon, 23 Apr 2012 11:59:53 +0200
+Subject: [PATCH 46/46] Added org.jboss.as.cmp module
+
+---
+ build/build.xml |    8 ++++----
+ build/pom.xml   |   10 +++++-----
+ pom.xml         |    2 +-
+ 3 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index f637bb1..e72ecab 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -355,6 +355,10 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-clustering-web-infinispan"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.cmp">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-cmp"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.connector">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-connector"/>
+         </module-def>
+@@ -926,10 +930,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-configadmin"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.cmp">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-cmp"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.host-controller">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-host-controller"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index 6fc687f..09d0880 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -268,6 +268,11 @@
+         </dependency>
+ 
+         <dependency>
++           <groupId>org.jboss.as</groupId>
++           <artifactId>jboss-as-cmp</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-connector</artifactId>
+         </dependency>
+@@ -1145,11 +1150,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                   <groupId>org.jboss.as</groupId>
+-                   <artifactId>jboss-as-cmp</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-configadmin</artifactId>
+                 </dependency>
+diff --git a/pom.xml b/pom.xml
+index 084fbd3..c6efadd 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -273,6 +273,7 @@
+         <module>build-config</module>
+         <module>cli</module>
+         <module>clustering</module>
++        <module>cmp</module>
+         <module>config-assembly</module>
+         <module>connector</module>
+         <module>controller</module>
+@@ -5967,7 +5968,6 @@
+                 <module>client/ejb</module>
+                 <module>client/jms</module>
+                 <module>client/shade</module>
+-                <module>cmp</module>
+                 <module>configadmin</module>
+                 <module>dist</module>
+                 <module>host-controller</module>
+-- 
+1.7.10
+

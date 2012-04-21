@@ -55,5 +55,5 @@ cp $JBOSS_HOME/docs/examples/properties/mgmt-users.properties ${LOCATION}/config
 # Make sure the mgmt-users.properties file has correct permissions!
 chmod 600 ${LOCATION}/configuration/mgmt-users.properties
 
-echo -e "Directory ${LOCATION} ws prepared to launch JBoss AS!\n\nYou can now boot your server: JBOSS_BASE_DIR=${LOCATION} ${JBOSS_HOME}/bin/standalone.sh -c ${STANDALONE_XML}"
+echo -e "Directory ${LOCATION} is prepared to launch JBoss AS!\n\nYou can now boot your server: JBOSS_BASE_DIR=${LOCATION} ${JBOSS_HOME}/bin/standalone.sh -c ${STANDALONE_XML}"
 

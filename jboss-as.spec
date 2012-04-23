@@ -11,7 +11,7 @@
 
 %global jbuid 185
 
-%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded jmx logging naming network platform-mbean process-controller protocol remoting security server threads transactions web weld
+%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded jmx logging mail naming network platform-mbean process-controller protocol remoting security server threads transactions web weld
 
 Name:             jboss-as
 Version:          7.1.1
@@ -77,6 +77,7 @@ Patch43:          0044-Removing-some-banned-deps-as-in-Fedora-those-are-jus.patc
 Patch44:          0045-Add-org.jboss.as.config-assembly-module.patch
 Patch45:          0046-Added-org.jboss.as.cmp-module.patch
 Patch46:          0047-AS7-4286-Fix-JavaCC-grammars-for-version-5.patch
+Patch47:          0048-Added-org.jboss.as.mail-module.patch
 
 BuildArch:        noarch
 
@@ -332,6 +333,7 @@ This package contains the API documentation for %{name}.
 %patch44 -p1
 %patch45 -p1
 %patch46 -p1
+%patch47 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -676,6 +678,7 @@ exit 0
 * Fri Apr 20 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-1
 - Upstream release 7.1.1.Final
 - Added jboss-as-cmp module
+- Added jboss-as-mail module
 
 * Mon Apr 16 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.0-3
 - Simplified systemd files

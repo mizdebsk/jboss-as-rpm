@@ -11,7 +11,7 @@
 
 %global jbuid 185
 
-%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded jmx logging mail naming network platform-mbean process-controller protocol remoting security server threads transactions web weld
+%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded jaxrs jmx logging mail naming network platform-mbean pojo process-controller protocol remoting security server threads transactions web weld
 
 Name:             jboss-as
 Version:          7.1.1
@@ -78,6 +78,9 @@ Patch44:          0045-Add-org.jboss.as.config-assembly-module.patch
 Patch45:          0046-Added-org.jboss.as.cmp-module.patch
 Patch46:          0047-AS7-4286-Fix-JavaCC-grammars-for-version-5.patch
 Patch47:          0048-Added-org.jboss.as.mail-module.patch
+Patch48:          0049-Added-org.jboss.as.jaxrs-module.patch
+Patch49:          0050-Added-org.jboss.as.pojo-module.patch
+Patch50:          0051-Loose-banned-deps-on-javax.xml.stream-stax-api.patch
 
 BuildArch:        noarch
 
@@ -87,8 +90,8 @@ BuildRequires:    apache-commons-logging
 BuildRequires:    apache-commons-collections
 BuildRequires:    apache-james-project
 BuildRequires:    atinject
-BuildRequires:    bean-validation-api >= 1.0.0-4
-BuildRequires:    bsf >= 2.4.0-10
+BuildRequires:    bean-validation-api
+BuildRequires:    bsf
 BuildRequires:    cal10n
 BuildRequires:    cdi-api
 BuildRequires:    dom4j
@@ -96,64 +99,64 @@ BuildRequires:    dom4j
 BuildRequires:    ecj
 BuildRequires:    guava
 BuildRequires:    h2
-BuildRequires:    hibernate-jpa-2.0-api >= 1.0.1-5
-BuildRequires:    hibernate-validator >= 4.2.0
-BuildRequires:    infinispan >= 5.1.2-1
-BuildRequires:    ironjacamar >= 1.0.9-3
-BuildRequires:    jandex >= 1.0.3-3
+BuildRequires:    hibernate-jpa-2.0-api
+BuildRequires:    hibernate-validator
+BuildRequires:    infinispan
+BuildRequires:    ironjacamar
+BuildRequires:    jandex
 BuildRequires:    java-devel >= 1:1.7.0
 BuildRequires:    javamail
 BuildRequires:    javassist
 BuildRequires:    jgroups
 BuildRequires:    jboss-annotations-1.1-api
 BuildRequires:    jboss-classfilewriter
-BuildRequires:    jboss-common-core >= 2.2.18-5
-BuildRequires:    jboss-connector-1.6-api >= 1.0.1
-BuildRequires:    jboss-dmr >= 1.1.1-3
-BuildRequires:    jboss-ejb-3.1-api >= 1.0.2
-BuildRequires:    jboss-ejb3-ext-api >= 2.0.0-2
+BuildRequires:    jboss-common-core
+BuildRequires:    jboss-connector-1.6-api
+BuildRequires:    jboss-dmr
+BuildRequires:    jboss-ejb-3.1-api
+BuildRequires:    jboss-ejb3-ext-api
 BuildRequires:    jboss-ejb-client
 BuildRequires:    jboss-el-2.2-api
-BuildRequires:    jboss-httpserver >= 1.0.0-1
+BuildRequires:    jboss-httpserver
 BuildRequires:    jboss-iiop-client
-BuildRequires:    jboss-invocation >= 1.1.1-1
-BuildRequires:    jboss-interceptor >= 2.0.0-1
-BuildRequires:    jboss-interceptors-1.1-api >= 1.0.1
-BuildRequires:    jboss-jacc-1.4-api >= 1.0.2
-BuildRequires:    jboss-jad-1.2-api >= 1.0.1
+BuildRequires:    jboss-invocation
+BuildRequires:    jboss-interceptor
+BuildRequires:    jboss-interceptors-1.1-api
+BuildRequires:    jboss-jacc-1.4-api
+BuildRequires:    jboss-jad-1.2-api
 BuildRequires:    jboss-jaxb-2.2-api
-BuildRequires:    jboss-jaxrpc-1.1-api >= 1.0.1
-BuildRequires:    jboss-jaspi-1.0-api >= 1.0.1
-BuildRequires:    jboss-jms-1.1-api >= 1.0.1
+BuildRequires:    jboss-jaxrpc-1.1-api
+BuildRequires:    jboss-jaspi-1.0-api
+BuildRequires:    jboss-jms-1.1-api
 BuildRequires:    jboss-jts
 BuildRequires:    jboss-jsf-2.1-api
 BuildRequires:    jboss-jsp-2.2-api
-BuildRequires:    jboss-jstl-1.2-api >= 1.0.3
+BuildRequires:    jboss-jstl-1.2-api
 BuildRequires:    jboss-parent
-BuildRequires:    jboss-logging >= 3.1.0-2
-BuildRequires:    jboss-logging-tools >= 1.0.0-1
-BuildRequires:    jboss-logmanager >= 1.2.2-1
-BuildRequires:    jboss-logmanager-log4j >= 1.0.0-3
-BuildRequires:    jboss-marshalling >= 1.3.9-2
-BuildRequires:    jboss-metadata >= 7.0.1-1
-BuildRequires:    jboss-modules >= 1.1.1-2
-BuildRequires:    jboss-msc >= 1.0.2
-BuildRequires:    jboss-negotiation >= 2.2.0-3.SP1
-BuildRequires:    jboss-remoting >= 3.2.2-2
+BuildRequires:    jboss-logging
+BuildRequires:    jboss-logging-tools
+BuildRequires:    jboss-logmanager
+BuildRequires:    jboss-logmanager-log4j
+BuildRequires:    jboss-marshalling
+BuildRequires:    jboss-metadata
+BuildRequires:    jboss-modules
+BuildRequires:    jboss-msc
+BuildRequires:    jboss-negotiation
+BuildRequires:    jboss-remoting
 BuildRequires:    jboss-remoting-jmx
-BuildRequires:    jboss-remote-naming >= 1.0.1
+BuildRequires:    jboss-remote-naming
 BuildRequires:    jboss-rmi-1.0-api
-BuildRequires:    jboss-sasl >= 1.0.0-2
+BuildRequires:    jboss-sasl
 BuildRequires:    jboss-saaj-1.3-api
-BuildRequires:    jboss-servlet-3.0-api >= 1.0.0-1
-BuildRequires:    jboss-stdio >= 1.0.1-3
+BuildRequires:    jboss-servlet-3.0-api
+BuildRequires:    jboss-stdio
 BuildRequires:    jboss-specs-parent
-BuildRequires:    jboss-threads >= 2.0.0-4
-BuildRequires:    jboss-transaction-1.1-api >= 1.0.1
+BuildRequires:    jboss-threads
+BuildRequires:    jboss-transaction-1.1-api
 BuildRequires:    jboss-transaction-spi
-BuildRequires:    jboss-web >= 7.0.10-1
+BuildRequires:    jboss-web
 BuildRequires:    jboss-web-native
-BuildRequires:    jboss-vfs >= 3.1.0-1
+BuildRequires:    jboss-vfs
 BuildRequires:    jbossws-api
 BuildRequires:    jcip-annotations
 BuildRequires:    jline
@@ -170,22 +173,23 @@ BuildRequires:    javacc-maven-plugin
 BuildRequires:    mojarra
 BuildRequires:    picketbox
 BuildRequires:    picketbox-commons
+BuildRequires:    resteasy >= 2.3.2-6
 BuildRequires:    rhq-plugin-annotations
 BuildRequires:    slf4j
 BuildRequires:    slf4j-jboss-logmanager
-BuildRequires:    staxmapper >= 1.1.0-2
+BuildRequires:    staxmapper
 BuildRequires:    systemd-units
-BuildRequires:    weld-api >= 1.1-3
+BuildRequires:    weld-api
 BuildRequires:    weld-core
 BuildRequires:    weld-parent
 BuildRequires:    xalan-j2
 BuildRequires:    xerces-j2
-BuildRequires:    xnio >= 3.0.1-2
+BuildRequires:    xnio
 
 Requires:         atinject
 Requires:         apache-commons-logging
 Requires:         apache-commons-collections
-Requires:         bean-validation-api >= 1.0.0-4
+Requires:         bean-validation-api
 Requires:         cal10n
 Requires:         cdi-api
 Requires:         dom4j
@@ -193,61 +197,61 @@ Requires:         dom4j
 Requires:         ecj
 Requires:         guava
 Requires:         h2
-Requires:         hibernate-jpa-2.0-api >= 1.0.1-5
-Requires:         hibernate-validator >= 4.2.0
-Requires:         infinispan >= 5.1.2-1
-Requires:         ironjacamar >= 1.0.9-3
-Requires:         jandex >= 1.0.3-3
-Requires:         java
+Requires:         hibernate-jpa-2.0-api
+Requires:         hibernate-validator
+Requires:         infinispan
+Requires:         ironjacamar
+Requires:         jandex
+Requires:         java >= 1:1.7.0
 Requires:         javamail
 Requires:         javassist
 Requires:         jboss-annotations-1.1-api
 Requires:         jboss-classfilewriter
-Requires:         jboss-common-core >= 2.2.18-5
-Requires:         jboss-connector-1.6-api >= 1.0.1
-Requires:         jboss-dmr >= 1.1.1-3
-Requires:         jboss-ejb-3.1-api >= 1.0.2
-Requires:         jboss-ejb3-ext-api >= 2.0.0-2
+Requires:         jboss-common-core
+Requires:         jboss-connector-1.6-api
+Requires:         jboss-dmr
+Requires:         jboss-ejb-3.1-api
+Requires:         jboss-ejb3-ext-api
 Requires:         jboss-ejb-client
 Requires:         jboss-el-2.2-api
-Requires:         jboss-httpserver >= 1.0.0-1
+Requires:         jboss-httpserver
 Requires:         jboss-iiop-client
-Requires:         jboss-interceptor >= 2.0.0-1
-Requires:         jboss-interceptors-1.1-api >= 1.0.1
-Requires:         jboss-invocation >= 1.1.1-1
-Requires:         jboss-jacc-1.4-api >= 1.0.2
-Requires:         jboss-jad-1.2-api >= 1.0.1
+Requires:         jboss-interceptor
+Requires:         jboss-interceptors-1.1-api
+Requires:         jboss-invocation
+Requires:         jboss-jacc-1.4-api
+Requires:         jboss-jad-1.2-api
 Requires:         jboss-jaxb-2.2-api
-Requires:         jboss-jaxrpc-1.1-api >= 1.0.1
-Requires:         jboss-jaspi-1.0-api >= 1.0.1
-Requires:         jboss-jms-1.1-api >= 1.0.1
+Requires:         jboss-jaxrpc-1.1-api
+Requires:         jboss-jaspi-1.0-api
+Requires:         jboss-jms-1.1-api
 Requires:         jboss-jsf-2.1-api
 Requires:         jboss-jsp-2.2-api
-Requires:         jboss-jstl-1.2-api >= 1.0.3
+Requires:         jboss-jstl-1.2-api
 Requires:         jboss-jts
-Requires:         jboss-logging >= 3.1.0-2
-Requires:         jboss-logging-tools >= 1.0.0-1
-Requires:         jboss-logmanager >= 1.2.2-1
-Requires:         jboss-logmanager-log4j >= 1.0.0-3
-Requires:         jboss-marshalling >= 1.3.9-2
-Requires:         jboss-metadata >= 7.0.1-1
-Requires:         jboss-modules >= 1.1.1-2
-Requires:         jboss-msc >= 1.0.2
-Requires:         jboss-negotiation >= 2.2.0-3.SP1
-Requires:         jboss-remoting >= 3.2.2-2
+Requires:         jboss-logging
+Requires:         jboss-logging-tools
+Requires:         jboss-logmanager
+Requires:         jboss-logmanager-log4j
+Requires:         jboss-marshalling
+Requires:         jboss-metadata
+Requires:         jboss-modules
+Requires:         jboss-msc
+Requires:         jboss-negotiation
+Requires:         jboss-remoting
 Requires:         jboss-remoting-jmx
-Requires:         jboss-remote-naming >= 1.0.1
+Requires:         jboss-remote-naming
 Requires:         jboss-rmi-1.0-api
-Requires:         jboss-sasl >= 1.0.0-2
+Requires:         jboss-sasl
 Requires:         jboss-saaj-1.3-api
-Requires:         jboss-servlet-3.0-api >= 1.0.0-1
-Requires:         jboss-stdio >= 1.0.1-3
-Requires:         jboss-threads >= 2.0.0-4
-Requires:         jboss-transaction-1.1-api >= 1.0.1
+Requires:         jboss-servlet-3.0-api
+Requires:         jboss-stdio
+Requires:         jboss-threads
+Requires:         jboss-transaction-1.1-api
 Requires:         jboss-transaction-spi
-Requires:         jboss-web >= 7.0.10-1
+Requires:         jboss-web
 Requires:         jboss-web-native
-Requires:         jboss-vfs >= 3.1.0-1
+Requires:         jboss-vfs
 Requires:         jbossws-api
 Requires:         jcip-annotations
 Requires:         jgroups
@@ -258,15 +262,16 @@ Requires:         jpackage-utils
 Requires:         mojarra
 Requires:         picketbox
 Requires:         picketbox-commons
+Requires:         resteasy >= 2.3.2-6
 Requires:         rhq-plugin-annotations
 Requires:         slf4j
 Requires:         slf4j-jboss-logmanager
-Requires:         staxmapper >= 1.1.0-2
-Requires:         weld-api >= 1.1-3
+Requires:         staxmapper
+Requires:         weld-api
 Requires:         weld-core
 Requires:         xalan-j2
 Requires:         xerces-j2
-Requires:         xnio >= 3.0.1-2
+Requires:         xnio
 Requires(pre):    shadow-utils
 
 %description
@@ -334,6 +339,9 @@ This package contains the API documentation for %{name}.
 %patch45 -p1
 %patch46 -p1
 %patch47 -p1
+%patch48 -p1
+%patch49 -p1
+%patch50 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -602,6 +610,11 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath picketbox/picketbox) org/picketbox/main/picketbox.jar
     ln -s $(build-classpath picketbox/infinispan) org/picketbox/main/infinispan.jar
     ln -s $(build-classpath picketbox-commons) org/picketbox/main/picketbox-commons.jar
+
+    for m in atom-provider cdi jackson-provider jaxb-provider jaxrs jettison-provider jsapi multipart-provider yaml-provider; do
+      ln -s $(build-classpath resteasy/resteasy-${m}) org/jboss/resteasy/resteasy-${m}/main/resteasy-${m}.jar
+    done
+
     ln -s $(build-classpath slf4j/api) org/slf4j/main/api.jar
     ln -s $(build-classpath slf4j/ext) org/slf4j/ext/main/ext.jar
     ln -s $(build-classpath slf4j/jcl-over-slf4j) org/slf4j/jcl-over-slf4j/main/jcl-over-slf4j.jar
@@ -679,6 +692,9 @@ exit 0
 - Upstream release 7.1.1.Final
 - Added jboss-as-cmp module
 - Added jboss-as-mail module
+- Added jboss-as-jaxrs module
+- Added jboss-as-pojo module
+- Spec file cleanup from versions
 
 * Mon Apr 16 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.0-3
 - Simplified systemd files

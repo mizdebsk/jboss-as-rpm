@@ -1,0 +1,29 @@
+From 6299915111ab611446d79daf3b271a38368b96a3 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Thu, 26 Apr 2012 18:41:09 +0200
+Subject: [PATCH 52/52] Remove jbossweb-native dependency. We'll have
+ unpackaged .so files in jboss-web-native package.
+
+---
+ build/pom.xml |    5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/build/pom.xml b/build/pom.xml
+index fea222d..df3087f 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -349,11 +349,6 @@
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
+-            <artifactId>jbossweb-native</artifactId>
+-        </dependency>
+-
+-        <dependency>
+-            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-naming</artifactId>
+         </dependency>
+ 
+-- 
+1.7.10
+

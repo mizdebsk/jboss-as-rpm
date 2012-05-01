@@ -81,6 +81,7 @@ Patch47:          0048-Added-org.jboss.as.mail-module.patch
 Patch48:          0049-Added-org.jboss.as.jaxrs-module.patch
 Patch49:          0050-Added-org.jboss.as.pojo-module.patch
 Patch50:          0051-Loose-banned-deps-on-javax.xml.stream-stax-api.patch
+Patch51:          0052-Remove-jbossweb-native-dependency.-We-ll-have-unpack.patch
 
 BuildArch:        noarch
 
@@ -189,6 +190,7 @@ BuildRequires:    xnio
 Requires:         atinject
 Requires:         apache-commons-logging
 Requires:         apache-commons-collections
+Requires:         apr
 Requires:         bean-validation-api
 Requires:         cal10n
 Requires:         cdi-api
@@ -260,6 +262,7 @@ Requires:         jul-to-slf4j-stub
 Requires:         joda-time
 Requires:         jpackage-utils
 Requires:         mojarra
+Requires:         openssl
 Requires:         picketbox
 Requires:         picketbox-commons
 Requires:         resteasy >= 2.3.2-6
@@ -342,6 +345,7 @@ This package contains the API documentation for %{name}.
 %patch48 -p1
 %patch49 -p1
 %patch50 -p1
+%patch51 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -430,7 +434,7 @@ pushd build/target/jboss-as-%{namedversion}
   rm -rf bin/initscripts
 
   # Prepare directory for properties files
-  mkdir docs/examples/properties
+  install -d -m 755 docs/examples/properties
 
   # Copy logging.properties and mgmt-users.properties so we can reuse it later in jboss-as-cp script
   cp standalone/configuration/logging.properties docs/examples/properties/
@@ -487,6 +491,25 @@ pushd $RPM_BUILD_ROOT%{homedir}
   
   # Create symlinks to jars
   pushd modules
+    # AS7 relies on some arch specific binary modules, let's link them both and don't check if they exists.
+    # At least one of these should exists because we require them, but we're not very interested which one.
+    for a in i686 x86_64; do
+      install -d -m 755 org/jboss/as/web/main/lib/linux-${a}
+
+      if [ "${a}" = "x86_64" ]; then
+        libdir="/usr/lib64"
+      else
+        libdir="/usr/lib"
+      fi
+
+      pushd org/jboss/as/web/main/lib/linux-${a}
+        ln -s ${libdir}/libjbnative-1.so.0 libtcnative-1.so
+        ln -s ${libdir}/libapr-1.so.0 libapr-1.so
+        ln -s ${libdir}/libcrypto.so libcrypto.so
+        ln -s ${libdir}/libssl.so libssl.so
+      popd
+    done
+
     # JBoss AS modules
     # Symlinks all main AS7 modules + some addtiional modules that have different naming scheme
     for m in %{modules} domain-http-error-context domain-http-interface; do

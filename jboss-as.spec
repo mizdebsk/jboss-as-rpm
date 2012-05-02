@@ -491,25 +491,6 @@ pushd $RPM_BUILD_ROOT%{homedir}
   
   # Create symlinks to jars
   pushd modules
-    # AS7 relies on some arch specific binary modules, let's link them both and don't check if they exists.
-    # At least one of these should exists because we require them, but we're not very interested which one.
-    for a in i686 x86_64; do
-      install -d -m 755 org/jboss/as/web/main/lib/linux-${a}
-
-      if [ "${a}" = "x86_64" ]; then
-        libdir="/usr/lib64"
-      else
-        libdir="/usr/lib"
-      fi
-
-      pushd org/jboss/as/web/main/lib/linux-${a}
-        ln -s ${libdir}/libjbnative-1.so.0 libtcnative-1.so
-        ln -s ${libdir}/libapr-1.so.0 libapr-1.so
-        ln -s ${libdir}/libcrypto.so libcrypto.so
-        ln -s ${libdir}/libssl.so libssl.so
-      popd
-    done
-
     # JBoss AS modules
     # Symlinks all main AS7 modules + some addtiional modules that have different naming scheme
     for m in %{modules} domain-http-error-context domain-http-interface; do
@@ -536,6 +517,9 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
     # And some other expcetions...
     ln -s %{_javadir}/jboss-as/jboss-as-jpa.jar org/jboss/as/jpa/main/jboss-as-jpa-%{namedversion}.jar
+
+    # Prepare directories for native libs
+    install -d -m 755 org/jboss/as/web/main/lib/linux-{x86_64,i686}
 
     # Please keep alphabetic by jar name
     ln -s $(build-classpath apache-commons-collections) org/apache/commons/collections/main/commons-collections.jar
@@ -667,6 +651,29 @@ getent group %{name} >/dev/null || groupadd -r %{name}
 getent passwd %{name} >/dev/null || \
     useradd -c "JBoss AS" -u %{jbuid} -g %{name} -s /bin/nologin -r -d %{homedir} %{name}
 exit 0
+
+%post
+# AS7 relies on some arch specific binary modules, let's link them.
+# We don't want to do this at build time because it should be still noarch package.
+arch=`uname -m`
+
+if [ "${arch}" = "x86_64" ]; then
+  libdir="/usr/lib64"
+else
+  libdir="/usr/lib"
+fi
+
+pushd %{homedir}/modules/org/jboss/as/web/main/lib/linux-${arch} > /dev/null
+  ln -s ${libdir}/libjbnative-1.so.0 libtcnative-1.so
+  ln -s ${libdir}/libapr-1.so.0 libapr-1.so
+  ln -s ${libdir}/libcrypto.so libcrypto.so
+  ln -s ${libdir}/libssl.so libssl.so
+popd > /dev/null
+
+%preun
+# Let's clean up the symlinks
+arch=`uname -m`
+rm -rf %{homedir}/modules/org/jboss/as/web/main/lib/linux-${arch}/*
 
 %files
 %{homedir}/appclient

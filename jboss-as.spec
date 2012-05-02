@@ -15,7 +15,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          1%{?dist}
+Release:          2%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -718,6 +718,9 @@ rm -rf %{homedir}/modules/org/jboss/as/web/main/lib/linux-${arch}/*
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Wed May 02 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-2
+- Link to native  modules in post section to avoid arch-specific Requires
+
 * Fri Apr 20 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-1
 - Upstream release 7.1.1.Final
 - Added jboss-as-cmp module

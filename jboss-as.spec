@@ -82,6 +82,7 @@ Patch48:          0049-Added-org.jboss.as.jaxrs-module.patch
 Patch49:          0050-Added-org.jboss.as.pojo-module.patch
 Patch50:          0051-Loose-banned-deps-on-javax.xml.stream-stax-api.patch
 Patch51:          0052-Remove-jbossweb-native-dependency.-We-ll-have-unpack.patch
+Patch52:          0053-Add-dependencies-to-minimal-for-missing-modules-to-r.patch
 
 BuildArch:        noarch
 
@@ -346,6 +347,7 @@ This package contains the API documentation for %{name}.
 %patch49 -p1
 %patch50 -p1
 %patch51 -p1
+%patch52 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)

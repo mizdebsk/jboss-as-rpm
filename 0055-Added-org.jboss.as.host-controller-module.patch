@@ -1,0 +1,88 @@
+From 40f0084f762cd14ee6afc76b22f61e6c55726fcc Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Thu, 3 May 2012 17:08:45 +0200
+Subject: [PATCH 55/55] Added org.jboss.as.host-controller module
+
+---
+ build/build.xml |    8 ++++----
+ build/pom.xml   |   10 +++++-----
+ pom.xml         |    2 +-
+ 3 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index d9bcf9c..d9b49d0 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -409,6 +409,10 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-embedded"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.host-controller">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-host-controller"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.jaxrs">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jaxrs"/>
+         </module-def>
+@@ -983,10 +987,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-configadmin"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.host-controller">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-host-controller"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.jsr77">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jsr77"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index ac3216b..a2a89ce 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -339,6 +339,11 @@
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-host-controller</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-jaxrs</artifactId>
+         </dependency>
+ 
+@@ -1265,11 +1270,6 @@
+                     <artifactId>jboss-as-jsr77</artifactId>
+                 </dependency>
+ 
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-host-controller</artifactId>
+-                </dependency>
+-
+                 <!--
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+diff --git a/pom.xml b/pom.xml
+index b9b3f9f..9a37167 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -286,6 +286,7 @@
+         <module>ee-deployment</module>
+         <module>ejb3</module>
+         <module>embedded</module>
++        <module>host-controller</module>
+         <module>jaxrs</module>
+         <module>jmx</module>
+         <module>jpa</module>
+@@ -5974,7 +5975,6 @@
+                 <module>client/shade</module>
+                 <module>configadmin</module>
+                 <module>dist</module>
+-                <module>host-controller</module>
+                 <!--
+                 <module>jacorb</module>
+                 -->
+-- 
+1.7.10
+

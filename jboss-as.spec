@@ -11,7 +11,11 @@
 
 %global jbuid 185
 
+# Enabled modules:
 %global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jaxrs jmx logging mail naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
+
+# Additional modules enabled, but not listed above because of different structure:
+# clustering
 
 Name:             jboss-as
 Version:          7.1.1
@@ -85,6 +89,7 @@ Patch51:          0052-Remove-jbossweb-native-dependency.-We-ll-have-unpack.patc
 Patch52:          0053-Add-dependencies-to-minimal-for-missing-modules-to-r.patch
 Patch53:          0054-Added-org.jboss.as.sar-module.patch
 Patch54:          0055-Added-org.jboss.as.host-controller-module.patch
+Patch55:          0056-Added-org.jboss.as.webservices.server.integration-an.patch
 
 BuildArch:        noarch
 
@@ -352,6 +357,7 @@ This package contains the API documentation for %{name}.
 %patch52 -p1
 %patch53 -p1
 %patch54 -p1
+%patch55 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)

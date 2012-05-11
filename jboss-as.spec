@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          2%{?dist}
+Release:          3%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -745,6 +745,11 @@ rm -rf %{homedir}/modules/org/jboss/as/web/main/lib/linux-${arch}/*
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Fri May 11 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-3
+- Added org.jboss.as.sar module
+- Added org.jboss.as.host-controller module
+- Added org.jboss.as.jaxr module
+
 * Wed May 02 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-2
 - Link to native  modules in post section to avoid arch-specific Requires
 

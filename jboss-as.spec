@@ -91,6 +91,7 @@ Patch53:          0054-Added-org.jboss.as.sar-module.patch
 Patch54:          0055-Added-org.jboss.as.host-controller-module.patch
 Patch55:          0056-Added-org.jboss.as.webservices.server.integration-an.patch
 Patch56:          0057-Enable-jboss-as-ejb-client-bom.patch
+Patch57:          0058-Enabled-org.jboss.spec.javax.ws.rs-module.patch
 
 BuildArch:        noarch
 
@@ -136,6 +137,7 @@ BuildRequires:    jboss-jacc-1.4-api
 BuildRequires:    jboss-jad-1.2-api
 BuildRequires:    jboss-jaxb-2.2-api
 BuildRequires:    jboss-jaxrpc-1.1-api
+BuildRequires:    jboss-jaxrs-1.1-api
 BuildRequires:    jboss-jaspi-1.0-api
 BuildRequires:    jboss-jms-1.1-api
 BuildRequires:    jboss-jts
@@ -234,6 +236,7 @@ Requires:         jboss-jacc-1.4-api
 Requires:         jboss-jad-1.2-api
 Requires:         jboss-jaxb-2.2-api
 Requires:         jboss-jaxrpc-1.1-api
+Requires:         jboss-jaxrs-1.1-api
 Requires:         jboss-jaspi-1.0-api
 Requires:         jboss-jms-1.1-api
 Requires:         jboss-jsf-2.1-api
@@ -360,6 +363,7 @@ This package contains the API documentation for %{name}.
 %patch54 -p1
 %patch55 -p1
 %patch56 -p1
+%patch57 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)
@@ -584,6 +588,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-jad-1.2-api) javax/enterprise/deploy/api/main/jboss-jad-1.2-api.jar
     ln -s $(build-classpath jboss-jaxb-2.2-api) javax/xml/bind/api/main/jboss-jaxb-2.2-api.jar
     ln -s $(build-classpath jboss-jaxrpc-1.1-api) javax/xml/rpc/api/main/jboss-jaxrpc-1.1-api.jar
+    ln -s $(build-classpath jboss-jaxrs-1.1-api) javax/ws/rs/api/main/jboss-jaxrs-1.1-api.jar
     ln -s $(build-classpath jboss-jaspi-1.0-api) javax/security/auth/message/api/main/jboss-jaspi-1.0-api.jar
     ln -s $(build-classpath jboss-jms-1.1-api) javax/jms/api/main/jboss-jms-1.1-api.jar
     ln -s $(build-classpath jboss-jsf-2.1-api) javax/faces/api/main/jboss-jsf-2.1-api.jar

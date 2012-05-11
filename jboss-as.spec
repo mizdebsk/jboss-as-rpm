@@ -90,6 +90,7 @@ Patch52:          0053-Add-dependencies-to-minimal-for-missing-modules-to-r.patc
 Patch53:          0054-Added-org.jboss.as.sar-module.patch
 Patch54:          0055-Added-org.jboss.as.host-controller-module.patch
 Patch55:          0056-Added-org.jboss.as.webservices.server.integration-an.patch
+Patch56:          0057-Enable-jboss-as-ejb-client-bom.patch
 
 BuildArch:        noarch
 
@@ -358,6 +359,7 @@ This package contains the API documentation for %{name}.
 %patch53 -p1
 %patch54 -p1
 %patch55 -p1
+%patch56 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)

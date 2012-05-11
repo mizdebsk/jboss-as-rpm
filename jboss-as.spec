@@ -183,7 +183,7 @@ BuildRequires:    javacc-maven-plugin
 BuildRequires:    mojarra
 BuildRequires:    picketbox
 BuildRequires:    picketbox-commons
-BuildRequires:    resteasy >= 2.3.2-6
+BuildRequires:    resteasy >= 2.3.2-7
 BuildRequires:    rhq-plugin-annotations
 BuildRequires:    slf4j
 BuildRequires:    slf4j-jboss-logmanager
@@ -274,7 +274,7 @@ Requires:         mojarra
 Requires:         openssl
 Requires:         picketbox
 Requires:         picketbox-commons
-Requires:         resteasy >= 2.3.2-6
+Requires:         resteasy >= 2.3.2-7
 Requires:         rhq-plugin-annotations
 Requires:         slf4j
 Requires:         slf4j-jboss-logmanager
@@ -634,6 +634,8 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
     for m in atom-provider cdi jackson-provider jaxb-provider jaxrs jettison-provider jsapi multipart-provider yaml-provider; do
       ln -s $(build-classpath resteasy/resteasy-${m}) org/jboss/resteasy/resteasy-${m}/main/resteasy-${m}.jar
+      # Jandex indexes
+      ln -s $(build-classpath resteasy/resteasy-${m}-jandex) org/jboss/resteasy/resteasy-${m}/main/resteasy-${m}-jandex.jar
     done
 
     ln -s $(build-classpath slf4j/api) org/slf4j/main/api.jar

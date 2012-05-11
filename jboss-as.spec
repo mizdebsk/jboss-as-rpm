@@ -12,7 +12,7 @@
 %global jbuid 185
 
 # Enabled modules:
-%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jaxrs jmx logging mail naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
+%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jaxr jaxrs jmx logging mail naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
 
 # Additional modules enabled, but not listed above because of different structure:
 # clustering
@@ -92,6 +92,7 @@ Patch54:          0055-Added-org.jboss.as.host-controller-module.patch
 Patch55:          0056-Added-org.jboss.as.webservices.server.integration-an.patch
 Patch56:          0057-Enable-jboss-as-ejb-client-bom.patch
 Patch57:          0058-Enabled-org.jboss.spec.javax.ws.rs-module.patch
+Patch58:          0059-Added-org.jboss.as.jaxr-module.patch
 
 BuildArch:        noarch
 
@@ -100,6 +101,7 @@ BuildRequires:    ant-apache-bsf
 BuildRequires:    apache-commons-logging
 BuildRequires:    apache-commons-collections
 BuildRequires:    apache-james-project
+BuildRequires:    apache-scout
 BuildRequires:    atinject
 BuildRequires:    bean-validation-api
 BuildRequires:    bsf
@@ -136,6 +138,7 @@ BuildRequires:    jboss-interceptors-1.1-api
 BuildRequires:    jboss-jacc-1.4-api
 BuildRequires:    jboss-jad-1.2-api
 BuildRequires:    jboss-jaxb-2.2-api
+BuildRequires:    jboss-jaxr-1.0-api
 BuildRequires:    jboss-jaxrpc-1.1-api
 BuildRequires:    jboss-jaxrs-1.1-api
 BuildRequires:    jboss-jaspi-1.0-api
@@ -201,6 +204,7 @@ BuildRequires:    xnio
 Requires:         atinject
 Requires:         apache-commons-logging
 Requires:         apache-commons-collections
+Requires:         apache-scout
 Requires:         apr
 Requires:         bean-validation-api
 Requires:         cal10n
@@ -235,6 +239,7 @@ Requires:         jboss-invocation
 Requires:         jboss-jacc-1.4-api
 Requires:         jboss-jad-1.2-api
 Requires:         jboss-jaxb-2.2-api
+Requires:         jboss-jaxr-1.0-api
 Requires:         jboss-jaxrpc-1.1-api
 Requires:         jboss-jaxrs-1.1-api
 Requires:         jboss-jaspi-1.0-api
@@ -364,6 +369,7 @@ This package contains the API documentation for %{name}.
 %patch55 -p1
 %patch56 -p1
 %patch57 -p1
+%patch58 -p1
 
 %build
 # We don't have packaged all test dependencies (jboss-test for example)

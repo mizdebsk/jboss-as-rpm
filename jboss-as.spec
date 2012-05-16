@@ -12,7 +12,7 @@
 %global jbuid 185
 
 # Enabled modules:
-%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jaxr jaxrs jmx logging mail naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
+%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jaxr jaxrs jmx logging management-client-content mail naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
 
 # Additional modules enabled, but not listed above because of different structure:
 # clustering
@@ -93,14 +93,19 @@ Patch55:          0056-Added-org.jboss.as.webservices.server.integration-an.patc
 Patch56:          0057-Enable-jboss-as-ejb-client-bom.patch
 Patch57:          0058-Enabled-org.jboss.spec.javax.ws.rs-module.patch
 Patch58:          0059-Added-org.jboss.as.jaxr-module.patch
+Patch59:          0060-Added-org.jboss.as.messaging-module.patch
+Patch60:          0061-Runtime-dependencies.patch
 
 BuildArch:        noarch
 
 # Please keep alphabetically
 BuildRequires:    ant-apache-bsf
-BuildRequires:    apache-commons-logging
 BuildRequires:    apache-commons-collections
+BuildRequires:    apache-commons-configuration
+BuildRequires:    apache-commons-lang
+BuildRequires:    apache-commons-logging
 BuildRequires:    apache-james-project
+BuildRequires:    apache-juddi
 BuildRequires:    apache-scout
 BuildRequires:    atinject
 BuildRequires:    bean-validation-api
@@ -114,6 +119,8 @@ BuildRequires:    guava
 BuildRequires:    h2
 BuildRequires:    hibernate-jpa-2.0-api
 BuildRequires:    hibernate-validator
+BuildRequires:    hornetq
+BuildRequires:    git
 BuildRequires:    infinispan
 BuildRequires:    ironjacamar
 BuildRequires:    jandex
@@ -184,6 +191,7 @@ BuildRequires:    maven-checkstyle-plugin
 BuildRequires:    maven-resources-plugin
 BuildRequires:    maven-surefire-plugin
 BuildRequires:    maven-dependency-plugin
+BuildRequires:    netty
 BuildRequires:    javacc-maven-plugin
 BuildRequires:    mojarra
 BuildRequires:    picketbox
@@ -202,8 +210,11 @@ BuildRequires:    xerces-j2
 BuildRequires:    xnio
 
 Requires:         atinject
-Requires:         apache-commons-logging
 Requires:         apache-commons-collections
+Requires:         apache-commons-configuration
+Requires:         apache-commons-lang
+Requires:         apache-commons-logging
+Requires:         apache-juddi
 Requires:         apache-scout
 Requires:         apr
 Requires:         bean-validation-api
@@ -216,6 +227,7 @@ Requires:         guava
 Requires:         h2
 Requires:         hibernate-jpa-2.0-api
 Requires:         hibernate-validator
+Requires:         hornetq
 Requires:         infinispan
 Requires:         ironjacamar
 Requires:         jandex
@@ -279,6 +291,7 @@ Requires:         jul-to-slf4j-stub
 Requires:         joda-time
 Requires:         jpackage-utils
 Requires:         mojarra
+Requires:         netty
 Requires:         openssl
 Requires:         picketbox
 Requires:         picketbox-commons
@@ -311,67 +324,18 @@ This package contains the API documentation for %{name}.
 
 %prep
 %setup -q -n jboss-as-%{namedversion}
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-%patch3 -p1
-%patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
-%patch11 -p1
-%patch12 -p1
-%patch13 -p1
-%patch14 -p1
-%patch15 -p1
-%patch16 -p1
-%patch17 -p1
-%patch18 -p1
-%patch19 -p1
-%patch20 -p1
-%patch21 -p1
-%patch22 -p1
-%patch23 -p1
-%patch24 -p1
-%patch25 -p1
-%patch26 -p1
-%patch27 -p1
-%patch28 -p1
-%patch29 -p1
-%patch30 -p1
-%patch31 -p1
-%patch32 -p1
-%patch33 -p1
-%patch34 -p1
-%patch35 -p1
-%patch36 -p1
-%patch37 -p1
-%patch38 -p1
-%patch39 -p1
-%patch40 -p1
-%patch41 -p1
-%patch42 -p1
-%patch43 -p1
-%patch44 -p1
-%patch45 -p1
-%patch46 -p1
-%patch47 -p1
-%patch48 -p1
-%patch49 -p1
-%patch50 -p1
-%patch51 -p1
-%patch52 -p1
-%patch53 -p1
-%patch54 -p1
-%patch55 -p1
-%patch56 -p1
-%patch57 -p1
-%patch58 -p1
+
+git init
+git config user.email "jboss-as-owner@fedoraproject.org"
+git config user.name "JBoss AS package owner"
+git add .
+git commit -a -q -m "%{version} baseline."
+
+git am %{patches}
 
 %build
+export MAVEN_OPTS="-Xms512m -Xmx1024m -XX:PermSize=128m -XX:MaxPermSize=256m"
+
 # We don't have packaged all test dependencies (jboss-test for example)
 mvn-rpmbuild -Dmaven.test.skip=true -Dminimalistic -e install javadoc:aggregate
 
@@ -542,11 +506,22 @@ pushd $RPM_BUILD_ROOT%{homedir}
     # And some other expcetions...
     ln -s %{_javadir}/jboss-as/jboss-as-jpa.jar org/jboss/as/jpa/main/jboss-as-jpa-%{namedversion}.jar
 
+    # Remove native libs that are shipped with the source distribution...
+    rm -rf org/hornetq/main/lib/*
+
     # Prepare directories for native libs
     install -d -m 755 org/jboss/as/web/main/lib/linux-{x86_64,i686}
+    install -d -m 755 org/hornetq/main/lib/linux-{x86_64,i686}
 
     # Please keep alphabetic by jar name
-    ln -s $(build-classpath apache-commons-collections) org/apache/commons/collections/main/commons-collections.jar
+
+    for m in collections configuration lang logging; do
+      ln -s $(build-classpath apache-commons-${m}) org/apache/commons/${m}/main/commons-${m}.jar
+    done
+
+    ln -s $(build-classpath apache-juddi/juddi-client) org/apache/juddi/juddi-client/main/juddi-client.jar
+    ln -s $(build-classpath apache-juddi/uddi-ws) org/apache/juddi/uddi-ws/main/uddi-ws.jar
+    ln -s $(build-classpath apache-scout) org/apache/juddi/scout/main/scout.jar
     ln -s $(build-classpath atinject) javax/inject/api/main/atinject.jar
     ln -s $(build-classpath cal10n/cal10n-api) ch/qos/cal10n/main/cal10n-api.jar
     ln -s $(build-classpath cdi-api) javax/enterprise/api/main/cdi-api.jar
@@ -639,6 +614,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath joda-time) org/joda/time/main/joda-time.jar
     ln -s $(build-classpath log4j) org/apache/log4j/main/log4j.jar
     ln -s $(build-classpath mojarra/jsf-impl) com/sun/jsf-impl/main/jsf-impl.jar
+    ln -s $(build-classpath netty) org/jboss/netty/main/netty.jar
     ln -s $(build-classpath picketbox/picketbox) org/picketbox/main/picketbox.jar
     ln -s $(build-classpath picketbox/infinispan) org/picketbox/main/infinispan.jar
     ln -s $(build-classpath picketbox-commons) org/picketbox/main/picketbox-commons.jar
@@ -690,6 +666,10 @@ else
   libdir="/usr/lib"
 fi
 
+pushd %{homedir}/modules/org/hornetq/main/lib/linux-${arch} > /dev/null
+  ln -s ${libdir}/libHornetQAIO.so.0 libHornetQAIO.so
+popd > /dev/null
+
 pushd %{homedir}/modules/org/jboss/as/web/main/lib/linux-${arch} > /dev/null
   ln -s ${libdir}/libjbnative-1.so.0 libtcnative-1.so
   ln -s ${libdir}/libapr-1.so.0 libapr-1.so
@@ -698,9 +678,11 @@ pushd %{homedir}/modules/org/jboss/as/web/main/lib/linux-${arch} > /dev/null
 popd > /dev/null
 
 %preun
-# Let's clean up the symlinks
+# Let's clean up the arch-specific symlinks
 arch=`uname -m`
+
 rm -rf %{homedir}/modules/org/jboss/as/web/main/lib/linux-${arch}/*
+rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 
 %files
 %{homedir}/appclient
@@ -746,9 +728,11 @@ rm -rf %{homedir}/modules/org/jboss/as/web/main/lib/linux-${arch}/*
 
 %changelog
 * Fri May 11 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-3
+- Changed the way we apply patches at build time
 - Added org.jboss.as.sar module
 - Added org.jboss.as.host-controller module
 - Added org.jboss.as.jaxr module
+- Added org.jboss.as.messaging module
 
 * Wed May 02 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-2
 - Link to native  modules in post section to avoid arch-specific Requires

@@ -1,0 +1,100 @@
+From 13360e01200466b06cd5126b6a6e88fbb6ea524e Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Fri, 11 May 2012 18:41:52 +0200
+Subject: [PATCH 59/61] Added org.jboss.as.jaxr module
+
+---
+ build/build.xml |    8 ++++----
+ build/pom.xml   |   15 +++++----------
+ pom.xml         |    2 +-
+ 3 files changed, 10 insertions(+), 15 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index b7a1e43..932e69f 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -417,6 +417,10 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-host-controller"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.jaxr">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-jaxr"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.jaxrs">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jaxrs"/>
+         </module-def>
+@@ -1005,10 +1009,6 @@
+         </module-def>
+         -->
+ 
+-        <module-def name="org.jboss.as.jaxr">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-jaxr"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.jdr">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jdr"/>
+             <maven-resource group="org.jboss.as" artifact="jboss-as-sos"/>
+diff --git a/build/pom.xml b/build/pom.xml
+index 5102193..1329633 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -344,6 +344,11 @@
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-jaxr</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-jaxrs</artifactId>
+         </dependency>
+ 
+@@ -1144,11 +1149,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.apache.juddi.scout</groupId>
+-                    <artifactId>scout</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.apache.ws.xmlschema</groupId>
+                     <artifactId>xmlschema-core</artifactId>
+                 </dependency>
+@@ -1262,11 +1262,6 @@
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-jaxr</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-jdr</artifactId>
+                 </dependency>
+ 
+diff --git a/pom.xml b/pom.xml
+index 521acb2..789a7eb 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -288,6 +288,7 @@
+         <module>ejb3</module>
+         <module>embedded</module>
+         <module>host-controller</module>
++        <module>jaxr</module>
+         <module>jaxrs</module>
+         <module>jmx</module>
+         <module>jpa</module>
+@@ -5978,7 +5979,6 @@
+                 <!--
+                 <module>jacorb</module>
+                 -->
+-                <module>jaxr</module>
+                 <module>jdr</module>
+                 <module>jsr77</module>
+                 <module>messaging</module>
+-- 
+1.7.10.2
+

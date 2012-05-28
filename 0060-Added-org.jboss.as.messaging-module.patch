@@ -1,0 +1,210 @@
+From 92b4499f84f1365539573120535c47226d04a76e Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 15 May 2012 09:53:44 +0200
+Subject: [PATCH 60/61] Added org.jboss.as.messaging module
+
+---
+ build/build.xml |   34 +++++++++++++++++-----------------
+ build/pom.xml   |   50 +++++++++++++++++++++++++-------------------------
+ pom.xml         |    2 +-
+ 3 files changed, 43 insertions(+), 43 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 932e69f..ccde335 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -153,6 +153,15 @@
+             <maven-resource group="jline" artifact="jline"/>
+         </module-def>
+ 
++        <module-def name="org.hornetq">
++            <maven-resource group="org.hornetq" artifact="hornetq-core"/>
++            <maven-resource group="org.hornetq" artifact="hornetq-jms"/>
++        </module-def>
++
++        <module-def name="org.hornetq.ra">
++            <maven-resource group="org.hornetq" artifact="hornetq-ra"/>
++        </module-def>
++
+         <module-def name="org.infinispan">
+             <maven-resource group="org.infinispan" artifact="infinispan-core"/>
+         </module-def>
+@@ -449,6 +458,10 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-mail"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.messaging">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-messaging"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.network">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-network"/>
+         </module-def>
+@@ -598,6 +611,10 @@
+             <maven-resource group="org.jboss.logmanager" artifact="jboss-logmanager"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.netty">
++            <maven-resource group="org.jboss.netty" artifact="netty"/>
++        </module-def>
++
+         <module-def name="org.jboss.logmanager.log4j">
+             <maven-resource group="org.jboss.logmanager" artifact="jboss-logmanager-log4j"/>
+         </module-def>
+@@ -962,15 +979,6 @@
+             <maven-resource group="org.hibernate" artifact="hibernate-envers"/>
+         </module-def>
+ 
+-        <module-def name="org.hornetq">
+-            <maven-resource group="org.hornetq" artifact="hornetq-core"/>
+-            <maven-resource group="org.hornetq" artifact="hornetq-jms"/>
+-        </module-def>
+-
+-        <module-def name="org.hornetq.ra">
+-            <maven-resource group="org.hornetq" artifact="hornetq-ra"/>
+-        </module-def>
+-
+         <!--
+         <module-def name="org.jacorb">
+             <maven-resource group="org.jacorb" artifact="jacorb"/>
+@@ -1030,10 +1038,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-management-client-content"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.messaging">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-messaging"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.as.modcluster">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-modcluster"/>
+             <maven-resource group="org.jboss.mod_cluster" artifact="mod_cluster-container-spi"/>
+@@ -1063,10 +1067,6 @@
+             <maven-resource group="jboss.jaxbintros" artifact="jboss-jaxb-intros"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.netty">
+-            <maven-resource group="org.jboss.netty" artifact="netty"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.osgi.framework">
+             <maven-resource group="org.jboss.osgi.deployment" artifact="jbosgi-deployment"/>
+             <maven-resource group="org.jboss.osgi.framework" artifact="jbosgi-framework-core"/>
+diff --git a/build/pom.xml b/build/pom.xml
+index 1329633..42a664c 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -147,6 +147,21 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>org.hornetq</groupId>
++            <artifactId>hornetq-core</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.hornetq</groupId>
++            <artifactId>hornetq-jms</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.hornetq</groupId>
++            <artifactId>hornetq-ra</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>org.infinispan</groupId>
+             <artifactId>infinispan-cachestore-jdbc</artifactId>
+         </dependency>
+@@ -389,6 +404,11 @@
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-messaging</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-naming</artifactId>
+         </dependency>
+ 
+@@ -533,6 +553,11 @@
+         </dependency>
+ 
+         <dependency>
++            <groupId>org.jboss.netty</groupId>
++            <artifactId>netty</artifactId>
++        </dependency>
++
++        <dependency>
+             <groupId>org.jboss.security</groupId>
+             <artifactId>jboss-negotiation-common</artifactId>
+         </dependency>
+@@ -1224,21 +1249,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.hornetq</groupId>
+-                    <artifactId>hornetq-core</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.hornetq</groupId>
+-                    <artifactId>hornetq-jms</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.hornetq</groupId>
+-                    <artifactId>hornetq-ra</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-appclient</artifactId>
+                 </dependency>
+@@ -1279,11 +1289,6 @@
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-messaging</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-modcluster</artifactId>
+                 </dependency>
+ 
+@@ -1461,11 +1466,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.jboss.netty</groupId>
+-                    <artifactId>netty</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.jboss.osgi.framework</groupId>
+                     <artifactId>jbosgi-framework-core</artifactId>
+                 </dependency>
+diff --git a/pom.xml b/pom.xml
+index 789a7eb..2719095 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -295,6 +295,7 @@
+         <module>management-client-content</module>
+         <module>logging</module>
+         <module>mail</module>
++        <module>messaging</module>
+         <module>naming</module>
+         <module>network</module>
+         <module>platform-mbean</module>
+@@ -5981,7 +5982,6 @@
+                 -->
+                 <module>jdr</module>
+                 <module>jsr77</module>
+-                <module>messaging</module>
+                 <module>modcluster</module>
+                 <module>osgi</module>
+                 <module>remoting-test</module>
+-- 
+1.7.10.1
+

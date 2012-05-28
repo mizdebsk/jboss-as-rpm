@@ -1,0 +1,48 @@
+From 689a0ffb3feef54e861c0316ecdd83622b9f1db6 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Wed, 9 May 2012 17:54:39 +0200
+Subject: [PATCH 56/61] Added org.jboss.as.webservices.server.integration and
+ org.jboss.as.webservices.server.jaxrpc-integration
+ wrapper modules
+
+---
+ build/build.xml |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index d9b49d0..914c896 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -493,6 +493,14 @@
+             <maven-resource group="org.jboss.web" artifact="jbossweb"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.webservices.server.integration">
++            <!-- this is a dependencies only wrapper module - to support multiple JBossWS SOAP stacks -->
++        </module-def>
++
++        <module-def name="org.jboss.as.webservices.server.jaxrpc-integration">
++            <!-- this is a dependencies only module for JAXRPC functionalities provided by JBossWS Native stack -->
++        </module-def>
++
+         <module-def name="org.jboss.as.weld">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-weld"/>
+         </module-def>
+@@ -1043,14 +1051,6 @@
+             <maven-resource-with-classifier group="org.jboss.ws.cxf" artifact="jbossws-cxf-resources" classifier="jboss711"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.webservices.server.integration">
+-            <!-- this is a dependencies only wrapper module - to support multiple JBossWS SOAP stacks -->
+-        </module-def>
+-
+-        <module-def name="org.jboss.as.webservices.server.jaxrpc-integration">
+-            <!-- this is a dependencies only module for JAXRPC functionalities provided by JBossWS Native stack -->
+-        </module-def>
+-
+         <module-def name="org.jboss.as.xts">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-xts"/>
+         </module-def>
+-- 
+1.7.10.2
+

@@ -730,6 +730,7 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 * Mon Jun 04 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-4
 - jboss-as-cp script is missing argument placeholder for c optarg, RHBZ#827571
 - Create a startup script when creating a new user instance (jboss-as-cp), RHBZ#827588
+- The user instance create script (jboss-as-cp) should allow a port offset to be specified, RHBZ#827589
 
 * Fri May 11 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-3
 - Changed the way we apply patches at build time

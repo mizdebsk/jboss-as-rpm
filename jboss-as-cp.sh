@@ -11,12 +11,13 @@ OPTIONS:
    -h      Show this message
    -c      JBoss AS configuration xml file (see \$JBOSS_HOME/docs/examples/configs/), default: standalone-web.xml
    -l      Location where the directory structure should be created (required)
+   -p      Port offset, see https://community.jboss.org/docs/DOC-16705
 EOF
 }
 
 STANDALONE_XML="standalone-web.xml"
 
-while getopts “hc:l:” OPTION
+while getopts “hc:l:p:” OPTION
 do
      case $OPTION in
          h)
@@ -28,6 +29,9 @@ do
              ;;
          l)
              LOCATION=$OPTARG
+             ;;
+         p)
+             PORT_OFFSET=$OPTARG
              ;;
          ?)
              usage
@@ -62,6 +66,11 @@ chmod 600 ${LOCATION}/configuration/mgmt-users.properties
 
 # Set the executable permissions correctly
 chmod 755 ${LOCATION}/bin/standalone.sh
+
+# Set the port offset (if specified)
+if [ "x$PORT_OFFSET" != "x" ]; then
+  sed -i s/'\(socket-binding-group name="standard-sockets" default-interface="public"\).*'/"\1 port-offset=\"${PORT_OFFSET}\">"/ ${LOCATION}/configuration/${STANDALONE_XML}
+fi
 
 echo -e "Directory ${LOCATION} is prepared to launch JBoss AS!\n\nYou can now boot your instance: ${LOCATION}/bin/standalone.sh"
 

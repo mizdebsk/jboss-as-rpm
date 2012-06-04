@@ -46,14 +46,22 @@ if [ "x$JBOSS_HOME" = "x" ]; then
    JBOSS_HOME="/usr/share/jboss-as"
 fi
 
-mkdir -p ${LOCATION}/{data,deployments,log,tmp,configuration}
+mkdir -p ${LOCATION}/{bin,data,deployments,log,tmp,configuration}
 
 cp $JBOSS_HOME/docs/examples/configs/$STANDALONE_XML ${LOCATION}/configuration/
 cp $JBOSS_HOME/docs/examples/properties/logging.properties ${LOCATION}/configuration/
 cp $JBOSS_HOME/docs/examples/properties/mgmt-users.properties ${LOCATION}/configuration/
 
+# Create the standalone script
+echo "#!/bin/sh
+
+JBOSS_BASE_DIR=${LOCATION} ${JBOSS_HOME}/bin/standalone.sh -c ${STANDALONE_XML}" > ${LOCATION}/bin/standalone.sh
+
 # Make sure the mgmt-users.properties file has correct permissions!
 chmod 600 ${LOCATION}/configuration/mgmt-users.properties
 
-echo -e "Directory ${LOCATION} is prepared to launch JBoss AS!\n\nYou can now boot your server: JBOSS_BASE_DIR=${LOCATION} ${JBOSS_HOME}/bin/standalone.sh -c ${STANDALONE_XML}"
+# Set the executable permissions correctly
+chmod 755 ${LOCATION}/bin/standalone.sh
+
+echo -e "Directory ${LOCATION} is prepared to launch JBoss AS!\n\nYou can now boot your instance: ${LOCATION}/bin/standalone.sh"
 

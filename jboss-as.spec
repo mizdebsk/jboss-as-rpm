@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          3%{?dist}
+Release:          4%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -727,6 +727,9 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Mon Jun 04 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-4
+- jboss-as-cp script is missing argument placeholder for c optarg, RHBZ#827571
+
 * Fri May 11 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-3
 - Changed the way we apply patches at build time
 - Added org.jboss.as.sar module

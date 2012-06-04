@@ -16,7 +16,7 @@ EOF
 
 STANDALONE_XML="standalone-web.xml"
 
-while getopts “hcl:” OPTION
+while getopts “hc:l:” OPTION
 do
      case $OPTION in
          h)

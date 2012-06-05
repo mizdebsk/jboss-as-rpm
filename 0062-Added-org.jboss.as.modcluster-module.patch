@@ -1,0 +1,109 @@
+From d61882a145903429898fcc2d85b1e8300282719f Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 5 Jun 2012 10:50:15 +0200
+Subject: [PATCH 62/62] Added org.jboss.as.modcluster module
+
+---
+ build/build.xml                                        |   16 ++++++++--------
+ build/pom.xml                                          |   10 +++++-----
+ .../jboss/as/modcluster/ModClusterSubsystemAdd.java    |    1 -
+ pom.xml                                                |    2 +-
+ 4 files changed, 14 insertions(+), 15 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 77aa728..dc1502e 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -490,6 +490,14 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-messaging"/>
+         </module-def>
+ 
++        <module-def name="org.jboss.as.modcluster">
++            <maven-resource group="org.jboss.as" artifact="jboss-as-modcluster"/>
++            <maven-resource group="org.jboss.mod_cluster" artifact="mod_cluster-container-spi"/>
++            <maven-resource group="org.jboss.mod_cluster" artifact="mod_cluster-core"/>
++            <maven-resource group="org.jboss.mod_cluster" artifact="mod_cluster-container-catalina"/>
++            <maven-resource group="org.jboss.mod_cluster" artifact="mod_cluster-container-jbossweb"/>
++        </module-def>
++
+         <module-def name="org.jboss.as.network">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-network"/>
+         </module-def>
+@@ -1038,14 +1046,6 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jpa-openjpa"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.as.modcluster">
+-            <maven-resource group="org.jboss.as" artifact="jboss-as-modcluster"/>
+-            <maven-resource group="org.jboss.mod_cluster" artifact="mod_cluster-container-spi"/>
+-            <maven-resource group="org.jboss.mod_cluster" artifact="mod_cluster-core"/>
+-            <maven-resource group="org.jboss.mod_cluster" artifact="mod_cluster-container-catalina"/>
+-            <maven-resource group="org.jboss.mod_cluster" artifact="mod_cluster-container-jbossweb"/>
+-        </module-def>
+-
+      	<module-def name="org.jboss.as.osgi">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-osgi-service"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index 42a664c..1389c25 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -409,6 +409,11 @@
+ 
+         <dependency>
+             <groupId>org.jboss.as</groupId>
++            <artifactId>jboss-as-modcluster</artifactId>
++        </dependency>
++
++        <dependency>
++            <groupId>org.jboss.as</groupId>
+             <artifactId>jboss-as-naming</artifactId>
+         </dependency>
+ 
+@@ -1289,11 +1294,6 @@
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+-                    <artifactId>jboss-as-modcluster</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-osgi-configadmin</artifactId>
+                 </dependency>
+ 
+diff --git a/modcluster/src/main/java/org/jboss/as/modcluster/ModClusterSubsystemAdd.java b/modcluster/src/main/java/org/jboss/as/modcluster/ModClusterSubsystemAdd.java
+index 71cdff4..b00b073 100644
+--- a/modcluster/src/main/java/org/jboss/as/modcluster/ModClusterSubsystemAdd.java
++++ b/modcluster/src/main/java/org/jboss/as/modcluster/ModClusterSubsystemAdd.java
+@@ -46,7 +46,6 @@ import org.jboss.modcluster.config.impl.ModClusterConfig;
+ import org.jboss.msc.service.ServiceBuilder;
+ import org.jboss.msc.service.ServiceController;
+ import org.jboss.msc.service.ServiceController.Mode;
+-import org.omg.CosCollection.Command;
+ 
+ /**
+  * The managed subsystem add update.
+diff --git a/pom.xml b/pom.xml
+index 2719095..fa79681 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -296,6 +296,7 @@
+         <module>logging</module>
+         <module>mail</module>
+         <module>messaging</module>
++        <module>modcluster</module>
+         <module>naming</module>
+         <module>network</module>
+         <module>platform-mbean</module>
+@@ -5982,7 +5983,6 @@
+                 -->
+                 <module>jdr</module>
+                 <module>jsr77</module>
+-                <module>modcluster</module>
+                 <module>osgi</module>
+                 <module>remoting-test</module>
+                 <module>spec-api</module>
+-- 
+1.7.10.2
+

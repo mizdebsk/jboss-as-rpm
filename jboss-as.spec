@@ -12,7 +12,7 @@
 %global jbuid 185
 
 # Enabled modules:
-%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jaxr jaxrs jmx logging management-client-content mail naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
+%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jaxr jaxrs jmx logging management-client-content mail modcluster naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
 
 # Additional modules enabled, but not listed above because of different structure:
 # clustering
@@ -95,6 +95,7 @@ Patch57:          0058-Enabled-org.jboss.spec.javax.ws.rs-module.patch
 Patch58:          0059-Added-org.jboss.as.jaxr-module.patch
 Patch59:          0060-Added-org.jboss.as.messaging-module.patch
 Patch60:          0061-Runtime-dependencies.patch
+Patch61:          0062-Added-org.jboss.as.modcluster-module.patch
 
 BuildArch:        noarch
 
@@ -125,6 +126,7 @@ BuildRequires:    infinispan
 BuildRequires:    ironjacamar
 BuildRequires:    jandex
 BuildRequires:    java-devel >= 1:1.7.0
+BuildRequires:    javacc-maven-plugin
 BuildRequires:    javamail
 BuildRequires:    javassist
 BuildRequires:    jgroups
@@ -191,9 +193,9 @@ BuildRequires:    maven-checkstyle-plugin
 BuildRequires:    maven-resources-plugin
 BuildRequires:    maven-surefire-plugin
 BuildRequires:    maven-dependency-plugin
-BuildRequires:    netty
-BuildRequires:    javacc-maven-plugin
 BuildRequires:    mojarra
+BuildRequires:    mod_cluster-java >= 1.2.1-2
+BuildRequires:    netty
 BuildRequires:    picketbox
 BuildRequires:    picketbox-commons
 BuildRequires:    resteasy >= 2.3.2-7
@@ -291,6 +293,7 @@ Requires:         jul-to-slf4j-stub
 Requires:         joda-time
 Requires:         jpackage-utils
 Requires:         mojarra
+Requires:         mod_cluster-java >= 1.2.1-2
 Requires:         netty
 Requires:         openssl
 Requires:         picketbox
@@ -334,7 +337,7 @@ git commit -a -q -m "%{version} baseline."
 git am %{patches}
 
 %build
-export MAVEN_OPTS="-Xms512m -Xmx1024m -XX:PermSize=128m -XX:MaxPermSize=256m"
+export MAVEN_OPTS="-Xms512m -Xmx1024m -XX:PermSize=128m -XX:MaxPermSize=384m"
 
 # We don't have packaged all test dependencies (jboss-test for example)
 mvn-rpmbuild -Dmaven.test.skip=true -Dminimalistic -e install javadoc:aggregate
@@ -614,6 +617,11 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath joda-time) org/joda/time/main/joda-time.jar
     ln -s $(build-classpath log4j) org/apache/log4j/main/log4j.jar
     ln -s $(build-classpath mojarra/jsf-impl) com/sun/jsf-impl/main/jsf-impl.jar
+
+    for m in container-catalina container-jbossweb container-spi core; do
+      ln -s $(build-classpath mod_cluster/${m}) org/jboss/as/modcluster/main/${m}.jar
+    done
+
     ln -s $(build-classpath netty) org/jboss/netty/main/netty.jar
     ln -s $(build-classpath picketbox/picketbox) org/picketbox/main/picketbox.jar
     ln -s $(build-classpath picketbox/infinispan) org/picketbox/main/infinispan.jar
@@ -731,6 +739,7 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 - jboss-as-cp script is missing argument placeholder for c optarg, RHBZ#827571
 - Create a startup script when creating a new user instance (jboss-as-cp), RHBZ#827588
 - The user instance create script (jboss-as-cp) should allow a port offset to be specified, RHBZ#827589
+- Added org.jboss.as.modcluster module
 
 * Fri May 11 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-3
 - Changed the way we apply patches at build time

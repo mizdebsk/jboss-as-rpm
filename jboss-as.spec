@@ -12,7 +12,7 @@
 %global jbuid 185
 
 # Enabled modules:
-%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jaxr jaxrs jmx logging management-client-content mail modcluster naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
+%global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jaxr jaxrs jmx jsr77 logging management-client-content mail modcluster naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
 
 # Additional modules enabled, but not listed above because of different structure:
 # clustering
@@ -96,6 +96,8 @@ Patch58:          0059-Added-org.jboss.as.jaxr-module.patch
 Patch59:          0060-Added-org.jboss.as.messaging-module.patch
 Patch60:          0061-Runtime-dependencies.patch
 Patch61:          0062-Added-org.jboss.as.modcluster-module.patch
+Patch62:          0063-Enable-jboss-as-jms-client-bom.patch
+Patch63:          0064-Added-org.jboss.as.jsr77-module.patch
 
 BuildArch:        noarch
 
@@ -144,6 +146,7 @@ BuildRequires:    jboss-iiop-client
 BuildRequires:    jboss-invocation
 BuildRequires:    jboss-interceptor
 BuildRequires:    jboss-interceptors-1.1-api
+BuildRequires:    jboss-j2eemgmt-1.1-api
 BuildRequires:    jboss-jacc-1.4-api
 BuildRequires:    jboss-jad-1.2-api
 BuildRequires:    jboss-jaxb-2.2-api
@@ -250,6 +253,7 @@ Requires:         jboss-iiop-client
 Requires:         jboss-interceptor
 Requires:         jboss-interceptors-1.1-api
 Requires:         jboss-invocation
+Requires:         jboss-j2eemgmt-1.1-api
 Requires:         jboss-jacc-1.4-api
 Requires:         jboss-jad-1.2-api
 Requires:         jboss-jaxb-2.2-api
@@ -568,6 +572,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-interceptor-spi) org/jboss/interceptor/spi/main/jboss-interceptor-spi.jar
     ln -s $(build-classpath jboss-interceptors-1.1-api) javax/interceptor/api/main/jboss-interceptors-1.1-api.jar
     ln -s $(build-classpath jboss-invocation) org/jboss/invocation/main/jboss-invocation.jar
+    ln -s $(build-classpath jboss-jboss-j2eemgmt-1.1-api) javax/management/j2ee/api/main/jboss-j2eemgmt-1.1-api.jar
     ln -s $(build-classpath jboss-jacc-1.4-api) javax/security/jacc/api/main/jboss-jacc-1.4-api.jar
     ln -s $(build-classpath jboss-jad-1.2-api) javax/enterprise/deploy/api/main/jboss-jad-1.2-api.jar
     ln -s $(build-classpath jboss-jaxb-2.2-api) javax/xml/bind/api/main/jboss-jaxb-2.2-api.jar
@@ -740,6 +745,7 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 - Create a startup script when creating a new user instance (jboss-as-cp), RHBZ#827588
 - The user instance create script (jboss-as-cp) should allow a port offset to be specified, RHBZ#827589
 - Added org.jboss.as.modcluster module
+- Added org.jboss.as.jsr77 module
 
 * Fri May 11 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-3
 - Changed the way we apply patches at build time

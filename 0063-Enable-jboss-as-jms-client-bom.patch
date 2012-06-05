@@ -1,0 +1,32 @@
+From 0cd4f0195ec7f05e6cab70bf39b3cd59bc3fd2de Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 5 Jun 2012 14:03:18 +0200
+Subject: [PATCH 63/63] Enable jboss-as-jms-client-bom
+
+---
+ pom.xml |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pom.xml b/pom.xml
+index fa79681..91651f3 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -273,6 +273,7 @@
+         <module>build-config</module>
+         <module>cli</module>
+         <module>client/ejb</module>
++        <module>client/jms</module>
+         <module>clustering</module>
+         <module>cmp</module>
+         <module>config-assembly</module>
+@@ -5974,7 +5975,6 @@
+                 <module>build</module>
+                 <module>build-config</module>
+                 <module>arquillian</module>
+-                <module>client/jms</module>
+                 <module>client/shade</module>
+                 <module>configadmin</module>
+                 <module>dist</module>
+-- 
+1.7.10.2
+

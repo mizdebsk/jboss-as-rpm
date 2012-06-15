@@ -15,7 +15,7 @@
 %global modules cli cmp connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jaxr jaxrs jmx jsr77 logging management-client-content mail modcluster naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
 
 # Additional modules enabled, but not listed above because of different structure:
-# clustering
+# arquillian domain-http clustering jpa osgi
 
 Name:             jboss-as
 Version:          7.1.1
@@ -98,6 +98,10 @@ Patch60:          0061-Runtime-dependencies.patch
 Patch61:          0062-Added-org.jboss.as.modcluster-module.patch
 Patch62:          0063-Enable-jboss-as-jms-client-bom.patch
 Patch63:          0064-Added-org.jboss.as.jsr77-module.patch
+Patch64:          0065-Added-org.jboss.as.arquillian-module.patch
+Patch65:          0066-Added-org.jboss.as.osgi-module.patch
+Patch66:          0067-Disable-for-now-ARQ-testng-integration.patch
+Patch67:          0068-Added-org.jboss.as.configadmin-module.patch
 
 BuildArch:        noarch
 
@@ -110,6 +114,8 @@ BuildRequires:    apache-commons-logging
 BuildRequires:    apache-james-project
 BuildRequires:    apache-juddi
 BuildRequires:    apache-scout
+BuildRequires:    arquillian-core
+BuildRequires:    arquillian-osgi
 BuildRequires:    atinject
 BuildRequires:    bean-validation-api
 BuildRequires:    bsf
@@ -118,6 +124,7 @@ BuildRequires:    cdi-api
 BuildRequires:    dom4j
 # TODO: ecj dependency tree is big and ugly...
 BuildRequires:    ecj
+BuildRequires:    felix-configadmin
 BuildRequires:    guava
 BuildRequires:    h2
 BuildRequires:    hibernate-jpa-2.0-api
@@ -132,6 +139,7 @@ BuildRequires:    javacc-maven-plugin
 BuildRequires:    javamail
 BuildRequires:    javassist
 BuildRequires:    jgroups
+BuildRequires:    jbosgi-repository
 BuildRequires:    jboss-annotations-1.1-api
 BuildRequires:    jboss-classfilewriter
 BuildRequires:    jboss-common-core
@@ -203,6 +211,8 @@ BuildRequires:    picketbox
 BuildRequires:    picketbox-commons
 BuildRequires:    resteasy >= 2.3.2-7
 BuildRequires:    rhq-plugin-annotations
+BuildRequires:    shrinkwrap
+BuildRequires:    shrinkwrap-resolver
 BuildRequires:    slf4j
 BuildRequires:    slf4j-jboss-logmanager
 BuildRequires:    staxmapper
@@ -222,12 +232,15 @@ Requires:         apache-commons-logging
 Requires:         apache-juddi
 Requires:         apache-scout
 Requires:         apr
+Requires:         arquillian-core
+Requires:         arquillian-osgi
 Requires:         bean-validation-api
 Requires:         cal10n
 Requires:         cdi-api
 Requires:         dom4j
 # TODO: ecj dependency tree is big and ugly...
 Requires:         ecj
+Requires:         felix-configadmin
 Requires:         guava
 Requires:         h2
 Requires:         hibernate-jpa-2.0-api
@@ -239,6 +252,7 @@ Requires:         jandex
 Requires:         java >= 1:1.7.0
 Requires:         javamail
 Requires:         javassist
+Requires:         jbosgi-repository
 Requires:         jboss-annotations-1.1-api
 Requires:         jboss-classfilewriter
 Requires:         jboss-common-core
@@ -304,6 +318,8 @@ Requires:         picketbox
 Requires:         picketbox-commons
 Requires:         resteasy >= 2.3.2-7
 Requires:         rhq-plugin-annotations
+Requires:         shrinkwrap
+Requires:         shrinkwrap-resolver
 Requires:         slf4j
 Requires:         slf4j-jboss-logmanager
 Requires:         staxmapper
@@ -377,13 +393,19 @@ for m in %{modules} build-config ee-deployment; do
 done
 
 # Definition of submodules
-multimodules="domain-http clustering jpa"
+multimodules="arquillian domain-http clustering jpa osgi"
 # If a submodule contains hyphen in the name, just skip it, e.g. domain-http => domainhttp
+modules_arquillian="common container-managed container-remote protocol-jmx testenricher-msc"
 modules_clustering="api common impl jgroups infinispan registry service web-spi web-infinispan ejb3-infinispan"
 modules_jpa="util spi"
 modules_domainhttp="interface error-context"
+modules_osgi="service configadmin"
 
 for m in ${multimodules}; do
+  # POM
+  cp -a ${m}/pom.xml $RPM_BUILD_ROOT%{_mavenpomdir}/JPP.%{name}-%{name}-${m}-parent.pom
+  # DEPMAP
+  %add_maven_depmap JPP.%{name}-%{name}-${m}-parent.pom
 
   eval submodules=\$"modules_${m//-/}"
 
@@ -746,6 +768,9 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 - The user instance create script (jboss-as-cp) should allow a port offset to be specified, RHBZ#827589
 - Added org.jboss.as.modcluster module
 - Added org.jboss.as.jsr77 module
+- Added org.jboss.as.arquillian module
+- Added org.jboss.as.osgi module
+- Added org.jboss.as.configadmin module
 
 * Fri May 11 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-3
 - Changed the way we apply patches at build time

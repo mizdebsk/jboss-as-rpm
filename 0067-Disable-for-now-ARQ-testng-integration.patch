@@ -1,0 +1,26 @@
+From 83edff3ce4092a23b9951de588c198ad1f66fffc Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Fri, 15 Jun 2012 09:56:36 +0200
+Subject: [PATCH 67/67] Disable for now ARQ testng-integration
+
+---
+ arquillian/pom.xml |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arquillian/pom.xml b/arquillian/pom.xml
+index 346a9cc..22eef3b 100644
+--- a/arquillian/pom.xml
++++ b/arquillian/pom.xml
+@@ -42,8 +42,8 @@
+         <module>container-remote</module>
+         <module>protocol-jmx</module>
+         <module>testenricher-msc</module>
+-        <module>testng-integration</module>
+         <!--
++        <module>testng-integration</module>
+         <module>container-embedded</module>
+         <module>protocol-servlet</module>
+         <module>processor-jsfunit</module>
+-- 
+1.7.10.2
+

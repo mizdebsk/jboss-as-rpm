@@ -1,0 +1,618 @@
+From 34f21424e3e4bbf9d61267e3ed5980a0ef102b15 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 19 Jun 2012 13:22:27 +0200
+Subject: [PATCH 20/25] Commenting out still unavailable dependencies
+
+---
+ build/build.xml |   46 +++++++++++++++++++++++++++++++++++++++++++---
+ build/pom.xml   |   46 +++++++++++++++++++++++++++++++++++++++++++---
+ 2 files changed, 86 insertions(+), 6 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index a825a08..8ad359c 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -86,7 +86,7 @@
+ 
+     <target name="create-ext-content">
+         <mkdir dir="${output.dir}/modules/org/jboss/integration/ext-content/main/bundled"/>
+-        <copy file="${org.jboss.seam.integration:jboss-seam-int-jbossas:jar}" tofile="${output.dir}/modules/org/jboss/integration/ext-content/main/bundled/jboss-seam-int.jar"/>
++        <!-- <copy file="${org.jboss.seam.integration:jboss-seam-int-jbossas:jar}" tofile="${output.dir}/modules/org/jboss/integration/ext-content/main/bundled/jboss-seam-int.jar"/> -->
+ 
+         <!-- Copy the EJB specific schemas to the JBOSS_HOME/docs/schema folder -->
+         <unzip src="${org.jboss.metadata:jboss-metadata-ejb:jar}" dest="${output.dir}/docs/schema/">
+@@ -317,26 +317,32 @@
+             <maven-resource group="com.sun.faces" artifact="jsf-impl"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="com.sun.jsf-impl" slot="1.2">
+             <maven-resource group="javax.faces" artifact="jsf-impl"/>
+         </module-def>
++        -->
+ 
+         <module-def name="com.sun.xml.bind">
+             <maven-resource group="com.sun.xml.bind" artifact="jaxb-impl"/>
+             <maven-resource group="com.sun.xml.bind" artifact="jaxb-xjc"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="com.sun.xml.messaging.saaj">
+             <maven-resource group="com.sun.xml.messaging.saaj" artifact="saaj-impl"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.dom4j">
+             <maven-resource group="dom4j" artifact="dom4j" />
+         </module-def>
+ 
++        <!--
+         <module-def name="gnu.getopt">
+             <maven-resource group="gnu-getopt" artifact="getopt" />
+         </module-def>
++        -->
+ 
+         <module-def name="javaee.api"/>
+ 
+@@ -364,9 +370,11 @@
+             <maven-resource group="org.jboss.spec.javax.faces" artifact="jboss-jsf-api_2.1_spec"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="javax.faces.api" slot="1.2">
+             <maven-resource group="javax.faces" artifact="jsf-api"/>
+         </module-def>
++        -->
+ 
+         <module-def name="javax.inject.api">
+             <maven-resource group="javax.inject" artifact="javax.inject"/>
+@@ -380,9 +388,11 @@
+             <maven-resource group="org.jboss.spec.javax.jms" artifact="jboss-jms-api_1.1_spec"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="javax.jws.api">
+             <maven-resource group="javax.jws" artifact="jsr181-api"/>
+         </module-def>
++        -->
+ 
+         <module-def name="javax.management.j2ee.api">
+             <maven-resource group="org.jboss.spec.javax.management.j2ee" artifact="jboss-j2eemgmt-api_1.1_spec"/>
+@@ -508,6 +518,7 @@
+             <maven-resource group="commons-pool" artifact="commons-pool"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="org.apache.cxf">
+             <maven-resource group="org.apache.cxf" artifact="cxf-api"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-common-utilities"/>
+@@ -540,6 +551,7 @@
+             <maven-resource group="org.apache.cxf.xjcplugins" artifact="cxf-xjc-dv"/>
+             <maven-resource group="org.apache.cxf.xjcplugins" artifact="cxf-xjc-ts"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.apache.httpcomponents">
+             <!-- These probably do not need to be split up but we can revisit later -->
+@@ -549,7 +561,7 @@
+         </module-def>
+ 
+         <module-def name="org.apache.james.mime4j">
+-            <maven-resource group="org.apache.james" artifact="apache-mime4j"/>
++            <maven-resource group="org.apache.james" artifact="apache-mime4j-core"/>
+         </module-def>
+     	
+         <module-def name="org.apache.juddi.juddi-client">
+@@ -589,9 +601,11 @@
+             <maven-resource group="xml-resolver" artifact="xml-resolver"/>
+         </module-def>
+ 
++      <!--
+     	<module-def name="org.apache.ws.xmlschema">
+             <maven-resource group="org.apache.ws.xmlschema" artifact="xmlschema-core"/>
+         </module-def>
++        -->
+ 
+     	<module-def name="org.apache.ws.security">
+             <maven-resource group="org.apache.ws.security" artifact="wss4j"/>
+@@ -622,6 +636,7 @@
+             <maven-resource group="org.codehaus.jettison" artifact="jettison" />
+         </module-def>
+ 
++        <!--
+         <module-def name="org.hibernate">
+             <maven-resource group="org.hibernate" artifact="hibernate-core" />
+             <maven-resource group="org.hibernate.common" artifact="hibernate-commons-annotations" />
+@@ -632,6 +647,8 @@
+         <module-def name="org.hibernate.envers">
+             <maven-resource group="org.hibernate" artifact="hibernate-envers"/>
+         </module-def>
++        -->
++
+         <module-def name="org.hibernate.validator">
+             <maven-resource group="org.hibernate" artifact="hibernate-validator"/>
+         </module-def>
+@@ -685,9 +702,11 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-appclient"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="org.jboss.as.console">
+             <maven-resource-with-classifier group="org.jboss.as" artifact="jboss-as-console" classifier="resources"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.jboss.as.cli">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-cli"/>
+@@ -789,15 +808,18 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jaxrs"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="org.jboss.as.jdr">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jdr"/>
+             <maven-resource group="org.jboss.as" artifact="jboss-as-sos"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.jboss.as.jpa">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jpa"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="org.jboss.as.jpa.hibernate" slot="3">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jpa-hibernate3"/>
+         </module-def>
+@@ -809,6 +831,7 @@
+         <module-def name="org.jboss.as.jpa.openjpa">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jpa-openjpa"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.jboss.as.jpa.spi">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jpa-spi"/>
+@@ -869,7 +892,7 @@
+         <module-def name="org.jboss.as.web">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-web"/>
+             <maven-resource group="org.jboss.web" artifact="jbossweb"/>
+-            <extract-native-jar group="org.jboss.as" artifact="jbossweb-native"/>
++            <!-- <extract-native-jar group="org.jboss.as" artifact="jbossweb-native"/> -->
+         </module-def>
+ 
+         <module-def name="org.jboss.as.webservices">
+@@ -888,9 +911,12 @@
+         <module-def name="org.jboss.as.weld">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-weld"/>
+         </module-def>
++
++        <!--
+         <module-def name="org.jboss.as.xts">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-xts"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.jboss.classfilewriter">
+             <maven-resource group="org.jboss.classfilewriter" artifact="jboss-classfilewriter"/>
+@@ -1068,6 +1094,7 @@
+             <maven-resource group="org.jboss.ws" artifact="jbossws-common"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="org.jboss.ws.cxf.jbossws-cxf-client"/>
+ 
+         <module-def name="org.jboss.ws.cxf.jbossws-cxf-factories">
+@@ -1101,6 +1128,7 @@
+         <module-def name="org.jboss.ws.native.jbossws-native-services">
+             <maven-resource group="org.jboss.ws.native" artifact="jbossws-native-services"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.jboss.ws.api">
+             <maven-resource group="org.jboss.ws" artifact="jbossws-api"/>
+@@ -1110,9 +1138,11 @@
+             <maven-resource group="org.jboss.ws" artifact="jbossws-spi"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="org.jboss.ws.tools.common">
+             <maven-resource group="org.jboss.ws" artifact="jbossws-common-tools"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.jboss.ws.saaj-impl">
+         </module-def>
+@@ -1123,6 +1153,7 @@
+         <module-def name="org.jboss.ws.tools.wsconsume">
+         </module-def>
+ 
++        <!--
+         <module-def name="org.jboss.xb">
+             <maven-resource group="org.jboss" artifact="jbossxb"/>
+         </module-def>
+@@ -1132,6 +1163,7 @@
+             <maven-resource group="org.jboss.jbossts" artifact="jbossxts-api"/>
+             <maven-resource group="org.jboss.jbossts" artifact="jbosstxbridge"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.jgroups">
+             <maven-resource group="org.jgroups" artifact="jgroups"/>
+@@ -1147,11 +1179,13 @@
+             <maven-resource group="org.osgi" artifact="org.osgi.core"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="org.picketlink">
+             <maven-resource group="org.picketlink" artifact="picketlink-fed" jandex="true"/>
+             <maven-resource group="org.picketlink" artifact="picketlink-bindings" jandex="true"/>
+             <maven-resource group="org.picketlink" artifact="picketlink-bindings-jboss"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.picketbox">
+             <maven-resource group="org.picketbox" artifact="picketbox"/>
+@@ -1159,9 +1193,11 @@
+             <maven-resource group="org.picketbox" artifact="picketbox-commons"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="org.python.jython.standalone">
+             <maven-resource group="org.python" artifact="jython-standalone"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.slf4j.jcl-over-slf4j">
+             <maven-resource group="org.slf4j" artifact="jcl-over-slf4j"/>
+@@ -1209,9 +1245,11 @@
+             <maven-bundle group="org.apache.felix" artifact="org.apache.felix.configadmin"/>
+         </bundle-def>
+ 
++        <!--
+         <bundle-def name="org.apache.felix.log">
+             <maven-bundle group="org.apache.felix" artifact="org.apache.felix.log"/>
+         </bundle-def>
++        -->
+ 
+         <bundle-def name="org.jboss.as.osgi.configadmin">
+             <maven-bundle group="org.jboss.as" artifact="jboss-as-osgi-configadmin"/>
+@@ -1221,6 +1259,7 @@
+             <maven-bundle group="org.jboss.osgi.http" artifact="jbosgi-http-api"/>
+         </bundle-def>
+ 
++        <!--
+         <bundle-def name="org.jboss.osgi.logging">
+             <maven-bundle group="org.jboss.osgi.logging" artifact="jboss-osgi-logging"/>
+         </bundle-def>
+@@ -1228,6 +1267,7 @@
+         <bundle-def name="org.osgi.enterprise">
+             <maven-bundle group="org.osgi" artifact="org.osgi.enterprise"/>
+         </bundle-def>
++        -->
+ 
+         <bundle-def name="org.projectodd.stilts">
+             <maven-bundle group="org.projectodd.stilts" artifact="stilts-stomplet-server-bundle"/>
+diff --git a/build/pom.xml b/build/pom.xml
+index bc6078e..2928f16 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -237,10 +237,12 @@
+                     <artifactId>jaxb-xjc</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>com.sun.xml.messaging.saaj</groupId>
+                     <artifactId>saaj-impl</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>commons-beanutils</groupId>
+@@ -282,12 +284,12 @@
+                     <artifactId>dom4j</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>gnu-getopt</groupId>
+                     <artifactId>getopt</artifactId>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>org.jacorb</groupId>
+                     <artifactId>jacorb</artifactId>
+@@ -299,6 +301,7 @@
+                     <artifactId>cdi-api</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>javax.faces</groupId>
+                     <artifactId>jsf-api</artifactId>
+@@ -308,16 +311,19 @@
+                     <groupId>javax.faces</groupId>
+                     <artifactId>jsf-impl</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>javax.inject</groupId>
+                     <artifactId>javax.inject</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>javax.jws</groupId>
+                     <artifactId>jsr181-api</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>javax.mail</groupId>
+@@ -364,6 +370,7 @@
+                     <artifactId>nekohtml</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.apache.cxf</groupId>
+                     <artifactId>cxf-api</artifactId>
+@@ -513,16 +520,19 @@
+                     <groupId>org.apache.cxf.xjcplugins</groupId>
+                     <artifactId>cxf-xjc-ts</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.apache.felix</groupId>
+                     <artifactId>org.apache.felix.configadmin</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.apache.felix</groupId>
+                     <artifactId>org.apache.felix.log</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.apache.httpcomponents</groupId>
+@@ -541,7 +551,7 @@
+ 
+                 <dependency>
+                     <groupId>org.apache.james</groupId>
+-                    <artifactId>apache-mime4j</artifactId>
++                    <artifactId>apache-mime4j-core</artifactId>
+                 </dependency>
+ 
+                 <dependency>
+@@ -559,10 +569,12 @@
+                     <artifactId>scout</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.apache.ws.xmlschema</groupId>
+                     <artifactId>xmlschema-core</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.apache.velocity</groupId>
+@@ -609,6 +621,7 @@
+                     <artifactId>stax2-api</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.hibernate</groupId>
+                     <artifactId>hibernate-core</artifactId>
+@@ -628,16 +641,19 @@
+                     <groupId>org.hibernate</groupId>
+                     <artifactId>hibernate-infinispan</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.hibernate</groupId>
+                     <artifactId>hibernate-validator</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.hibernate</groupId>
+                     <artifactId>hibernate-envers</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.hibernate.javax.persistence</groupId>
+@@ -785,11 +801,13 @@
+                     <artifactId>jboss-as-configadmin</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-console</artifactId>
+                     <classifier>resources</classifier>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+@@ -856,10 +874,12 @@
+                     <artifactId>jboss-as-jaxrs</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-jdr</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+@@ -948,10 +968,12 @@
+                     <artifactId>jboss-as-security</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-sos</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+@@ -1015,6 +1037,7 @@
+                     <artifactId>jboss-as-jpa</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-jpa-hibernate3</artifactId>
+@@ -1029,6 +1052,7 @@
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-jpa-openjpa</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+@@ -1110,12 +1134,12 @@
+                     <artifactId>jbossjta-integration</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.jbossts</groupId>
+                     <artifactId>jbosstxbridge</artifactId>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>org.jboss.jbossts</groupId>
+                     <artifactId>jbossxts</artifactId>
+@@ -1186,6 +1210,7 @@
+                     <artifactId>jbosgi-framework-core</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.osgi.http</groupId>
+                     <artifactId>jbosgi-http-api</artifactId>
+@@ -1195,6 +1220,7 @@
+                     <groupId>org.jboss.osgi.logging</groupId>
+                     <artifactId>jboss-osgi-logging</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.osgi.repository</groupId>
+@@ -1281,10 +1307,12 @@
+                     <artifactId>jboss-sasl</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.seam.integration</groupId>
+                     <artifactId>jboss-seam-int-jbossas</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.security</groupId>
+@@ -1491,16 +1519,19 @@
+                     <artifactId>jbossws-common</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.ws</groupId>
+                     <artifactId>jbossws-common-tools</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.ws</groupId>
+                     <artifactId>jbossws-spi</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.ws.projects</groupId>
+                     <artifactId>jaxws-jboss-httpserver-httpspi</artifactId>
+@@ -1515,6 +1546,7 @@
+                     <groupId>org.jboss.ws.cxf</groupId>
+                     <artifactId>jbossws-cxf-factories</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.ws.cxf</groupId>
+@@ -1522,6 +1554,7 @@
+                     <classifier>jboss711</classifier>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.ws.cxf</groupId>
+                     <artifactId>jbossws-cxf-server</artifactId>
+@@ -1546,6 +1579,7 @@
+                     <groupId>org.jboss.ws.native</groupId>
+                     <artifactId>jbossws-native-services</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.xnio</groupId>
+@@ -1557,10 +1591,12 @@
+                     <artifactId>xnio-nio</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss</groupId>
+                     <artifactId>jbossxb</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jdom</groupId>
+@@ -1577,6 +1613,7 @@
+                     <artifactId>org.osgi.core</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.picketlink</groupId>
+                     <artifactId>picketlink-fed</artifactId>
+@@ -1596,6 +1633,7 @@
+                     <groupId>org.projectodd.stilts</groupId>
+                     <artifactId>stilts-stomplet-server-bundle</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.scannotation</groupId>
+@@ -1617,10 +1655,12 @@
+                     <artifactId>picketbox-infinispan</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.python</groupId>
+                     <artifactId>jython-standalone</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.slf4j</groupId>
+-- 
+1.7.10.4
+

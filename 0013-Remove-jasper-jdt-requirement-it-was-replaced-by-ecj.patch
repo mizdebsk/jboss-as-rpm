@@ -1,0 +1,57 @@
+From e18d566742c0d10420635b1f0487d1c2ff4ec1c3 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 19 Jun 2012 10:28:33 +0200
+Subject: [PATCH 13/25] Remove jasper-jdt requirement, it was replaced by ecj
+ in Fedora
+
+---
+ build/build.xml |    1 -
+ build/pom.xml   |    4 ++--
+ web/pom.xml     |    4 ++--
+ 3 files changed, 4 insertions(+), 5 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 762830d..a825a08 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -868,7 +868,6 @@
+ 
+         <module-def name="org.jboss.as.web">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-web"/>
+-            <maven-resource group="org.jboss.web" artifact="jasper-jdt"/>
+             <maven-resource group="org.jboss.web" artifact="jbossweb"/>
+             <extract-native-jar group="org.jboss.as" artifact="jbossweb-native"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index b3f1a2e..e9381fd 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -1462,8 +1462,8 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.jboss.web</groupId>
+-                    <artifactId>jasper-jdt</artifactId>
++                    <groupId>org.eclipse.jdt</groupId>
++                    <artifactId>core</artifactId>
+                 </dependency>
+ 
+                 <dependency>
+diff --git a/web/pom.xml b/web/pom.xml
+index d336f0d..ebd0b01 100644
+--- a/web/pom.xml
++++ b/web/pom.xml
+@@ -144,8 +144,8 @@
+         </dependency>
+ 
+         <dependency>
+-            <groupId>org.jboss.web</groupId>
+-            <artifactId>jasper-jdt</artifactId>
++            <groupId>org.eclipse.jdt</groupId>
++            <artifactId>core</artifactId>
+         </dependency>
+ 
+         <dependency>
+-- 
+1.7.10.4
+

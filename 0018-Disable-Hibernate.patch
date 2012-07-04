@@ -1,0 +1,41 @@
+From 7004cd7e6a219108a191fbd1378d37776daa2e3e Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 19 Jun 2012 11:51:50 +0200
+Subject: [PATCH 18/25] Disable Hibernate
+
+---
+ build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml |    1 -
+ jpa/pom.xml                                                        |    2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml b/build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml
+index 4785e5f..aa6f843 100644
+--- a/build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml
+@@ -40,7 +40,6 @@
+         <!-- For message inflow -->
+         <module name="javax.resource.api"/>
+         <module name="javax.rmi.api"/>
+-        <module name="org.hibernate"/>
+         <module name="org.jacorb" optional="true"/>
+         <module name="org.jboss.as.clustering.api"/>
+         <module name="org.jboss.as.clustering.ejb3.infinispan" services="import" optional="true"/>
+diff --git a/jpa/pom.xml b/jpa/pom.xml
+index 09dd27e..462e1ed 100644
+--- a/jpa/pom.xml
++++ b/jpa/pom.xml
+@@ -44,9 +44,11 @@
+         <module>core</module>
+         <module>util</module>
+         <module>spi</module>
++        <!--
+         <module>hibernate4</module>
+         <module>hibernate3</module>
+         <module>openjpa</module>
++        -->
+     </modules>
+ 
+     <dependencies>
+-- 
+1.7.10.4
+

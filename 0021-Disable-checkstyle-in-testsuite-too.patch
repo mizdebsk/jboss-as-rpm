@@ -1,0 +1,52 @@
+From 2fcfcab5556e34c3a1a5093715f0a3ee55541754 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 19 Jun 2012 17:32:34 +0200
+Subject: [PATCH 21/25] Disable checkstyle in testsuite too
+
+---
+ testsuite/shared/pom.xml |   29 -----------------------------
+ 1 file changed, 29 deletions(-)
+
+diff --git a/testsuite/shared/pom.xml b/testsuite/shared/pom.xml
+index d1af58a..4124cb1 100644
+--- a/testsuite/shared/pom.xml
++++ b/testsuite/shared/pom.xml
+@@ -27,35 +27,6 @@
+         <version.saxon>8.7</version.saxon>
+     </properties>
+     
+-    <build>
+-        <plugins>
+-            <plugin>
+-                <groupId>org.apache.maven.plugins</groupId>
+-                <artifactId>maven-checkstyle-plugin</artifactId>
+-                <configuration>
+-                    <!-- TODO: Don't fail on checkstyle until AS7-2954 is fixed.  -->
+-                    <failsOnError>false</failsOnError>
+-                </configuration>
+-                
+-                <executions>
+-                    <execution>
+-                        <id>check-style-ts-shared</id>
+-                        <phase>compile</phase>
+-                        <goals><goal>checkstyle</goal></goals>
+-                        <configuration>
+-                            <configLocation>${basedir}/src/main/config/checkstyle.xml</configLocation>
+-                            <consoleOutput>true</consoleOutput>
+-                            <failsOnError>false</failsOnError>
+-                            <useFile/>
+-                        </configuration>
+-                    </execution>
+-                </executions>
+-                
+-            </plugin>
+-        </plugins>
+-    </build>
+-
+-
+     <dependencies>
+         <dependency>
+             <groupId>org.jboss.as</groupId>
+-- 
+1.7.10.4
+

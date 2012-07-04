@@ -1,7 +1,7 @@
-From 927183315f53a5cfe590ace851888dcd280acbd9 Mon Sep 17 00:00:00 2001
+From 8acd55883b4e6e9aabbf0b740f1d08c91392c91b Mon Sep 17 00:00:00 2001
 From: Carlo de Wolf <cdewolf@redhat.com>
 Date: Wed, 15 Feb 2012 13:32:41 +0100
-Subject: [PATCH 01/43] AS7-3724: DO NOT UPSTREAM! an ugly patch to remove
+Subject: [PATCH 01/25] AS7-3724: DO NOT UPSTREAM! an ugly patch to remove
  IIOP functionality
 
 ---
@@ -886,5 +886,5 @@ index 696d358..c92e3ca 100644
          context.addStep(new AbstractDeploymentChainStep() {
              protected void execute(final DeploymentProcessorTarget processorTarget) {
 -- 
-1.7.10
+1.7.10.4
 

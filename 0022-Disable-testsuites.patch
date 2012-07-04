@@ -1,0 +1,27 @@
+From 15708bab207d1e0883d82c8c01d734e84997245c Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 19 Jun 2012 18:55:42 +0200
+Subject: [PATCH 22/25] Disable testsuites
+
+---
+ pom.xml |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pom.xml b/pom.xml
+index 3691619..aaef12a 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -5985,9 +5985,9 @@
+                 <module>weld</module>
+                 <!--
+                 <module>xts</module>
+-                -->
+                 <module>testsuite/shared</module>
+                 <module>testsuite</module>
++                -->
+             </modules>
+         </profile>
+     </profiles>
+-- 
+1.7.10.4
+

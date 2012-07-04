@@ -1,0 +1,100 @@
+From 6cea5b2ac5e33bbdde69211ab76ce18e2642342a Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 19 Jun 2012 19:21:43 +0200
+Subject: [PATCH 23/25] Added org.jboss.as.jdr module
+
+---
+ build/build.xml |    4 ----
+ build/pom.xml   |    6 ------
+ pom.xml         |    2 --
+ 3 files changed, 12 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 8ad359c..63995ba 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -808,12 +808,10 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jaxrs"/>
+         </module-def>
+ 
+-        <!--
+         <module-def name="org.jboss.as.jdr">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jdr"/>
+             <maven-resource group="org.jboss.as" artifact="jboss-as-sos"/>
+         </module-def>
+-        -->
+ 
+         <module-def name="org.jboss.as.jpa">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-jpa"/>
+@@ -1193,11 +1191,9 @@
+             <maven-resource group="org.picketbox" artifact="picketbox-commons"/>
+         </module-def>
+ 
+-        <!--
+         <module-def name="org.python.jython.standalone">
+             <maven-resource group="org.python" artifact="jython-standalone"/>
+         </module-def>
+-        -->
+ 
+         <module-def name="org.slf4j.jcl-over-slf4j">
+             <maven-resource group="org.slf4j" artifact="jcl-over-slf4j"/>
+diff --git a/build/pom.xml b/build/pom.xml
+index 2928f16..0cb1306 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -874,12 +874,10 @@
+                     <artifactId>jboss-as-jaxrs</artifactId>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-jdr</artifactId>
+                 </dependency>
+-                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+@@ -968,12 +966,10 @@
+                     <artifactId>jboss-as-security</artifactId>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-sos</artifactId>
+                 </dependency>
+-                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+@@ -1655,12 +1651,10 @@
+                     <artifactId>picketbox-infinispan</artifactId>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>org.python</groupId>
+                     <artifactId>jython-standalone</artifactId>
+                 </dependency>
+-                -->
+ 
+                 <dependency>
+                     <groupId>org.slf4j</groupId>
+diff --git a/pom.xml b/pom.xml
+index aaef12a..f05832e 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -5963,9 +5963,7 @@
+                 -->
+                 <module>jaxr</module>
+                 <module>jaxrs</module>
+-                <!--
+                 <module>jdr</module>
+-                -->
+                 <module>jpa</module>
+                 <module>jsr77</module>
+                 <module>logging</module>
+-- 
+1.7.10.4
+

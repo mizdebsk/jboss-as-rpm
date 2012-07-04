@@ -1,0 +1,37 @@
+From 0ea25332cc07ae5bd27401ad87b68221e4be00ca Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Wed, 20 Jun 2012 15:37:16 +0200
+Subject: [PATCH 24/25] Make AS7 work with jython 2.2.1
+
+---
+ jdr/jboss-as-jdr/src/main/java/org/jboss/as/jdr/SoSReport.java |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/jdr/jboss-as-jdr/src/main/java/org/jboss/as/jdr/SoSReport.java b/jdr/jboss-as-jdr/src/main/java/org/jboss/as/jdr/SoSReport.java
+index d5981da..0059b4e 100644
+--- a/jdr/jboss-as-jdr/src/main/java/org/jboss/as/jdr/SoSReport.java
++++ b/jdr/jboss-as-jdr/src/main/java/org/jboss/as/jdr/SoSReport.java
+@@ -32,6 +32,7 @@ import org.jboss.as.controller.client.ModelControllerClient;
+ 
+ import org.python.core.adapter.ClassicPyObjectAdapter;
+ import org.python.core.PyObject;
++import org.python.core.PyObject.ConversionException;
+ import org.python.core.PyString;
+ import org.python.util.PythonInterpreter;
+ 
+@@ -141,7 +142,11 @@ public class SoSReport {
+      * @return the full path to the report archive
+      */
+     public String execute() {
+-        return sosreport.invoke("execute").asString();
++        try {
++          return sosreport.invoke("execute").asString(0);
++        } catch (ConversionException e) {
++          return "";
++        }
+     }
+ 
+     /**
+-- 
+1.7.10.4
+

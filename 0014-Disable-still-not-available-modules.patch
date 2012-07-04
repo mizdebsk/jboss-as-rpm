@@ -1,0 +1,26 @@
+From f7e7a6f0d61683a4b8c28c060225365aad5bf0cc Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 19 Jun 2012 10:46:29 +0200
+Subject: [PATCH 14/25] Disable still not available modules
+
+---
+ pom.xml |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/pom.xml b/pom.xml
+index 800fcd7..ae8ca34 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -5969,7 +5969,9 @@
+                 -->
+                 <module>jaxr</module>
+                 <module>jaxrs</module>
++                <!--
+                 <module>jdr</module>
++                -->
+                 <module>jpa</module>
+                 <module>jsr77</module>
+                 <module>logging</module>
+-- 
+1.7.10.4
+

@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          5%{?dist}
+Release:          6%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -807,7 +807,7 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 %{bindir}/*.conf
 %{bindir}/*.sh
 %{bindir}/*.xml
-%{_bindir}
+%{_bindir}/*
 %{homedir}/auth
 %{homedir}/domain
 %{homedir}/standalone
@@ -844,6 +844,9 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Fri Jul 20 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-6
+- /usr/bin conflict between jboss-as-7.1.1-4 and filesystem-3.1-1, RHBZ#839419
+
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.1.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
 

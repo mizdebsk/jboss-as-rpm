@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          4%{?dist}
+Release:          5%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -844,6 +844,9 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.1.1-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Wed Jul 04 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-4
 - jboss-as-cp script is missing argument placeholder for c optarg, RHBZ#827571
 - Create a startup script when creating a new user instance (jboss-as-cp), RHBZ#827588

@@ -209,6 +209,7 @@ BuildRequires:    wsdl4j >= 1.6.2-5
 BuildRequires:    wss4j
 BuildRequires:    xalan-j2
 BuildRequires:    xerces-j2
+BuildRequires:    xml-security
 BuildRequires:    xnio
 
 Requires:         atinject
@@ -340,6 +341,7 @@ Requires:         wsdl4j >= 1.6.2-5
 Requires:         wss4j
 Requires:         xalan-j2
 Requires:         xerces-j2
+Requires:         xml-security
 Requires:         xnio
 Requires(pre):    shadow-utils
 
@@ -629,7 +631,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath javassist) org/javassist/main/javassist.jar
     ln -s $(build-classpath jcip-annotations) net/jcip/main/jcip-annotations.jar
     ln -s $(build-classpath jandex) org/jboss/jandex/main/jandex.jar
-    ln -s $(build-classpath jboss-jaxrs-1.1-api/jaxrs-api) javax/ws/rs/api/main/jaxrs-api.jar
+    ln -s $(build-classpath jboss-jaxrs-1.1-api) javax/ws/rs/api/main/jaxrs-api.jar
 
     ln -s $(build-classpath jbosgi-deployment) org/jboss/osgi/framework/main/jbosgi-deployment.jar
     ln -s $(build-classpath jbosgi-framework-core) org/jboss/osgi/framework/main/jbosgi-framework-core.jar
@@ -663,6 +665,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-jad-1.2-api) javax/enterprise/deploy/api/main/jboss-jad-1.2-api.jar
     ln -s $(build-classpath jboss-jaxb-2.2-api) javax/xml/bind/api/main/jboss-jaxb-2.2-api.jar
     ln -s $(build-classpath jboss-jaxb-intros) org/jboss/jaxbintros/main/jboss-jaxb-intros.jar
+    ln -s $(build-classpath jboss-jaxr-1.0-api) javax/xml/registry/api/main/jboss-jaxr-1.0-api.jar
     ln -s $(build-classpath jboss-jaxrpc-1.1-api) javax/xml/rpc/api/main/jboss-jaxrpc-1.1-api.jar
     ln -s $(build-classpath jboss-jaxrs-1.1-api) javax/ws/rs/api/main/jboss-jaxrs-1.1-api.jar
     ln -s $(build-classpath jboss-jaxws-2.2-api) javax/xml/ws/api/main/jboss-jaxws-2.2-api.jar
@@ -753,6 +756,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath xalan-j2) org/apache/xalan/main/xalan-j2.jar
     ln -s $(build-classpath xalan-j2-serializer) org/apache/xalan/main/xalan-j2-serializer.jar
     ln -s $(build-classpath xerces-j2) org/apache/xerces/main/xerces-j2.jar
+    ln -s $(build-classpath xmlsec) org/apache/santuario/xmlsec/main/xmlsec.jar
     ln -s $(build-classpath xnio-api) org/jboss/xnio/main/xnio-api.jar
     ln -s $(build-classpath xnio-nio) org/jboss/xnio/nio/main/xnio-nio.jar
   popd
@@ -846,6 +850,7 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 %changelog
 * Fri Jul 20 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-6
 - /usr/bin conflict between jboss-as-7.1.1-4 and filesystem-3.1-1, RHBZ#839419
+- Missing symlinks RHBZ#842997, RHBZ#842996
 
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.1.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

@@ -59,6 +59,7 @@ Patch21:          0022-Disable-testsuites.patch
 Patch22:          0023-Added-org.jboss.as.jdr-module.patch
 Patch23:          0024-Make-AS7-work-with-jython-2.2.1.patch
 Patch24:          0025-Remove-javax.jws.api.-This-is-part-of-the-JDK.patch
+Patch25:          0026-Specify-version-requirement-for-org.eclipse.jdt-core.patch
 
 BuildArch:        noarch
 
@@ -82,7 +83,6 @@ BuildRequires:    cal10n
 BuildRequires:    cdi-api
 BuildRequires:    cssparser
 BuildRequires:    dom4j
-# TODO: ecj dependency tree is big and ugly...
 BuildRequires:    ecj
 BuildRequires:    felix-configadmin
 BuildRequires:    felix-osgi-core
@@ -186,6 +186,10 @@ BuildRequires:    maven-surefire-plugin
 BuildRequires:    maven-dependency-plugin
 BuildRequires:    maven-help-plugin
 BuildRequires:    maven-shade-plugin
+BuildRequires:    maven-enforcer-plugin
+BuildRequires:    maven-ear-plugin
+BuildRequires:    maven-eclipse-plugin
+BuildRequires:    maven-ejb-plugin
 BuildRequires:    xml-maven-plugin
 BuildRequires:    mojarra
 BuildRequires:    mod_cluster-java >= 1.2.1-2
@@ -229,7 +233,6 @@ Requires:         cal10n
 Requires:         cdi-api
 Requires:         cssparser
 Requires:         dom4j
-# TODO: ecj dependency tree is big and ugly...
 Requires:         ecj
 Requires:         felix-configadmin
 Requires:         felix-osgi-core
@@ -848,9 +851,11 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 %doc %{homedir}/LICENSE.txt
 
 %changelog
-* Fri Jul 20 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-6
+* Wed Aug 01 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-6
 - /usr/bin conflict between jboss-as-7.1.1-4 and filesystem-3.1-1, RHBZ#839419
 - Missing symlinks RHBZ#842997, RHBZ#842996
+- Fixed BR
+- Fixed empty version requirement for org.eclipse.jdt:core
 
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.1.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

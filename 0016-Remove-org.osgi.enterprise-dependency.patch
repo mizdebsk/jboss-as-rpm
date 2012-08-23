@@ -1,13 +1,13 @@
 From fe01d291b864a085aa29f15b409c40063f689968 Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Tue, 19 Jun 2012 11:16:40 +0200
-Subject: [PATCH 16/25] Remove org.osgi.enterprise dependency
+Subject: [PATCH] Remove org.osgi.enterprise dependency
 
 ---
- build/pom.xml        |    5 -----
- osgi/service/pom.xml |    4 ----
- pom.xml              |    6 ------
- spec-api/pom.xml     |    4 ----
+ build/pom.xml        | 5 -----
+ osgi/service/pom.xml | 4 ----
+ pom.xml              | 6 ------
+ spec-api/pom.xml     | 4 ----
  4 files changed, 19 deletions(-)
 
 diff --git a/build/pom.xml b/build/pom.xml
@@ -73,6 +73,3 @@ index fbd99b2..a1005c8 100644
        <groupId>javax.mail</groupId>
        <artifactId>mail</artifactId>
      </dependency>
--- 
-1.7.10.4
-

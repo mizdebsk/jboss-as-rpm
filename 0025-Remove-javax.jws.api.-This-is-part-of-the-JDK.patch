@@ -1,22 +1,22 @@
 From 5ce83ed3fa197ef2b35fbad9281b02c8dbe24f69 Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Thu, 21 Jun 2012 16:18:28 +0200
-Subject: [PATCH 25/25] Remove javax.jws.api. This is part of the JDK.
+Subject: [PATCH] Remove javax.jws.api. This is part of the JDK.
 
 ---
- build/build.xml                                    |    6 ----
- build/pom.xml                                      |    7 -----
- .../resources/modules/javaee/api/main/module.xml   |    1 -
- .../resources/modules/javax/api/main/module.xml    |    1 +
- .../modules/javax/jws/api/main/module.xml          |   29 --------------------
- .../modules/org/apache/cxf/main/module.xml         |    1 -
- .../org/jboss/as/webservices/main/module.xml       |    1 -
- .../webservices/server/integration/main/module.xml |    1 -
- .../modules/org/jboss/metadata/main/module.xml     |    1 -
- .../modules/org/jboss/ws/common/main/module.xml    |    1 -
- .../ws/cxf/jbossws-cxf-server/main/module.xml      |    1 -
- .../ws/native/jbossws-native-core/main/module.xml  |    1 -
- .../modules/org/jboss/xts/main/module.xml          |    5 ----
+ build/build.xml                                    |  6 -----
+ build/pom.xml                                      |  7 ------
+ .../resources/modules/javaee/api/main/module.xml   |  1 -
+ .../resources/modules/javax/api/main/module.xml    |  1 +
+ .../modules/javax/jws/api/main/module.xml          | 29 ----------------------
+ .../modules/org/apache/cxf/main/module.xml         |  1 -
+ .../org/jboss/as/webservices/main/module.xml       |  1 -
+ .../webservices/server/integration/main/module.xml |  1 -
+ .../modules/org/jboss/metadata/main/module.xml     |  1 -
+ .../modules/org/jboss/ws/common/main/module.xml    |  1 -
+ .../ws/cxf/jbossws-cxf-server/main/module.xml      |  1 -
+ .../ws/native/jbossws-native-core/main/module.xml  |  1 -
+ .../modules/org/jboss/xts/main/module.xml          |  5 ----
  13 files changed, 1 insertion(+), 55 deletions(-)
  delete mode 100644 build/src/main/resources/modules/javax/jws/api/main/module.xml
 
@@ -214,6 +214,3 @@ index 114e769..23cf11d 100644
          <!-- this is needed to ensure @Resource annotations on the JaxWS endpoint classes are in the
               classloader scope-->
          <module name="javax.annotation.api"/>
--- 
-1.7.10.4
-

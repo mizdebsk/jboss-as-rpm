@@ -1,10 +1,10 @@
 From 4c999437d603f991316f3b8d9738b896c5b1bdcf Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <goldmann@fedoraproject.org>
 Date: Thu, 26 Jan 2012 08:58:59 -0500
-Subject: [PATCH 03/25] Fix initd script
+Subject: [PATCH] Fix initd script
 
 ---
- build/src/main/resources/bin/init.d/jboss-as.conf |    6 +++++-
+ build/src/main/resources/bin/init.d/jboss-as.conf | 6 +++++-
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/build/src/main/resources/bin/init.d/jboss-as.conf b/build/src/main/resources/bin/init.d/jboss-as.conf
@@ -28,6 +28,3 @@ index 0bfc942..72a356b 100644
 +# The configuration you want to run
 +#
 +JBOSS_CONFIG=standalone-minimalistic.xml
--- 
-1.7.10.4
-

@@ -1,11 +1,11 @@
 From 34f21424e3e4bbf9d61267e3ed5980a0ef102b15 Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Tue, 19 Jun 2012 13:22:27 +0200
-Subject: [PATCH 20/25] Commenting out still unavailable dependencies
+Subject: [PATCH] Commenting out still unavailable dependencies
 
 ---
- build/build.xml |   46 +++++++++++++++++++++++++++++++++++++++++++---
- build/pom.xml   |   46 +++++++++++++++++++++++++++++++++++++++++++---
+ build/build.xml | 46 +++++++++++++++++++++++++++++++++++++++++++---
+ build/pom.xml   | 46 +++++++++++++++++++++++++++++++++++++++++++---
  2 files changed, 86 insertions(+), 6 deletions(-)
 
 diff --git a/build/build.xml b/build/build.xml
@@ -613,6 +613,3 @@ index bc6078e..2928f16 100644
  
                  <dependency>
                      <groupId>org.slf4j</groupId>
--- 
-1.7.10.4
-

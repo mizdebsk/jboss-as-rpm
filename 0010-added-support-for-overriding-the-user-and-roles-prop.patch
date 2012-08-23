@@ -1,22 +1,21 @@
 From e4aa48a19be0a587962e5d75f47c9f7f735c6f79 Mon Sep 17 00:00:00 2001
 From: "flemming.harms@gmail.com" <flemming.harms@gmail.com>
 Date: Wed, 11 Apr 2012 21:00:27 +0200
-Subject: [PATCH 10/25] added support for overriding the user and roles
- property files for both the standalone and domain
- server mode. Specify the system property
- jboss.server.config.user.dir to overriding the
- location for standalone user files and the property
- jboss.domain.config.user.dir for overiding the
+Subject: [PATCH] added support for overriding the user and roles property
+ files for both the standalone and domain server mode.
+ Specify the system property jboss.server.config.user.dir to
+ overriding the location for standalone user files and the
+ property jboss.domain.config.user.dir for overiding the
  location for domain mode
 
 ---
- build/src/main/resources/bin/add-user.bat          |    5 +-
- build/src/main/resources/bin/add-user.sh           |    2 +
- .../management/security/AddPropertiesUser.java     |   20 +++-
- .../security/state/PropertyFileFinder.java         |   21 ++--
- .../security/state/PropertyFilePrompt.java         |    5 +-
- .../management/security/state/StateValues.java     |    9 ++
- .../security/state/PropertyFileFinderTestCase.java |  123 ++++++++++++++++++++
+ build/src/main/resources/bin/add-user.bat          |   5 +-
+ build/src/main/resources/bin/add-user.sh           |   2 +
+ .../management/security/AddPropertiesUser.java     |  20 +++-
+ .../security/state/PropertyFileFinder.java         |  21 ++--
+ .../security/state/PropertyFilePrompt.java         |   5 +-
+ .../management/security/state/StateValues.java     |   9 ++
+ .../security/state/PropertyFileFinderTestCase.java | 123 +++++++++++++++++++++
  7 files changed, 166 insertions(+), 19 deletions(-)
  create mode 100644 domain-management/src/test/java/org/jboss/as/domain/management/security/state/PropertyFileFinderTestCase.java
 
@@ -354,6 +353,3 @@ index 0000000..81689d1
 +
 +
 +}
--- 
-1.7.10.4
-

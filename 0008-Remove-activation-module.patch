@@ -1,22 +1,22 @@
 From 1f913d56bd0c7e4ad7a12c811c0c73a8eefde61e Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Mon, 16 Apr 2012 17:45:12 +0200
-Subject: [PATCH 08/25] Remove activation module
+Subject: [PATCH] Remove activation module
 
 ---
- build/build.xml                                    |    4 --
- build/pom.xml                                      |    5 ---
- build/src/license/licenses.xml                     |   16 --------
- .../resources/modules/javaee/api/main/module.xml   |    1 -
- .../modules/javax/activation/api/main/module.xml   |   39 --------------------
- .../resources/modules/javax/api/main/module.xml    |    1 +
- .../modules/javax/mail/api/main/module.xml         |    1 -
- .../modules/javax/xml/bind/api/main/module.xml     |    1 -
- .../modules/javax/xml/registry/api/main/module.xml |    2 +-
- .../modules/javax/xml/soap/api/main/module.xml     |    1 -
- .../codehaus/jackson/jackson-xc/main/module.xml    |    3 +-
- .../jboss/resteasy/resteasy-jaxrs/main/module.xml  |    1 -
- pom.xml                                            |    7 ----
+ build/build.xml                                    |  4 ---
+ build/pom.xml                                      |  5 ---
+ build/src/license/licenses.xml                     | 16 ---------
+ .../resources/modules/javaee/api/main/module.xml   |  1 -
+ .../modules/javax/activation/api/main/module.xml   | 39 ----------------------
+ .../resources/modules/javax/api/main/module.xml    |  1 +
+ .../modules/javax/mail/api/main/module.xml         |  1 -
+ .../modules/javax/xml/bind/api/main/module.xml     |  1 -
+ .../modules/javax/xml/registry/api/main/module.xml |  2 +-
+ .../modules/javax/xml/soap/api/main/module.xml     |  1 -
+ .../codehaus/jackson/jackson-xc/main/module.xml    |  3 +-
+ .../jboss/resteasy/resteasy-jaxrs/main/module.xml  |  1 -
+ pom.xml                                            |  7 ----
  13 files changed, 3 insertions(+), 79 deletions(-)
  delete mode 100644 build/src/main/resources/modules/javax/activation/api/main/module.xml
 
@@ -249,6 +249,3 @@ index a9336c4..800fcd7 100644
                  <groupId>javax.enterprise</groupId>
                  <artifactId>cdi-api</artifactId>
                  <version>${version.javax.enterprise}</version>
--- 
-1.7.10.4
-

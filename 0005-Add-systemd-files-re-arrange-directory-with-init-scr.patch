@@ -1,17 +1,16 @@
 From 9c880056d9e84eba74c83542db12101979475c6e Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Wed, 4 Apr 2012 15:30:43 +0200
-Subject: [PATCH 05/25] Add systemd files, re-arrange directory with init
- scripts
+Subject: [PATCH] Add systemd files, re-arrange directory with init scripts
 
 ---
- .../resources/bin/init.d/jboss-as-standalone.sh    |  175 -------------------
- build/src/main/resources/bin/init.d/jboss-as.conf  |   22 ---
- .../bin/initscripts/systemd/jboss-as.conf          |    4 +
- .../bin/initscripts/systemd/jboss-as.service       |   17 ++
- .../resources/bin/initscripts/sysv/jboss-as.conf   |   22 +++
- .../resources/bin/initscripts/sysv/jboss-as.sh     |  176 ++++++++++++++++++++
- build/src/main/resources/bin/standalone.sh         |    4 +
+ .../resources/bin/init.d/jboss-as-standalone.sh    | 175 --------------------
+ build/src/main/resources/bin/init.d/jboss-as.conf  |  22 ---
+ .../bin/initscripts/systemd/jboss-as.conf          |   4 +
+ .../bin/initscripts/systemd/jboss-as.service       |  17 ++
+ .../resources/bin/initscripts/sysv/jboss-as.conf   |  22 +++
+ .../resources/bin/initscripts/sysv/jboss-as.sh     | 176 +++++++++++++++++++++
+ build/src/main/resources/bin/standalone.sh         |   4 +
  7 files changed, 223 insertions(+), 197 deletions(-)
  delete mode 100755 build/src/main/resources/bin/init.d/jboss-as-standalone.sh
  delete mode 100644 build/src/main/resources/bin/init.d/jboss-as.conf
@@ -487,6 +486,3 @@ index 364dd9e..a3c32da 100755
  
  # For Cygwin, switch paths to Windows format before running java
  if $cygwin; then
--- 
-1.7.10.4
-

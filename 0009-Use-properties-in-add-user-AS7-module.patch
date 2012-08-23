@@ -1,28 +1,28 @@
 From 0ed08613fbf5f1d026309b4ce8896bc380311759 Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Mon, 16 Apr 2012 18:23:15 +0200
-Subject: [PATCH 09/25] Use properties in add-user AS7 module
+Subject: [PATCH] Use properties in add-user AS7 module
 
 ---
- .../management/DomainManagementMessages.java       |   51 +-
- .../management/security/AddPropertiesUser.java     |  634 ++------------------
- .../domain/management/security/ConsoleWrapper.java |   85 +++
- .../as/domain/management/security/JavaConsole.java |   66 ++
- .../management/security/PropertiesFileLoader.java  |   60 +-
- .../domain/management/security/state/AddUser.java  |   88 +++
- .../security/state/ConfirmationChoice.java         |   95 +++
- .../security/state/DuplicateUserCheckState.java    |   68 +++
- .../management/security/state/ErrorState.java      |   74 +++
- .../security/state/PromptNewUserState.java         |  114 ++++
- .../security/state/PromptPasswordState.java        |   86 +++
- .../security/state/PropertyFileFinder.java         |  190 ++++++
- .../security/state/PropertyFilePrompt.java         |  104 ++++
- .../as/domain/management/security/state/State.java |   34 ++
- .../management/security/state/StateValues.java     |  142 +++++
- .../security/state/UpdatePropertiesHandler.java    |  111 ++++
- .../management/security/state/UpdateUser.java      |   88 +++
- .../security/state/UserPropertiesFileHandler.java  |   38 ++
- .../management/security/state/WeakCheckState.java  |   90 +++
+ .../management/DomainManagementMessages.java       |  51 +-
+ .../management/security/AddPropertiesUser.java     | 634 ++-------------------
+ .../domain/management/security/ConsoleWrapper.java |  85 +++
+ .../as/domain/management/security/JavaConsole.java |  66 +++
+ .../management/security/PropertiesFileLoader.java  |  60 +-
+ .../domain/management/security/state/AddUser.java  |  88 +++
+ .../security/state/ConfirmationChoice.java         |  95 +++
+ .../security/state/DuplicateUserCheckState.java    |  68 +++
+ .../management/security/state/ErrorState.java      |  74 +++
+ .../security/state/PromptNewUserState.java         | 114 ++++
+ .../security/state/PromptPasswordState.java        |  86 +++
+ .../security/state/PropertyFileFinder.java         | 190 ++++++
+ .../security/state/PropertyFilePrompt.java         | 104 ++++
+ .../as/domain/management/security/state/State.java |  34 ++
+ .../management/security/state/StateValues.java     | 142 +++++
+ .../security/state/UpdatePropertiesHandler.java    | 111 ++++
+ .../management/security/state/UpdateUser.java      |  88 +++
+ .../security/state/UserPropertiesFileHandler.java  |  38 ++
+ .../management/security/state/WeakCheckState.java  |  90 +++
  19 files changed, 1603 insertions(+), 615 deletions(-)
  create mode 100644 domain-management/src/main/java/org/jboss/as/domain/management/security/ConsoleWrapper.java
  create mode 100644 domain-management/src/main/java/org/jboss/as/domain/management/security/JavaConsole.java
@@ -2524,6 +2524,3 @@ index 0000000..4c7d094
 +
 +}
 \ No newline at end of file
--- 
-1.7.10.4
-

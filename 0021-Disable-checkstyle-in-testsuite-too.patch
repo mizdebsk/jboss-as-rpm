@@ -1,10 +1,10 @@
 From 2fcfcab5556e34c3a1a5093715f0a3ee55541754 Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Tue, 19 Jun 2012 17:32:34 +0200
-Subject: [PATCH 21/25] Disable checkstyle in testsuite too
+Subject: [PATCH] Disable checkstyle in testsuite too
 
 ---
- testsuite/shared/pom.xml |   29 -----------------------------
+ testsuite/shared/pom.xml | 29 -----------------------------
  1 file changed, 29 deletions(-)
 
 diff --git a/testsuite/shared/pom.xml b/testsuite/shared/pom.xml
@@ -47,6 +47,3 @@ index d1af58a..4124cb1 100644
      <dependencies>
          <dependency>
              <groupId>org.jboss.as</groupId>
--- 
-1.7.10.4
-

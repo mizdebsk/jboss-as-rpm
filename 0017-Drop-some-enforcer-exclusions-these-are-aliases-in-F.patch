@@ -1,11 +1,10 @@
 From 79965aee34da1fdffa6c7b774b829c999b8303d3 Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Tue, 19 Jun 2012 11:37:29 +0200
-Subject: [PATCH 17/25] Drop some enforcer exclusions, these are aliases in
- Fedora
+Subject: [PATCH] Drop some enforcer exclusions, these are aliases in Fedora
 
 ---
- pom.xml |    6 +++---
+ pom.xml | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
@@ -35,6 +34,3 @@ index c613f00..3691619 100644
                                          </excludes>
                                      </bannedDependencies>
                                  </rules>
--- 
-1.7.10.4
-

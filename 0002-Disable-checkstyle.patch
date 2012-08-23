@@ -1,10 +1,10 @@
 From c58d3127467dfb10fc7b534757af4eca8801e2ef Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <goldmann@fedoraproject.org>
 Date: Thu, 26 Jan 2012 08:58:21 -0500
-Subject: [PATCH 02/25] Disable checkstyle
+Subject: [PATCH] Disable checkstyle
 
 ---
- pom.xml |   33 ---------------------------------
+ pom.xml | 33 ---------------------------------
  1 file changed, 33 deletions(-)
 
 diff --git a/pom.xml b/pom.xml
@@ -58,6 +58,3 @@ index c4ea094..a9336c4 100644
                  <!-- Ban bad dependencies -->
                  <plugin>
                      <groupId>org.apache.maven.plugins</groupId>
--- 
-1.7.10.4
-

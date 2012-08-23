@@ -1,12 +1,12 @@
 From e202e453392cb15a9ee8acf8b90b1023120d5c17 Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Wed, 4 Apr 2012 15:06:07 +0200
-Subject: [PATCH 04/25] Added standalone-web.xml example configuration. Use
- this by default in Fedora.
+Subject: [PATCH] Added standalone-web.xml example configuration. Use this by
+ default in Fedora.
 
 ---
- build/src/main/resources/bin/init.d/jboss-as.conf  |    2 +-
- .../docs/examples/configs/standalone-web.xml       |  227 ++++++++++++++++++++
+ build/src/main/resources/bin/init.d/jboss-as.conf  |   2 +-
+ .../docs/examples/configs/standalone-web.xml       | 227 +++++++++++++++++++++
  2 files changed, 228 insertions(+), 1 deletion(-)
  create mode 100644 build/src/main/resources/docs/examples/configs/standalone-web.xml
 
@@ -253,6 +253,3 @@ index 0000000..02074d2
 +    </socket-binding-group>
 +
 +</server>
--- 
-1.7.10.4
-

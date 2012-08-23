@@ -1,12 +1,12 @@
 From 6cea5b2ac5e33bbdde69211ab76ce18e2642342a Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Tue, 19 Jun 2012 19:21:43 +0200
-Subject: [PATCH 23/25] Added org.jboss.as.jdr module
+Subject: [PATCH] Added org.jboss.as.jdr module
 
 ---
- build/build.xml |    4 ----
- build/pom.xml   |    6 ------
- pom.xml         |    2 --
+ build/build.xml | 4 ----
+ build/pom.xml   | 6 ------
+ pom.xml         | 2 --
  3 files changed, 12 deletions(-)
 
 diff --git a/build/build.xml b/build/build.xml
@@ -95,6 +95,3 @@ index aaef12a..f05832e 100644
                  <module>jpa</module>
                  <module>jsr77</module>
                  <module>logging</module>
--- 
-1.7.10.4
-

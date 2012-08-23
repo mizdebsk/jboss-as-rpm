@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          6%{?dist}
+Release:          7%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -60,10 +60,17 @@ Patch22:          0023-Added-org.jboss.as.jdr-module.patch
 Patch23:          0024-Make-AS7-work-with-jython-2.2.1.patch
 Patch24:          0025-Remove-javax.jws.api.-This-is-part-of-the-JDK.patch
 Patch25:          0026-Specify-version-requirement-for-org.eclipse.jdt-core.patch
+Patch26:          0027-Link-ecj-in-the-org.jboss.as.web-module-to-be-able-t.patch
+Patch27:          0028-Add-ExampleDS-H2-datasource-to-standalone-web.xml.patch
+Patch28:          0029-Add-jtype-dependency-to-hibernate-validator-to-fix-t.patch
+Patch29:          0030-Add-org.apache.openjpa-module.-This-allows-to-use-th.patch
+Patch30:          0031-Add-org.hibernate.3-module.patch
+Patch31:          0032-Enable-jpa-openjpa-and-jpa-hibernate3-modules.patch
 
 BuildArch:        noarch
 
 # Please keep alphabetically
+BuildRequires:    antlr
 BuildRequires:    ant-apache-bsf
 BuildRequires:    apache-commons-cli
 BuildRequires:    apache-commons-codec
@@ -90,6 +97,8 @@ BuildRequires:    felix-osgi-compendium
 BuildRequires:    guava
 BuildRequires:    h2
 BuildRequires:    hibernate3
+Buildrequires:    hibernate3-entitymanager
+Buildrequires:    hibernate3-infinispan >= 3.6.10-6
 BuildRequires:    hibernate-commons-annotations
 BuildRequires:    hibernate-jpa-2.0-api
 BuildRequires:    hibernate-validator
@@ -105,6 +114,7 @@ BuildRequires:    java-devel >= 1:1.7.0
 BuildRequires:    javacc-maven-plugin
 BuildRequires:    javamail
 BuildRequires:    javassist
+BuildRequires:    jaxen
 BuildRequires:    jgroups
 BuildRequires:    jbosgi-deployment
 BuildRequires:    jbosgi-framework
@@ -177,6 +187,7 @@ BuildRequires:    jline
 BuildRequires:    jul-to-slf4j-stub
 BuildRequires:    joda-time
 BuildRequires:    jpackage-utils
+BuildRequires:    jtype
 BuildRequires:    jython >= 2.2.1-9
 BuildRequires:    maven
 BuildRequires:    maven-jar-plugin
@@ -195,11 +206,14 @@ BuildRequires:    mojarra
 BuildRequires:    mod_cluster-java >= 1.2.1-2
 BuildRequires:    neethi
 BuildRequires:    netty
+BuildRequires:    objectweb-asm
+BuildRequires:    openjpa
 BuildRequires:    picketbox
 BuildRequires:    picketbox-commons
 BuildRequires:    resteasy >= 2.3.2-7
 BuildRequires:    rhq-plugin-annotations
 BuildRequires:    scannotation
+BuildRequires:    serp
 BuildRequires:    shrinkwrap
 BuildRequires:    shrinkwrap-resolver
 BuildRequires:    slf4j
@@ -216,6 +230,7 @@ BuildRequires:    xerces-j2
 BuildRequires:    xml-security
 BuildRequires:    xnio
 
+Requires:         antlr
 Requires:         atinject
 Requires:         apache-commons-cli
 Requires:         apache-commons-codec
@@ -241,6 +256,8 @@ Requires:         guava
 Requires:         glassfish-jaxb
 Requires:         h2
 Requires:         hibernate3
+Requires:         hibernate3-entitymanager
+Requires:         hibernate3-infinispan >= 3.6.10-6
 Requires:         hibernate-commons-annotations
 Requires:         hibernate-jpa-2.0-api
 Requires:         hibernate-validator
@@ -253,6 +270,7 @@ Requires:         jandex
 Requires:         java >= 1:1.7.0
 Requires:         javamail
 Requires:         javassist
+Requires:         jaxen
 Requires:         jbosgi-deployment
 Requires:         jbosgi-framework
 Requires:         jbosgi-metadata
@@ -322,17 +340,21 @@ Requires:         jline
 Requires:         jul-to-slf4j-stub
 Requires:         joda-time
 Requires:         jpackage-utils
+Requires:         jtype
 Requires:         jython >= 2.2.1-9
 Requires:         mojarra
 Requires:         mod_cluster-java >= 1.2.1-2
 Requires:         neethi
 Requires:         netty
+Requires:         objectweb-asm
+Requires:         openjpa
 Requires:         openssl
 Requires:         picketbox
 Requires:         picketbox-commons
 Requires:         resteasy >= 2.3.2-7
 Requires:         rhq-plugin-annotations
 Requires:         scannotation
+Requires:         serp
 Requires:         shrinkwrap
 Requires:         shrinkwrap-resolver
 Requires:         slf4j
@@ -415,7 +437,7 @@ multimodules="arquillian domain-http clustering jpa osgi webservices"
 # If a submodule contains hyphen in the name, just skip it, e.g. domain-http => domainhttp
 modules_arquillian="common container-managed container-remote protocol-jmx testenricher-msc"
 modules_clustering="api common impl jgroups infinispan registry service web-spi web-infinispan ejb3-infinispan"
-modules_jpa="util spi"
+modules_jpa="util spi openjpa hibernate3"
 modules_domainhttp="interface error-context"
 modules_osgi="service configadmin"
 modules_webservices="server-integration tests-integration"
@@ -572,6 +594,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
     # And some other expcetions...
     ln -s %{_javadir}/jboss-as/jboss-as-jpa.jar org/jboss/as/jpa/main/jboss-as-jpa-%{namedversion}.jar
+    ln -s %{_javadir}/jboss-as/jboss-as-jpa-hibernate3.jar org/jboss/as/jpa/hibernate/3/jboss-as-jpa-hibernate3-%{namedversion}.jar
     ln -s %{_javadir}/jboss-as/jboss-as-jdr.jar org/jboss/as/jdr/main/jboss-as-jdr-%{namedversion}.jar
     ln -s %{_javadir}/jboss-as/jboss-as-sos.jar org/jboss/as/jdr/main/jboss-as-sos-%{namedversion}.jar
     ln -s %{_javadir}/jboss-as/jboss-as-osgi-service.jar org/jboss/as/osgi/main/jboss-as-osgi-service-%{namedversion}.jar
@@ -595,9 +618,16 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath apache-juddi/juddi-client) org/apache/juddi/juddi-client/main/juddi-client.jar
     ln -s $(build-classpath apache-juddi/uddi-ws) org/apache/juddi/uddi-ws/main/uddi-ws.jar
     ln -s $(build-classpath apache-scout) org/apache/juddi/scout/main/scout.jar
+
+    ln -s $(build-classpath antlr) org/antlr/main/antlr.jar
+    # Make sure we don't specify the version suffix in the jar name for antlr
+    # TODO report a bug and fix this properly
+    sed -i "s|antlr.*\.jar|antlr\.jar|" org/antlr/main/module.xml
+
     ln -s $(build-classpath atinject) javax/inject/api/main/atinject.jar
     ln -s $(build-classpath cal10n/cal10n-api) ch/qos/cal10n/main/cal10n-api.jar
     ln -s $(build-classpath cdi-api) javax/enterprise/api/main/cdi-api.jar
+    ln -s $(build-classpath dom4j) org/dom4j/main/dom4j.jar
     ln -s $(build-classpath ecj) org/jboss/as/web/main/ecj.jar
     ln -s $(build-classpath guava) com/google/guava/main/guava.jar
     ln -s $(build-classpath glassfish-jaxb/jaxb-impl) com/sun/xml/bind/main/jaxb-impl.jar
@@ -606,7 +636,13 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath bean-validation-api) javax/validation/api/main/geronimo-validation.jar
     ln -s $(build-classpath h2) com/h2database/h2/main/h2.jar
     ln -s $(build-classpath hibernate-validator) org/hibernate/validator/main/hibernate-validator.jar
+    ln -s $(build-classpath jtype) com/googlecode/jtype/main/jtype.jar
     ln -s $(build-classpath hibernate-jpa-2.0-api) javax/persistence/api/main/hibernate-jpa-2.0-api.jar
+
+    ln -s $(build-classpath hibernate3/hibernate-core) org/hibernate/3/hibernate-core.jar
+    ln -s $(build-classpath hibernate3/hibernate-entitymanager) org/hibernate/3/hibernate-entitymanager.jar
+    ln -s $(build-classpath hibernate3/hibernate-infinispan) org/hibernate/3/hibernate-infinispan.jar
+    ln -s $(build-classpath hibernate/hibernate-commons-annotations) org/hibernate/3/hibernate-commons-annotations.jar
 
     ln -s $(build-classpath hornetq/hornetq-core) org/hornetq/main/hornetq-core.jar
     ln -s $(build-classpath hornetq/hornetq-jms) org/hornetq/main/hornetq-jms.jar
@@ -632,6 +668,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
     ln -s $(build-classpath javamail/mail) javax/mail/api/main/mail.jar
     ln -s $(build-classpath javassist) org/javassist/main/javassist.jar
+    ln -s $(build-classpath jaxen) org/jaxen/main/jaxen.jar
     ln -s $(build-classpath jcip-annotations) net/jcip/main/jcip-annotations.jar
     ln -s $(build-classpath jandex) org/jboss/jandex/main/jandex.jar
     ln -s $(build-classpath jboss-jaxrs-1.1-api) javax/ws/rs/api/main/jaxrs-api.jar
@@ -727,6 +764,14 @@ pushd $RPM_BUILD_ROOT%{homedir}
     done
 
     ln -s $(build-classpath netty) org/jboss/netty/main/netty.jar
+    ln -s $(build-classpath objectweb-asm/asm) asm/asm/main/asm.jar
+
+    ln -s $(build-classpath openjpa/kernel) org/apache/openjpa/main/kernel.jar
+    ln -s $(build-classpath openjpa/lib) org/apache/openjpa/main/lib.jar
+    ln -s $(build-classpath openjpa/persistence) org/apache/openjpa/main/persistence.jar
+    ln -s $(build-classpath openjpa/persistence-jdbc) org/apache/openjpa/main/persistence-jdbc.jar
+    ln -s $(build-classpath openjpa/jdbc) org/apache/openjpa/main/jdbc.jar
+
     ln -s $(build-classpath felix/org.osgi.core) org/osgi/core/main/org.osgi.core.jar
     ln -s $(build-classpath picketbox/picketbox) org/picketbox/main/picketbox.jar
     ln -s $(build-classpath picketbox/infinispan) org/picketbox/main/infinispan.jar
@@ -742,6 +787,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath resteasy/async-http-servlet-3.0) org/jboss/resteasy/resteasy-jaxrs/main/async-http-servlet-3.0.jar
 
     ln -s $(build-classpath scannotation) org/scannotation/scannotation/main/scannotation.jar
+    ln -s $(build-classpath serp) net/sourceforge/serp/main/serp.jar
 
     ln -s $(build-classpath shrinkwrap/api) org/jboss/shrinkwrap/core/main/api.jar
     ln -s $(build-classpath shrinkwrap/spi) org/jboss/shrinkwrap/core/main/spi.jar
@@ -851,6 +897,13 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Thu Aug 23 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-7
+- Added org.jboss.as.jpa.openjpa module
+- Added org.jboss.as.jpa.hibernate3 module
+- Added jtype dependency to hibernate-validator to fix NoClassDefFoundError exception
+- Regenerated patches with git format-patch --no-numbered --no-signature
+- Added ExampleDS to the standalone-web.xml config
+
 * Wed Aug 01 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-6
 - /usr/bin conflict between jboss-as-7.1.1-4 and filesystem-3.1-1, RHBZ#839419
 - Missing symlinks RHBZ#842997, RHBZ#842996

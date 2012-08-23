@@ -1,7 +1,7 @@
 From 7538a2eea9277d006a17be955ee2e7095adad09f Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Wed, 1 Aug 2012 15:32:01 +0200
-Subject: [PATCH 26/26] Specify version requirement for org.eclipse.jdt:core
+Subject: [PATCH] Specify version requirement for org.eclipse.jdt:core
  dependency
 
 ---
@@ -32,6 +32,3 @@ index f05832e..f4ce7b5 100644
                  <version>${version.org.jboss.web.jasper-jdt}</version>
              </dependency>
  
--- 
-1.7.11.2
-

@@ -1,11 +1,11 @@
 From e4eb19be3408a137d08942feddd569f8cf70ce73 Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Tue, 17 Apr 2012 13:56:43 +0200
-Subject: [PATCH 11/25] [AS7-4536] add-user.sh mangles permissions of
+Subject: [PATCH] [AS7-4536] add-user.sh mangles permissions of
  mgmt-users.properties
 
 ---
- .../management/security/PropertiesFileLoader.java  |   42 ++++++++++++--------
+ .../management/security/PropertiesFileLoader.java  | 42 +++++++++++++---------
  1 file changed, 25 insertions(+), 17 deletions(-)
 
 diff --git a/domain-management/src/main/java/org/jboss/as/domain/management/security/PropertiesFileLoader.java b/domain-management/src/main/java/org/jboss/as/domain/management/security/PropertiesFileLoader.java
@@ -94,6 +94,3 @@ index 38737cb..9c4bad9 100644
      private void safeClose(final Closeable c) {
          try {
              c.close();
--- 
-1.7.10.4
-

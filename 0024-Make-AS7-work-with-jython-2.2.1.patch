@@ -1,10 +1,10 @@
 From 0ea25332cc07ae5bd27401ad87b68221e4be00ca Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Wed, 20 Jun 2012 15:37:16 +0200
-Subject: [PATCH 24/25] Make AS7 work with jython 2.2.1
+Subject: [PATCH] Make AS7 work with jython 2.2.1
 
 ---
- jdr/jboss-as-jdr/src/main/java/org/jboss/as/jdr/SoSReport.java |    7 ++++++-
+ jdr/jboss-as-jdr/src/main/java/org/jboss/as/jdr/SoSReport.java | 7 ++++++-
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/jdr/jboss-as-jdr/src/main/java/org/jboss/as/jdr/SoSReport.java b/jdr/jboss-as-jdr/src/main/java/org/jboss/as/jdr/SoSReport.java
@@ -32,6 +32,3 @@ index d5981da..0059b4e 100644
      }
  
      /**
--- 
-1.7.10.4
-

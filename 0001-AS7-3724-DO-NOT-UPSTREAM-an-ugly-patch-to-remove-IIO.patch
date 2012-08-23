@@ -1,29 +1,29 @@
 From 8acd55883b4e6e9aabbf0b740f1d08c91392c91b Mon Sep 17 00:00:00 2001
 From: Carlo de Wolf <cdewolf@redhat.com>
 Date: Wed, 15 Feb 2012 13:32:41 +0100
-Subject: [PATCH 01/25] AS7-3724: DO NOT UPSTREAM! an ugly patch to remove
- IIOP functionality
+Subject: [PATCH] AS7-3724: DO NOT UPSTREAM! an ugly patch to remove IIOP
+ functionality
 
 ---
- build/build.xml                                    |    8 ++-
- build/pom.xml                                      |   12 +++-
- .../modules/org/jboss/as/ejb3/main/module.xml      |    4 +-
- .../modules/org/jboss/jts/main/module.xml          |    2 +-
- .../resources/modules/org/omg/api/main/module.xml  |    2 +-
- ejb3/pom.xml                                       |    9 +++
- .../ejb3/deployment/EjbDeploymentInformation.java  |   14 ++++-
- .../processors/DeploymentRepositoryProcessor.java  |    4 +-
- .../EjbDependencyDeploymentUnitProcessor.java      |    3 +-
- .../org/jboss/as/ejb3/subsystem/EJB3Extension.java |    6 +-
- .../as/ejb3/subsystem/EJB3Subsystem12Parser.java   |   66 ++++++++++++++++----
- .../jboss/as/ejb3/subsystem/EJB3SubsystemAdd.java  |   39 +++++++-----
- .../ejb/ManagementEjbDeploymentInformation.java    |    3 +-
- pom.xml                                            |    9 ++-
- transactions/pom.xml                               |   10 ++-
- .../txn/service/ArjunaRecoveryManagerService.java  |   25 +++-----
- .../service/ArjunaTransactionManagerService.java   |   21 ++++---
- .../jboss/as/txn/service/XATerminatorService.java  |    3 +
- .../as/txn/subsystem/TransactionSubsystemAdd.java  |    4 +-
+ build/build.xml                                    |  8 ++-
+ build/pom.xml                                      | 12 +++-
+ .../modules/org/jboss/as/ejb3/main/module.xml      |  4 +-
+ .../modules/org/jboss/jts/main/module.xml          |  2 +-
+ .../resources/modules/org/omg/api/main/module.xml  |  2 +-
+ ejb3/pom.xml                                       |  9 +++
+ .../ejb3/deployment/EjbDeploymentInformation.java  | 14 ++++-
+ .../processors/DeploymentRepositoryProcessor.java  |  4 +-
+ .../EjbDependencyDeploymentUnitProcessor.java      |  3 +-
+ .../org/jboss/as/ejb3/subsystem/EJB3Extension.java |  6 +-
+ .../as/ejb3/subsystem/EJB3Subsystem12Parser.java   | 66 ++++++++++++++++++----
+ .../jboss/as/ejb3/subsystem/EJB3SubsystemAdd.java  | 39 +++++++------
+ .../ejb/ManagementEjbDeploymentInformation.java    |  3 +-
+ pom.xml                                            |  9 ++-
+ transactions/pom.xml                               | 10 +++-
+ .../txn/service/ArjunaRecoveryManagerService.java  | 25 ++++----
+ .../service/ArjunaTransactionManagerService.java   | 21 +++----
+ .../jboss/as/txn/service/XATerminatorService.java  |  3 +
+ .../as/txn/subsystem/TransactionSubsystemAdd.java  |  4 +-
  19 files changed, 168 insertions(+), 76 deletions(-)
 
 diff --git a/build/build.xml b/build/build.xml
@@ -885,6 +885,3 @@ index 696d358..c92e3ca 100644
  
          context.addStep(new AbstractDeploymentChainStep() {
              protected void execute(final DeploymentProcessorTarget processorTarget) {
--- 
-1.7.10.4
-

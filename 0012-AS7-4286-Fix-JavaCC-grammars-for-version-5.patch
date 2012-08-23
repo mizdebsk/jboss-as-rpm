@@ -1,7 +1,7 @@
 From 43ed974a5aa06624a6d1b58bf5821689d61e2c46 Mon Sep 17 00:00:00 2001
 From: Juan Hernandez <juan.hernandez@redhat.com>
 Date: Wed, 8 Feb 2012 16:22:56 +0100
-Subject: [PATCH 12/25] [AS7-4286] Fix JavaCC grammars for version 5.
+Subject: [PATCH] [AS7-4286] Fix JavaCC grammars for version 5.
 
 The JBossQL en EJBQL grammars used for CMP use some tokens with
 empty regular expressions. This worked with JavaCC 4 but doesn't
@@ -11,8 +11,8 @@ This patch creates a DUMMY lexical state that will never be
 reached and puts those tokens inside with a non empty regular
 expression (that will never be matched).
 ---
- .../jjtree/org/jboss/as/cmp/ejbql/EJBQLParser.jjt  |   37 +++++++++----------
- .../org/jboss/as/cmp/ejbql/JBossQLParser.jjt       |   38 ++++++++++----------
+ .../jjtree/org/jboss/as/cmp/ejbql/EJBQLParser.jjt  | 37 +++++++++++----------
+ .../org/jboss/as/cmp/ejbql/JBossQLParser.jjt       | 38 +++++++++++-----------
  2 files changed, 38 insertions(+), 37 deletions(-)
 
 diff --git a/cmp/src/main/jjtree/org/jboss/as/cmp/ejbql/EJBQLParser.jjt b/cmp/src/main/jjtree/org/jboss/as/cmp/ejbql/EJBQLParser.jjt
@@ -139,6 +139,3 @@ index 116f86b..51f996f 100644
 +|  < UNKNOWN_PATH: "UNKNOWN_PATH" >
 +|  < COLLECTION_VALUED_PATH: "COLLECTION_VALUED_PATH" >
 +}
--- 
-1.7.10.4
-

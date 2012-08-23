@@ -1,13 +1,13 @@
 From e18d566742c0d10420635b1f0487d1c2ff4ec1c3 Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Tue, 19 Jun 2012 10:28:33 +0200
-Subject: [PATCH 13/25] Remove jasper-jdt requirement, it was replaced by ecj
- in Fedora
+Subject: [PATCH] Remove jasper-jdt requirement, it was replaced by ecj in
+ Fedora
 
 ---
- build/build.xml |    1 -
- build/pom.xml   |    4 ++--
- web/pom.xml     |    4 ++--
+ build/build.xml | 1 -
+ build/pom.xml   | 4 ++--
+ web/pom.xml     | 4 ++--
  3 files changed, 4 insertions(+), 5 deletions(-)
 
 diff --git a/build/build.xml b/build/build.xml
@@ -52,6 +52,3 @@ index d336f0d..ebd0b01 100644
          </dependency>
  
          <dependency>
--- 
-1.7.10.4
-

@@ -1,11 +1,11 @@
 From 7004cd7e6a219108a191fbd1378d37776daa2e3e Mon Sep 17 00:00:00 2001
 From: Marek Goldmann <mgoldman@redhat.com>
 Date: Tue, 19 Jun 2012 11:51:50 +0200
-Subject: [PATCH 18/25] Disable Hibernate
+Subject: [PATCH] Disable Hibernate
 
 ---
- build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml |    1 -
- jpa/pom.xml                                                        |    2 ++
+ build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml | 1 -
+ jpa/pom.xml                                                        | 2 ++
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml b/build/src/main/resources/modules/org/jboss/as/ejb3/main/module.xml
@@ -36,6 +36,3 @@ index 09dd27e..462e1ed 100644
      </modules>
  
      <dependencies>
--- 
-1.7.10.4
-

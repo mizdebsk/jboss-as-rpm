@@ -12,14 +12,14 @@
 %global jbuid 185
 
 # Enabled modules:
-%global modules cli cmp configadmin connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jaxr jaxrs jmx jsr77 logging management-client-content mail modcluster naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
+%global modules cli cmp configadmin connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jacorb jaxr jaxrs jmx jsr77 logging management-client-content mail modcluster naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
 
 # Additional modules enabled, but not listed above because of different structure:
 # arquillian domain-http clustering jpa osgi jdr webservices
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          7%{?dist}
+Release:          8%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -66,6 +66,8 @@ Patch28:          0029-Add-jtype-dependency-to-hibernate-validator-to-fix-t.patc
 Patch29:          0030-Add-org.apache.openjpa-module.-This-allows-to-use-th.patch
 Patch30:          0031-Add-org.hibernate.3-module.patch
 Patch31:          0032-Enable-jpa-openjpa-and-jpa-hibernate3-modules.patch
+Patch32:          0033-Revert-AS7-3724-DO-NOT-UPSTREAM-an-ugly-patch-to-rem.patch
+Patch33:          0034-Enable-jbossxb-module.patch
 
 BuildArch:        noarch
 
@@ -109,6 +111,7 @@ BuildRequires:    git
 BuildRequires:    glassfish-jaxb
 BuildRequires:    infinispan
 BuildRequires:    ironjacamar
+BuildRequires:    jacorb
 BuildRequires:    jandex
 BuildRequires:    java-devel >= 1:1.7.0
 BuildRequires:    javacc-maven-plugin
@@ -149,7 +152,7 @@ BuildRequires:    jboss-jaxrs-1.1-api
 BuildRequires:    jboss-jaxws-2.2-api
 BuildRequires:    jboss-jaspi-1.0-api
 BuildRequires:    jboss-jms-1.1-api
-BuildRequires:    jboss-jts >= 4.16.2-4
+BuildRequires:    jboss-jts >= 4.16.2-8
 BuildRequires:    jboss-jsf-2.1-api
 BuildRequires:    jboss-jsp-2.2-api
 BuildRequires:    jboss-jstl-1.2-api
@@ -166,7 +169,7 @@ BuildRequires:    jboss-negotiation
 BuildRequires:    jboss-remoting
 BuildRequires:    jboss-remoting-jmx
 BuildRequires:    jboss-remote-naming
-BuildRequires:    jboss-rmi-1.0-api
+BuildRequires:    jboss-rmi-1.0-api >= 1.0.4-4
 BuildRequires:    jboss-sasl
 BuildRequires:    jboss-saaj-1.3-api
 BuildRequires:    jboss-servlet-3.0-api
@@ -182,6 +185,7 @@ BuildRequires:    jbossws-api
 BuildRequires:    jbossws-common >= 2.0.4-3
 BuildRequires:    jbossws-cxf
 BuildRequires:    jbossws-spi >= 2.0.3-2
+BuildRequires:    jbossxb
 BuildRequires:    jcip-annotations
 BuildRequires:    jline
 BuildRequires:    jul-to-slf4j-stub
@@ -266,6 +270,7 @@ Requires:         httpcomponents-client
 Requires:         httpcomponents-core
 Requires:         infinispan
 Requires:         ironjacamar
+Requires:         jacorb
 Requires:         jandex
 Requires:         java >= 1:1.7.0
 Requires:         javamail
@@ -306,7 +311,7 @@ Requires:         jboss-jms-1.1-api
 Requires:         jboss-jsf-2.1-api
 Requires:         jboss-jsp-2.2-api
 Requires:         jboss-jstl-1.2-api
-Requires:         jboss-jts >= 4.16.2-4
+Requires:         jboss-jts >= 4.16.2-8
 Requires:         jboss-logging
 Requires:         jboss-logging-tools
 Requires:         jboss-logmanager
@@ -319,7 +324,7 @@ Requires:         jboss-negotiation
 Requires:         jboss-remoting
 Requires:         jboss-remoting-jmx
 Requires:         jboss-remote-naming
-Requires:         jboss-rmi-1.0-api
+Requires:         jboss-rmi-1.0-api >= 1.0.4-4
 Requires:         jboss-sasl
 Requires:         jboss-saaj-1.3-api
 Requires:         jboss-servlet-3.0-api
@@ -334,6 +339,7 @@ Requires:         jbossws-api
 Requires:         jbossws-common >= 2.0.4-3
 Requires:         jbossws-cxf
 Requires:         jbossws-spi >= 2.0.3-2
+Requires:         jbossxb
 Requires:         jcip-annotations
 Requires:         jgroups
 Requires:         jline
@@ -666,6 +672,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath ironjacamar/ironjacamar-validator) org/jboss/ironjacamar/impl/main/ironjacamar-validator.jar
     ln -s $(build-classpath ironjacamar/ironjacamar-jdbc) org/jboss/ironjacamar/jdbcadapters/main/ironjacamar-jdbc.jar
 
+    ln -s $(build-classpath jacorb) org/jacorb/main/jacorb.jar
     ln -s $(build-classpath javamail/mail) javax/mail/api/main/mail.jar
     ln -s $(build-classpath javassist) org/javassist/main/javassist.jar
     ln -s $(build-classpath jaxen) org/jaxen/main/jaxen.jar
@@ -714,8 +721,8 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-jsf-2.1-api) javax/faces/api/main/jboss-jsf-2.1-api.jar
     ln -s $(build-classpath jboss-jsp-2.2-api) javax/servlet/jsp/api/main/jboss-jsp-2.2-api.jar
     ln -s $(build-classpath jboss-jstl-1.2-api) javax/servlet/jstl/api/main/jboss-jstl-1.2-api.jar
-    ln -s $(build-classpath jboss-jts/jbossjta) org/jboss/jts/main/jbossjta.jar
-    ln -s $(build-classpath jboss-jts/jbossjta-integration) org/jboss/jts/integration/main/jbossjta-integration.jar
+    ln -s $(build-classpath jboss-jts/jbossjts) org/jboss/jts/main/jbossjts.jar
+    ln -s $(build-classpath jboss-jts/jbossjts-integration) org/jboss/jts/integration/main/jbossjts-integration.jar
     ln -s $(build-classpath jboss-logging) org/jboss/logging/main/jboss-logging.jar
     ln -s $(build-classpath jboss-logmanager) org/jboss/logmanager/main/jboss-logmanager.jar
     ln -s $(build-classpath jboss-logmanager-log4j) org/jboss/logmanager/log4j/main/jboss-logmanager-log4j.jar
@@ -751,6 +758,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jbossws-common) org/jboss/ws/common/main/jbossws-common.jar
     ln -s $(build-classpath jbossws-spi) org/jboss/ws/spi/main/jbossws-spi.jar
     ln -s $(build-classpath jbossws-cxf/jbossws-cxf-resources) org/jboss/as/webservices/main/jbossws-cxf-resources.jar
+    ln -s $(build-classpath jbossxb) org/jboss/xb/main/jbossxb.jar
     ln -s $(build-classpath jgroups) org/jgroups/main/jgroups.jar
     ln -s $(build-classpath jline) jline/main/jline.jar
     ln -s $(build-classpath jul-to-slf4j-stub) org/jboss/logging/jul-to-slf4j-stub/main/jul-to-slf4j-stub.jar
@@ -897,6 +905,9 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Thu Aug 30 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-8
+- Added org.jboss.as.jpa.jacorb module
+
 * Thu Aug 23 2012 Marek Goldmann <mgoldman@redhat.com> 7.1.1-7
 - Added org.jboss.as.jpa.openjpa module
 - Added org.jboss.as.jpa.hibernate3 module

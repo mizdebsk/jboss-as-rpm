@@ -1,0 +1,26 @@
+From abb268146cf2cff214537bbd2121cd77f71d2889 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Fri, 31 Aug 2012 17:19:58 +0200
+Subject: [PATCH] Enable jbossxb module
+
+---
+ build/build.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 8d8c017..c09a006 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -1165,11 +1165,11 @@
+         <module-def name="org.jboss.ws.tools.wsconsume">
+         </module-def>
+ 
+-        <!--
+         <module-def name="org.jboss.xb">
+             <maven-resource group="org.jboss" artifact="jbossxb"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="org.jboss.xts">
+             <maven-resource group="org.jboss.jbossts" artifact="jbossxts"/>
+             <maven-resource group="org.jboss.jbossts" artifact="jbossxts-api"/>

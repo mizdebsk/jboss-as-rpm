@@ -12,14 +12,14 @@
 %global jbuid 185
 
 # Enabled modules:
-%global modules cli cmp configadmin connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jacorb jaxr jaxrs jmx jsr77 logging management-client-content mail modcluster naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld
+%global modules cli cmp configadmin connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jacorb jaxr jaxrs jmx jsr77 logging management-client-content mail modcluster naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld xts
 
 # Additional modules enabled, but not listed above because of different structure:
 # arquillian domain-http clustering jpa osgi jdr webservices
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          8%{?dist}
+Release:          9%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -68,6 +68,7 @@ Patch30:          0031-Add-org.hibernate.3-module.patch
 Patch31:          0032-Enable-jpa-openjpa-and-jpa-hibernate3-modules.patch
 Patch32:          0033-Revert-AS7-3724-DO-NOT-UPSTREAM-an-ugly-patch-to-rem.patch
 Patch33:          0034-Enable-jbossxb-module.patch
+Patch34:          0035-Added-org.jboss.as.xts-module.patch
 
 BuildArch:        noarch
 
@@ -152,7 +153,7 @@ BuildRequires:    jboss-jaxrs-1.1-api
 BuildRequires:    jboss-jaxws-2.2-api
 BuildRequires:    jboss-jaspi-1.0-api
 BuildRequires:    jboss-jms-1.1-api
-BuildRequires:    jboss-jts >= 4.16.2-8
+BuildRequires:    jboss-jts >= 4.16.2-10
 BuildRequires:    jboss-jsf-2.1-api
 BuildRequires:    jboss-jsp-2.2-api
 BuildRequires:    jboss-jstl-1.2-api
@@ -311,7 +312,7 @@ Requires:         jboss-jms-1.1-api
 Requires:         jboss-jsf-2.1-api
 Requires:         jboss-jsp-2.2-api
 Requires:         jboss-jstl-1.2-api
-Requires:         jboss-jts >= 4.16.2-8
+Requires:         jboss-jts >= 4.16.2-10
 Requires:         jboss-logging
 Requires:         jboss-logging-tools
 Requires:         jboss-logmanager
@@ -375,6 +376,9 @@ Requires:         xerces-j2
 Requires:         xml-security
 Requires:         xnio
 Requires(pre):    shadow-utils
+Requires(post):   systemd-units
+Requires(preun):  systemd-units
+Requires(postun): systemd-units
 
 %description
 JBoss Application Server 7 is the latest release in a series of JBoss
@@ -723,6 +727,9 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-jstl-1.2-api) javax/servlet/jstl/api/main/jboss-jstl-1.2-api.jar
     ln -s $(build-classpath jboss-jts/jbossjts) org/jboss/jts/main/jbossjts.jar
     ln -s $(build-classpath jboss-jts/jbossjts-integration) org/jboss/jts/integration/main/jbossjts-integration.jar
+    ln -s $(build-classpath jboss-jts/jbossxts) org/jboss/xts/main/jbossxts.jar
+    ln -s $(build-classpath jboss-jts/jbossxts-api) org/jboss/xts/main/jbossxts-api.jar
+    ln -s $(build-classpath jboss-jts/jbosstxbridge) org/jboss/xts/main/jbosstxbridge.jar
     ln -s $(build-classpath jboss-logging) org/jboss/logging/main/jboss-logging.jar
     ln -s $(build-classpath jboss-logmanager) org/jboss/logmanager/main/jboss-logmanager.jar
     ln -s $(build-classpath jboss-logmanager-log4j) org/jboss/logmanager/log4j/main/jboss-logmanager-log4j.jar
@@ -855,12 +862,58 @@ pushd %{homedir}/modules/org/jboss/as/web/main/lib/linux-${arch} > /dev/null
   ln -sf ${libdir}/libssl.so libssl.so
 popd > /dev/null
 
+# Systemd
+%if 0%{?fedora} > 17
+
+%systemd_post jboss-as.service
+
+%else
+
+if [ $1 -eq 1 ] ; then
+    # Initial installation
+    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
+fi
+
+%endif
+
 %preun
 # Let's clean up the arch-specific symlinks
 arch=`uname -m`
 
 rm -rf %{homedir}/modules/org/jboss/as/web/main/lib/linux-${arch}/*
 rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
+
+# Systemd
+%if 0%{?fedora} > 17
+
+%systemd_preun jboss-as.service
+
+%else
+
+if [ $1 -eq 0 ] ; then
+    # Package removal, not upgrade
+    /bin/systemctl --no-reload disable jboss-as.service > /dev/null 2>&1 || :
+    /bin/systemctl stop jboss-as.service > /dev/null 2>&1 || :
+fi
+
+%endif
+
+%postun
+
+# Systemd
+%if 0%{?fedora} > 17
+
+%systemd_postun_with_restart jboss-as.service
+
+%else
+
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+if [ $1 -ge 1 ] ; then
+    # Package upgrade, not uninstall
+    /bin/systemctl try-restart jboss-as.service >/dev/null 2>&1 || :
+fi
+
+%endif
 
 %files
 %{homedir}/appclient
@@ -905,6 +958,10 @@ rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Tue Sep 18 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-9
+- Introduce new systemd-rpm macros in jboss-as spec file, RHBZ#856680
+- Added org.jboss.as.xts module
+
 * Thu Aug 30 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-8
 - Added org.jboss.as.jpa.jacorb module
 

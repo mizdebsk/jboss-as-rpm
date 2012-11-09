@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          9%{?dist}
+Release:          10%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -69,6 +69,9 @@ Patch31:          0032-Enable-jpa-openjpa-and-jpa-hibernate3-modules.patch
 Patch32:          0033-Revert-AS7-3724-DO-NOT-UPSTREAM-an-ugly-patch-to-rem.patch
 Patch33:          0034-Enable-jbossxb-module.patch
 Patch34:          0035-Added-org.jboss.as.xts-module.patch
+Patch35:          0036-Add-support-for-Hibernate-4.patch
+Patch36:          0037-Add-org.osgi-org.osgi.compendium-dependency-since-it.patch
+Patch37:          0038-Disable-jbossws-native-usage.patch
 
 BuildArch:        noarch
 
@@ -92,6 +95,11 @@ BuildRequires:    bsf
 BuildRequires:    cal10n
 BuildRequires:    cdi-api
 BuildRequires:    cssparser
+#BuildRequires:    cxf >= 2.4.9-2
+#BuildRequires:    cxf-api >= 2.4.9-2
+#BuildRequires:    cxf-common >= 2.4.9-2
+#BuildRequires:    cxf-rt >= 2.4.9-2
+#BuildRequires:    cxf-tools >= 2.4.9-2
 BuildRequires:    dom4j
 BuildRequires:    ecj
 BuildRequires:    felix-configadmin
@@ -99,9 +107,13 @@ BuildRequires:    felix-osgi-core
 BuildRequires:    felix-osgi-compendium
 BuildRequires:    guava
 BuildRequires:    h2
-BuildRequires:    hibernate3
-Buildrequires:    hibernate3-entitymanager
-Buildrequires:    hibernate3-infinispan >= 3.6.10-6
+BuildRequires:    hibernate
+BuildRequires:    hibernate-entitymanager
+BuildRequires:    hibernate-infinispan
+BuildRequires:    hibernate-envers
+BuildRequires:    hibernate3 >= 3.6.10-7
+BuildRequires:    hibernate3-entitymanager >= 3.6.10-7
+BuildRequires:    hibernate3-infinispan >= 3.6.10-7
 BuildRequires:    hibernate-commons-annotations
 BuildRequires:    hibernate-jpa-2.0-api
 BuildRequires:    hibernate-validator
@@ -110,6 +122,8 @@ BuildRequires:    httpcomponents-client
 BuildRequires:    httpcomponents-core
 BuildRequires:    git
 BuildRequires:    glassfish-jaxb
+BuildRequires:    glassfish-saaj
+BuildRequires:    gnu-getopt
 BuildRequires:    infinispan
 BuildRequires:    ironjacamar
 BuildRequires:    jacorb
@@ -119,6 +133,7 @@ BuildRequires:    javacc-maven-plugin
 BuildRequires:    javamail
 BuildRequires:    javassist
 BuildRequires:    jaxen
+BuildRequires:    jaxws-jboss-httpserver-httpspi
 BuildRequires:    jgroups
 BuildRequires:    jbosgi-deployment
 BuildRequires:    jbosgi-framework
@@ -182,15 +197,19 @@ BuildRequires:    jboss-transaction-spi
 BuildRequires:    jboss-web
 BuildRequires:    jboss-web-native
 BuildRequires:    jboss-vfs
+BuildRequires:    jbossws-parent
 BuildRequires:    jbossws-api
 BuildRequires:    jbossws-common >= 2.0.4-3
+#BuildRequires:    jbossws-common-tools
 BuildRequires:    jbossws-cxf
+#BuildRequires:    jbossws-cxf >= 4.0.2-2
 BuildRequires:    jbossws-spi >= 2.0.3-2
 BuildRequires:    jbossxb
 BuildRequires:    jcip-annotations
 BuildRequires:    jline
 BuildRequires:    jul-to-slf4j-stub
 BuildRequires:    joda-time
+BuildRequires:    javapackages-tools >= 0.7.2-1
 BuildRequires:    jpackage-utils
 BuildRequires:    jtype
 BuildRequires:    jython >= 2.2.1-9
@@ -230,6 +249,8 @@ BuildRequires:    weld-core
 BuildRequires:    weld-parent
 BuildRequires:    wsdl4j >= 1.6.2-5
 BuildRequires:    wss4j
+#BuildRequires:    wss4j >= 1.6.7
+BuildRequires:    ws-xmlschema
 BuildRequires:    xalan-j2
 BuildRequires:    xerces-j2
 BuildRequires:    xml-security
@@ -252,6 +273,11 @@ Requires:         bean-validation-api
 Requires:         cal10n
 Requires:         cdi-api
 Requires:         cssparser
+#Requires:         cxf >= 2.4.9-2
+#Requires:         cxf-api >= 2.4.9-2
+#Requires:         cxf-common >= 2.4.9-2
+#Requires:         cxf-rt >= 2.4.9-2
+#Requires:         cxf-tools >= 2.4.9-2
 Requires:         dom4j
 Requires:         ecj
 Requires:         felix-configadmin
@@ -259,10 +285,16 @@ Requires:         felix-osgi-core
 Requires:         felix-osgi-compendium
 Requires:         guava
 Requires:         glassfish-jaxb
+Requires:         glassfish-saaj
+Requires:         gnu-getopt
 Requires:         h2
-Requires:         hibernate3
-Requires:         hibernate3-entitymanager
-Requires:         hibernate3-infinispan >= 3.6.10-6
+Requires:         hibernate
+Requires:         hibernate-entitymanager
+Requires:         hibernate-infinispan
+Requires:         hibernate-envers
+Requires:         hibernate3 >= 3.6.10-7
+Requires:         hibernate3-entitymanager >= 3.6.10-7
+Requires:         hibernate3-infinispan >= 3.6.10-7
 Requires:         hibernate-commons-annotations
 Requires:         hibernate-jpa-2.0-api
 Requires:         hibernate-validator
@@ -277,6 +309,7 @@ Requires:         java >= 1:1.7.0
 Requires:         javamail
 Requires:         javassist
 Requires:         jaxen
+Requires:         jaxws-jboss-httpserver-httpspi
 Requires:         jbosgi-deployment
 Requires:         jbosgi-framework
 Requires:         jbosgi-metadata
@@ -338,7 +371,9 @@ Requires:         jboss-web-native
 Requires:         jboss-vfs
 Requires:         jbossws-api
 Requires:         jbossws-common >= 2.0.4-3
+#Requires:         jbossws-common-tools
 Requires:         jbossws-cxf
+#Requires:         jbossws-cxf >= 4.0.2-2
 Requires:         jbossws-spi >= 2.0.3-2
 Requires:         jbossxb
 Requires:         jcip-annotations
@@ -346,6 +381,7 @@ Requires:         jgroups
 Requires:         jline
 Requires:         jul-to-slf4j-stub
 Requires:         joda-time
+Requires:         javapackages-tools >= 0.7.2-1
 Requires:         jpackage-utils
 Requires:         jtype
 Requires:         jython >= 2.2.1-9
@@ -371,6 +407,8 @@ Requires:         weld-api
 Requires:         weld-core
 Requires:         wsdl4j >= 1.6.2-5
 Requires:         wss4j
+#Requires:         wss4j >= 1.6.7
+Requires:         ws-xmlschema
 Requires:         xalan-j2
 Requires:         xerces-j2
 Requires:         xml-security
@@ -447,7 +485,7 @@ multimodules="arquillian domain-http clustering jpa osgi webservices"
 # If a submodule contains hyphen in the name, just skip it, e.g. domain-http => domainhttp
 modules_arquillian="common container-managed container-remote protocol-jmx testenricher-msc"
 modules_clustering="api common impl jgroups infinispan registry service web-spi web-infinispan ejb3-infinispan"
-modules_jpa="util spi openjpa hibernate3"
+modules_jpa="util spi openjpa hibernate3 hibernate4"
 modules_domainhttp="interface error-context"
 modules_osgi="service configadmin"
 modules_webservices="server-integration tests-integration"
@@ -605,6 +643,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     # And some other expcetions...
     ln -s %{_javadir}/jboss-as/jboss-as-jpa.jar org/jboss/as/jpa/main/jboss-as-jpa-%{namedversion}.jar
     ln -s %{_javadir}/jboss-as/jboss-as-jpa-hibernate3.jar org/jboss/as/jpa/hibernate/3/jboss-as-jpa-hibernate3-%{namedversion}.jar
+    ln -s %{_javadir}/jboss-as/jboss-as-jpa-hibernate4.jar org/jboss/as/jpa/hibernate/4/jboss-as-jpa-hibernate4-%{namedversion}.jar
     ln -s %{_javadir}/jboss-as/jboss-as-jdr.jar org/jboss/as/jdr/main/jboss-as-jdr-%{namedversion}.jar
     ln -s %{_javadir}/jboss-as/jboss-as-sos.jar org/jboss/as/jdr/main/jboss-as-sos-%{namedversion}.jar
     ln -s %{_javadir}/jboss-as/jboss-as-osgi-service.jar org/jboss/as/osgi/main/jboss-as-osgi-service-%{namedversion}.jar
@@ -637,22 +676,42 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath atinject) javax/inject/api/main/atinject.jar
     ln -s $(build-classpath cal10n/cal10n-api) ch/qos/cal10n/main/cal10n-api.jar
     ln -s $(build-classpath cdi-api) javax/enterprise/api/main/cdi-api.jar
+
+#    for m in api common-utilities rt-bindings-coloc rt-bindings-http rt-bindings-object rt-bindings-soap \
+#             rt-bindings-xml rt-core rt-databinding-aegis rt-databinding-jaxb rt-frontend-jaxws \
+#             rt-frontend-simple rt-management rt-transports-common rt-transports-http rt-transports-jms \
+#             rt-transports-local rt-ws-addr rt-ws-policy rt-ws-rm rt-ws-security tools-common \
+#             tools-java2ws tools-validator tools-wsdlto-core tools-wsdlto-databinding-jaxb tools-wsdlto-frontend-jaxws; do
+#      ln -s $(build-classpath cxf/${m}) org/apache/cxf/main/${m}.jar
+#    done
+#
+#    for m in xjc-boolean xjc-dv xjc-ts; do
+#      ln -s $(build-classpath cxf-xjc-utils/cxf-${m}) org/apache/cxf/main/cxf-${m}.jar
+#    done
+
     ln -s $(build-classpath dom4j) org/dom4j/main/dom4j.jar
     ln -s $(build-classpath ecj) org/jboss/as/web/main/ecj.jar
     ln -s $(build-classpath guava) com/google/guava/main/guava.jar
     ln -s $(build-classpath glassfish-jaxb/jaxb-impl) com/sun/xml/bind/main/jaxb-impl.jar
     ln -s $(build-classpath glassfish-jaxb/jaxb-xjc) com/sun/xml/bind/main/jaxb-xjc.jar
-    # TODO this is an UGLY hack, think about removing it at some point!
-    ln -s $(build-classpath bean-validation-api) javax/validation/api/main/geronimo-validation.jar
+#    ln -s $(build-classpath glassfish-saaj) com/sun/xml/messaging/saaj/main/glassfish-saaj.jar
+#    ln -s $(build-classpath gnu-getopt) gnu/getopt/main/gnu-getopt.jar
+    ln -s $(build-classpath bean-validation-api) javax/validation/api/main/bean-validation-api.jar
     ln -s $(build-classpath h2) com/h2database/h2/main/h2.jar
     ln -s $(build-classpath hibernate-validator) org/hibernate/validator/main/hibernate-validator.jar
     ln -s $(build-classpath jtype) com/googlecode/jtype/main/jtype.jar
     ln -s $(build-classpath hibernate-jpa-2.0-api) javax/persistence/api/main/hibernate-jpa-2.0-api.jar
 
-    ln -s $(build-classpath hibernate3/hibernate-core) org/hibernate/3/hibernate-core.jar
-    ln -s $(build-classpath hibernate3/hibernate-entitymanager) org/hibernate/3/hibernate-entitymanager.jar
-    ln -s $(build-classpath hibernate3/hibernate-infinispan) org/hibernate/3/hibernate-infinispan.jar
+    ln -s $(build-classpath hibernate3/hibernate-core-3) org/hibernate/3/hibernate-core.jar
+    ln -s $(build-classpath hibernate3/hibernate-entitymanager-3) org/hibernate/3/hibernate-entitymanager.jar
+    ln -s $(build-classpath hibernate3/hibernate-infinispan-3) org/hibernate/3/hibernate-infinispan.jar
     ln -s $(build-classpath hibernate/hibernate-commons-annotations) org/hibernate/3/hibernate-commons-annotations.jar
+
+    ln -s $(build-classpath hibernate/hibernate-core) org/hibernate/main/hibernate-core.jar
+    ln -s $(build-classpath hibernate/hibernate-entitymanager) org/hibernate/main/hibernate-entitymanager.jar
+    ln -s $(build-classpath hibernate/hibernate-infinispan) org/hibernate/main/hibernate-infinispan.jar
+    ln -s $(build-classpath hibernate/hibernate-commons-annotations) org/hibernate/main/hibernate-commons-annotations.jar
+    ln -s $(build-classpath hibernate/hibernate-envers) org/hibernate/envers/main/hibernate-envers.jar
 
     ln -s $(build-classpath hornetq/hornetq-core) org/hornetq/main/hornetq-core.jar
     ln -s $(build-classpath hornetq/hornetq-jms) org/hornetq/main/hornetq-jms.jar
@@ -680,6 +739,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath javamail/mail) javax/mail/api/main/mail.jar
     ln -s $(build-classpath javassist) org/javassist/main/javassist.jar
     ln -s $(build-classpath jaxen) org/jaxen/main/jaxen.jar
+#    ln -s $(build-classpath jaxws-jboss-httpserver-httpspi) org/jboss/ws/jaxws-jboss-httpserver-httpspi/main/jaxws-jboss-httpserver-httpspi.jar
     ln -s $(build-classpath jcip-annotations) net/jcip/main/jcip-annotations.jar
     ln -s $(build-classpath jandex) org/jboss/jandex/main/jandex.jar
     ln -s $(build-classpath jboss-jaxrs-1.1-api) javax/ws/rs/api/main/jaxrs-api.jar
@@ -763,8 +823,17 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-web) org/jboss/as/web/main/jboss-web.jar
     ln -s $(build-classpath jbossws-api) org/jboss/ws/api/main/jbossws-api.jar
     ln -s $(build-classpath jbossws-common) org/jboss/ws/common/main/jbossws-common.jar
+#    ln -s $(build-classpath jbossws-common-tools) org/jboss/ws/tools/common/main/jbossws-common-tools.jar
     ln -s $(build-classpath jbossws-spi) org/jboss/ws/spi/main/jbossws-spi.jar
+
+#    for m in jbossws-cxf-factories jbossws-cxf-transports-httpserver jbossws-cxf-server; do
+#      ln -s $(build-classpath jbossws-cxf/${m}) org/jboss/ws/cxf/${m}/main/${m}.jar
+#    done
+
+#    ln -s $(build-classpath jbossws-cxf/jbossws-cxf-client) org/jboss/ws/jaxws-client/main/jbossws-cxf-client.jar
     ln -s $(build-classpath jbossws-cxf/jbossws-cxf-resources) org/jboss/as/webservices/main/jbossws-cxf-resources.jar
+    ln -s $(build-classpath jbossws-cxf/jbossws-cxf-resources-jboss711) org/jboss/as/webservices/main/jbossws-cxf-resources-jboss711.jar
+
     ln -s $(build-classpath jbossxb) org/jboss/xb/main/jbossxb.jar
     ln -s $(build-classpath jgroups) org/jgroups/main/jgroups.jar
     ln -s $(build-classpath jline) jline/main/jline.jar
@@ -788,6 +857,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath openjpa/jdbc) org/apache/openjpa/main/jdbc.jar
 
     ln -s $(build-classpath felix/org.osgi.core) org/osgi/core/main/org.osgi.core.jar
+    ln -s $(build-classpath felix/org.osgi.compendium) org/jboss/osgi/framework/main/org.osgi.compendium.jar
     ln -s $(build-classpath picketbox/picketbox) org/picketbox/main/picketbox.jar
     ln -s $(build-classpath picketbox/infinispan) org/picketbox/main/infinispan.jar
     ln -s $(build-classpath picketbox-commons) org/picketbox/main/picketbox-commons.jar
@@ -817,10 +887,12 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath weld-api/weld-spi) org/jboss/weld/spi/main/weld-spi.jar
     ln -s $(build-classpath weld-core) org/jboss/weld/core/main/weld-core.jar
     ln -s $(build-classpath wsdl4j) javax/wsdl4j/api/main/wsdl4j.jar
+    ln -s $(build-classpath wss4j) org/apache/ws/security/main/wss4j.jar
     ln -s $(build-classpath xalan-j2) org/apache/xalan/main/xalan-j2.jar
     ln -s $(build-classpath xalan-j2-serializer) org/apache/xalan/main/xalan-j2-serializer.jar
     ln -s $(build-classpath xerces-j2) org/apache/xerces/main/xerces-j2.jar
-    ln -s $(build-classpath xmlsec) org/apache/santuario/xmlsec/main/xmlsec.jar
+    ln -s $(build-classpath xml-security) org/apache/santuario/xmlsec/main/xml-security.jar
+#    ln -s $(build-classpath xmlschema-core) org/apache/ws/xmlschema/main/xmlschema-core.jar
     ln -s $(build-classpath xnio-api) org/jboss/xnio/main/xnio-api.jar
     ln -s $(build-classpath xnio-nio) org/jboss/xnio/nio/main/xnio-nio.jar
   popd
@@ -835,7 +907,7 @@ popd
 
 %pre
 # Add jboss-as user and group
-getent group %{name} >/dev/null || groupadd -r %{name}
+getent group %{name} >/dev/null || groupadd -r %{name} -g %{jbuid}
 getent passwd %{name} >/dev/null || \
     useradd -c "JBoss AS" -u %{jbuid} -g %{name} -s /bin/nologin -r -d %{homedir} %{name}
 exit 0
@@ -958,6 +1030,11 @@ fi
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Tue Nov 06 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-10
+- Added Hibernate 4 (default persistence provider) support
+- Preparations for webservice-related modules from CXF
+- Use static GID, RHBZ#873897
+
 * Tue Sep 18 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-9
 - Introduce new systemd-rpm macros in jboss-as spec file, RHBZ#856680
 - Added org.jboss.as.xts module

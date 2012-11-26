@@ -77,6 +77,7 @@ Patch39:          0040-JBWS-3446-Add-methods-for-creating-a-test-https-conn.patc
 Patch40:          0041-Modified-AS7-4890-upgrade-to-JBossWS-4.1.0.Beta1.patch
 Patch41:          0042-Revert-Disable-jbossws-native-usage.patch
 Patch42:          0043-Enable-jbossws-native-remove-javax.jws.api-from-cxf-.patch
+Patch43:          0044-fedora-Missing-module-dependencies-after-unbundling.patch
 
 BuildArch:        noarch
 
@@ -91,6 +92,7 @@ BuildRequires:    apache-commons-lang
 BuildRequires:    apache-commons-logging
 BuildRequires:    apache-james-project
 BuildRequires:    apache-juddi
+BuildRequires:    apache-mime4j
 BuildRequires:    apache-scout
 BuildRequires:    arquillian-core
 BuildRequires:    arquillian-osgi
@@ -133,6 +135,7 @@ BuildRequires:    istack-commons
 BuildRequires:    infinispan
 BuildRequires:    ironjacamar
 BuildRequires:    jacorb
+BuildRequires:    jackson
 BuildRequires:    jandex
 BuildRequires:    java-devel >= 1:1.7.0
 BuildRequires:    javacc-maven-plugin
@@ -140,6 +143,7 @@ BuildRequires:    javamail
 BuildRequires:    javassist
 BuildRequires:    jaxen
 BuildRequires:    jaxws-jboss-httpserver-httpspi
+BuildRequires:    jettison
 BuildRequires:    jgroups
 BuildRequires:    jbosgi-deployment
 BuildRequires:    jbosgi-framework
@@ -252,6 +256,7 @@ BuildRequires:    shrinkwrap
 BuildRequires:    shrinkwrap-resolver
 BuildRequires:    slf4j
 BuildRequires:    slf4j-jboss-logmanager
+BuildRequires:    snakeyaml
 BuildRequires:    staxmapper
 BuildRequires:    systemd-units
 BuildRequires:    velocity
@@ -277,6 +282,7 @@ Requires:         apache-commons-configuration
 Requires:         apache-commons-lang
 Requires:         apache-commons-logging
 Requires:         apache-juddi
+Requires:         apache-mime4j
 Requires:         apache-scout
 Requires:         apr
 Requires:         arquillian-core
@@ -317,12 +323,14 @@ Requires:         istack-commons
 Requires:         infinispan
 Requires:         ironjacamar
 Requires:         jacorb
+Requires:         jackson
 Requires:         jandex
 Requires:         java >= 1:1.7.0
 Requires:         javamail
 Requires:         javassist
 Requires:         jaxen
 Requires:         jaxws-jboss-httpserver-httpspi
+Requires:         jettison
 Requires:         jbosgi-deployment
 Requires:         jbosgi-framework
 Requires:         jbosgi-metadata
@@ -418,6 +426,7 @@ Requires:         shrinkwrap
 Requires:         shrinkwrap-resolver
 Requires:         slf4j
 Requires:         slf4j-jboss-logmanager
+Requires:         snakeyaml
 Requires:         staxmapper
 Requires:         velocity
 Requires:         weld-api
@@ -686,6 +695,10 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath apache-juddi/uddi-ws) org/apache/juddi/uddi-ws/main/uddi-ws.jar
     ln -s $(build-classpath apache-scout) org/apache/juddi/scout/main/scout.jar
 
+    for m in core dom storage; do
+      ln -s $(build-classpath apache-mime4j/${m}) org/apache/james/mime4j/main/${m}.jar
+    done
+
     ln -s $(build-classpath antlr) org/antlr/main/antlr.jar
     # Make sure we don't specify the version suffix in the jar name for antlr
     # TODO report a bug and fix this properly
@@ -757,6 +770,10 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath ironjacamar/ironjacamar-deployers-common) org/jboss/ironjacamar/impl/main/ironjacamar-deployers-common.jar
     ln -s $(build-classpath ironjacamar/ironjacamar-validator) org/jboss/ironjacamar/impl/main/ironjacamar-validator.jar
     ln -s $(build-classpath ironjacamar/ironjacamar-jdbc) org/jboss/ironjacamar/jdbcadapters/main/ironjacamar-jdbc.jar
+
+    for m in jackson-core-asl jackson-jaxrs jackson-mapper-asl jackson-xc; do
+      ln -s $(build-classpath jackson/${m}) org/codehaus/jackson/${m}/main/${m}.jar
+    done
 
     ln -s $(build-classpath jacorb) org/jacorb/main/jacorb.jar
     ln -s $(build-classpath javamail/mail) javax/mail/api/main/mail.jar
@@ -861,6 +878,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
     ln -s $(build-classpath jbossxb) org/jboss/xb/main/jbossxb.jar
     ln -s $(build-classpath jgroups) org/jgroups/main/jgroups.jar
+    ln -s $(build-classpath jettison) org/codehaus/jettison/main/jettison.jar
     ln -s $(build-classpath jline) jline/main/jline.jar
     ln -s $(build-classpath jul-to-slf4j-stub) org/jboss/logging/jul-to-slf4j-stub/main/jul-to-slf4j-stub.jar
     ln -s $(build-classpath joda-time) org/joda/time/main/joda-time.jar
@@ -913,6 +931,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath slf4j/ext) org/slf4j/ext/main/ext.jar
     ln -s $(build-classpath slf4j/jcl-over-slf4j) org/slf4j/jcl-over-slf4j/main/jcl-over-slf4j.jar
     ln -s $(build-classpath slf4j-jboss-logmanager) org/slf4j/impl/main/slf4j-jboss-logmanager.jar
+    ln -s $(build-classpath snakeyaml) org/yaml/snakeyaml/main/snakeyaml.jar
     ln -s $(build-classpath staxmapper) org/jboss/staxmapper/main/staxmapper.jar
     ln -s $(build-classpath txw2) com/sun/xml/bind/main/txw2.jar
     ln -s $(build-classpath velocity) org/apache/velocity/main/velocity.jar
@@ -1069,6 +1088,11 @@ fi
 %changelog
 * Tue Nov 20 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-11
 - Add webservices support based on CXF 2.6.3
+- The jackson modules don't have symlinks to .jar files, RHBZ#879008
+- The jettison modules doesn't have symlinks to .jar, RHBZ#879009
+- The mime4j module doesn't have symlinks to .jar files, RHBZ#879014
+- The snakeyaml modules doesn't have symlinks to .jar, RHBZ#879017
+- The com.sun.xml.bind needs to include the istack-commons-runtime.jar file, RHBZ#879020
 
 * Tue Nov 06 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-10
 - Added Hibernate 4 (default persistence provider) support

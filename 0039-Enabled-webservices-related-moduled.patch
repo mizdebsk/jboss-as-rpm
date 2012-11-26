@@ -1,0 +1,217 @@
+From dd52d9f2e0751d15f3524a5913836cff26a065ba Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 23 Oct 2012 12:58:41 +0200
+Subject: [PATCH] Enabled webservices related moduled
+
+---
+ build/build.xml | 16 +++-------------
+ build/pom.xml   | 14 +-------------
+ pom.xml         |  4 ++--
+ 3 files changed, 6 insertions(+), 28 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 78d0331..a98baa6 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -332,21 +332,17 @@
+             <maven-resource group="com.sun.xml.bind" artifact="jaxb-xjc"/>
+         </module-def>
+ 
+-        <!--
+         <module-def name="com.sun.xml.messaging.saaj">
+             <maven-resource group="com.sun.xml.messaging.saaj" artifact="saaj-impl"/>
+         </module-def>
+-        -->
+ 
+         <module-def name="org.dom4j">
+             <maven-resource group="dom4j" artifact="dom4j" />
+         </module-def>
+ 
+-        <!--
+         <module-def name="gnu.getopt">
+             <maven-resource group="gnu-getopt" artifact="getopt" />
+         </module-def>
+-        -->
+ 
+         <module-def name="javaee.api"/>
+ 
+@@ -520,7 +516,6 @@
+             <maven-resource group="commons-pool" artifact="commons-pool"/>
+         </module-def>
+ 
+-        <!--
+         <module-def name="org.apache.cxf">
+             <maven-resource group="org.apache.cxf" artifact="cxf-api"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-common-utilities"/>
+@@ -553,7 +548,6 @@
+             <maven-resource group="org.apache.cxf.xjcplugins" artifact="cxf-xjc-dv"/>
+             <maven-resource group="org.apache.cxf.xjcplugins" artifact="cxf-xjc-ts"/>
+         </module-def>
+-        -->
+ 
+         <module-def name="org.apache.httpcomponents">
+             <!-- These probably do not need to be split up but we can revisit later -->
+@@ -611,13 +605,11 @@
+             <maven-resource group="xml-resolver" artifact="xml-resolver"/>
+         </module-def>
+ 
+-      <!--
+-    	<module-def name="org.apache.ws.xmlschema">
++        <module-def name="org.apache.ws.xmlschema">
+             <maven-resource group="org.apache.ws.xmlschema" artifact="xmlschema-core"/>
+         </module-def>
+-        -->
+ 
+-    	<module-def name="org.apache.ws.security">
++        <module-def name="org.apache.ws.security">
+             <maven-resource group="org.apache.ws.security" artifact="wss4j"/>
+         </module-def>
+ 
+@@ -1101,7 +1093,6 @@
+             <maven-resource group="org.jboss.ws" artifact="jbossws-common"/>
+         </module-def>
+ 
+-        <!--
+         <module-def name="org.jboss.ws.cxf.jbossws-cxf-client"/>
+ 
+         <module-def name="org.jboss.ws.cxf.jbossws-cxf-factories">
+@@ -1124,6 +1115,7 @@
+             <maven-resource group="org.jboss.ws.projects" artifact="jaxws-jboss-httpserver-httpspi"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="org.jboss.ws.native.jbossws-native-core">
+             <maven-resource group="org.jboss.ws.native" artifact="jbossws-native-core"/>
+         </module-def>
+@@ -1145,11 +1137,9 @@
+             <maven-resource group="org.jboss.ws" artifact="jbossws-spi"/>
+         </module-def>
+ 
+-        <!--
+         <module-def name="org.jboss.ws.tools.common">
+             <maven-resource group="org.jboss.ws" artifact="jbossws-common-tools"/>
+         </module-def>
+-        -->
+ 
+         <module-def name="org.jboss.ws.saaj-impl">
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index b50b13e..17bf70b 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -242,12 +242,10 @@
+                     <artifactId>jaxb-xjc</artifactId>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>com.sun.xml.messaging.saaj</groupId>
+                     <artifactId>saaj-impl</artifactId>
+                 </dependency>
+-                -->
+ 
+                 <dependency>
+                     <groupId>commons-beanutils</groupId>
+@@ -289,12 +287,10 @@
+                     <artifactId>dom4j</artifactId>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>gnu-getopt</groupId>
+                     <artifactId>getopt</artifactId>
+                 </dependency>
+-                -->
+ 
+                 <dependency>
+                     <groupId>org.jacorb</groupId>
+@@ -368,7 +364,6 @@
+                     <artifactId>nekohtml</artifactId>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>org.apache.cxf</groupId>
+                     <artifactId>cxf-api</artifactId>
+@@ -518,7 +513,6 @@
+                     <groupId>org.apache.cxf.xjcplugins</groupId>
+                     <artifactId>cxf-xjc-ts</artifactId>
+                 </dependency>
+-                -->
+ 
+                 <dependency>
+                     <groupId>org.apache.felix</groupId>
+@@ -592,12 +586,10 @@
+                     <artifactId>openjpa-persistence-jdbc</artifactId>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>org.apache.ws.xmlschema</groupId>
+                     <artifactId>xmlschema-core</artifactId>
+                 </dependency>
+-                -->
+ 
+                 <dependency>
+                     <groupId>org.apache.velocity</groupId>
+@@ -1526,19 +1518,16 @@
+                     <artifactId>jbossws-common</artifactId>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>org.jboss.ws</groupId>
+                     <artifactId>jbossws-common-tools</artifactId>
+                 </dependency>
+-                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.ws</groupId>
+                     <artifactId>jbossws-spi</artifactId>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>org.jboss.ws.projects</groupId>
+                     <artifactId>jaxws-jboss-httpserver-httpspi</artifactId>
+@@ -1553,7 +1542,6 @@
+                     <groupId>org.jboss.ws.cxf</groupId>
+                     <artifactId>jbossws-cxf-factories</artifactId>
+                 </dependency>
+-                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.ws.cxf</groupId>
+@@ -1561,7 +1549,6 @@
+                     <classifier>jboss711</classifier>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>org.jboss.ws.cxf</groupId>
+                     <artifactId>jbossws-cxf-server</artifactId>
+@@ -1572,6 +1559,7 @@
+                     <artifactId>jbossws-cxf-transports-httpserver</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.ws.native</groupId>
+                     <artifactId>jbossws-native-core</artifactId>
+diff --git a/pom.xml b/pom.xml
+index e945f35..132f42e 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -388,10 +388,10 @@
+                                             <exclude>com.gwtplatform:gwtp-all</exclude>
+                                             <exclude>commons-httpclient:commons-httpclient</exclude>
+                                             <exclude>commons-logging:commons-logging</exclude>
+-                                            <exclude>concurrent:concurrent</exclude>
++                                            <!-- <exclude>concurrent:concurrent</exclude> Pulled in by picketbox -->
+                                             <exclude>jacorb:jacorb</exclude>
+                                             <exclude>javassist:javassist</exclude>
+-                                            <exclude>javax.persistence:persistence-api</exclude>
++                                            <!-- <exclude>javax.persistence:persistence-api</exclude> Pulled in by picketbox -->
+                                             <!-- <exclude>javax.servlet:servlet-api</exclude> Pulled in by org.osgi:org.osgi.compendium, alias -->
+                                             <exclude>javax.transaction:jta</exclude>
+                                             <exclude>javax.xml:jaxrpc-api</exclude>

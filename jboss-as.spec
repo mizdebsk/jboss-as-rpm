@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          10%{?dist}
+Release:          11%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -72,6 +72,11 @@ Patch34:          0035-Added-org.jboss.as.xts-module.patch
 Patch35:          0036-Add-support-for-Hibernate-4.patch
 Patch36:          0037-Add-org.osgi-org.osgi.compendium-dependency-since-it.patch
 Patch37:          0038-Disable-jbossws-native-usage.patch
+Patch38:          0039-Enabled-webservices-related-moduled.patch
+Patch39:          0040-JBWS-3446-Add-methods-for-creating-a-test-https-conn.patch
+Patch40:          0041-Modified-AS7-4890-upgrade-to-JBossWS-4.1.0.Beta1.patch
+Patch41:          0042-Revert-Disable-jbossws-native-usage.patch
+Patch42:          0043-Enable-jbossws-native-remove-javax.jws.api-from-cxf-.patch
 
 BuildArch:        noarch
 
@@ -95,11 +100,11 @@ BuildRequires:    bsf
 BuildRequires:    cal10n
 BuildRequires:    cdi-api
 BuildRequires:    cssparser
-#BuildRequires:    cxf >= 2.4.9-2
-#BuildRequires:    cxf-api >= 2.4.9-2
-#BuildRequires:    cxf-common >= 2.4.9-2
-#BuildRequires:    cxf-rt >= 2.4.9-2
-#BuildRequires:    cxf-tools >= 2.4.9-2
+BuildRequires:    cxf >= 2.6.3
+BuildRequires:    cxf-api >= 2.6.3
+BuildRequires:    cxf-common >= 2.6.3
+BuildRequires:    cxf-rt >= 2.6.3
+BuildRequires:    cxf-tools >= 2.6.3
 BuildRequires:    dom4j
 BuildRequires:    ecj
 BuildRequires:    felix-configadmin
@@ -124,6 +129,7 @@ BuildRequires:    git
 BuildRequires:    glassfish-jaxb
 BuildRequires:    glassfish-saaj
 BuildRequires:    gnu-getopt
+BuildRequires:    istack-commons
 BuildRequires:    infinispan
 BuildRequires:    ironjacamar
 BuildRequires:    jacorb
@@ -200,10 +206,10 @@ BuildRequires:    jboss-vfs
 BuildRequires:    jbossws-parent
 BuildRequires:    jbossws-api
 BuildRequires:    jbossws-common >= 2.0.4-3
-#BuildRequires:    jbossws-common-tools
-BuildRequires:    jbossws-cxf
-#BuildRequires:    jbossws-cxf >= 4.0.2-2
-BuildRequires:    jbossws-spi >= 2.0.3-2
+BuildRequires:    jbossws-common-tools
+BuildRequires:    jbossws-cxf >= 4.1.0
+BuildRequires:    jbossws-spi >= 2.1.0
+BuildRequires:    jbossws-native >= 4.1.0
 BuildRequires:    jbossxb
 BuildRequires:    jcip-annotations
 BuildRequires:    jline
@@ -232,6 +238,10 @@ BuildRequires:    neethi
 BuildRequires:    netty
 BuildRequires:    objectweb-asm
 BuildRequires:    openjpa
+BuildRequires:    opensaml-java
+BuildRequires:    opensaml-java-openws
+BuildRequires:    opensaml-java-xmltooling
+BuildRequires:    opensaml-java-parent
 BuildRequires:    picketbox
 BuildRequires:    picketbox-commons
 BuildRequires:    resteasy >= 2.3.2-7
@@ -244,16 +254,18 @@ BuildRequires:    slf4j
 BuildRequires:    slf4j-jboss-logmanager
 BuildRequires:    staxmapper
 BuildRequires:    systemd-units
+BuildRequires:    velocity
 BuildRequires:    weld-api
 BuildRequires:    weld-core
 BuildRequires:    weld-parent
 BuildRequires:    wsdl4j >= 1.6.2-5
-BuildRequires:    wss4j
-#BuildRequires:    wss4j >= 1.6.7
+BuildRequires:    wss4j >= 1.6.7
 BuildRequires:    ws-xmlschema
 BuildRequires:    xalan-j2
 BuildRequires:    xerces-j2
 BuildRequires:    xml-security
+BuildRequires:    xml-commons-apis
+BuildRequires:    xml-commons-resolver
 BuildRequires:    xnio
 
 Requires:         antlr
@@ -273,11 +285,11 @@ Requires:         bean-validation-api
 Requires:         cal10n
 Requires:         cdi-api
 Requires:         cssparser
-#Requires:         cxf >= 2.4.9-2
-#Requires:         cxf-api >= 2.4.9-2
-#Requires:         cxf-common >= 2.4.9-2
-#Requires:         cxf-rt >= 2.4.9-2
-#Requires:         cxf-tools >= 2.4.9-2
+Requires:         cxf >= 2.6.3
+Requires:         cxf-api >= 2.6.3
+Requires:         cxf-common >= 2.6.3
+Requires:         cxf-rt >= 2.6.3
+Requires:         cxf-tools >= 2.6.3
 Requires:         dom4j
 Requires:         ecj
 Requires:         felix-configadmin
@@ -301,6 +313,7 @@ Requires:         hibernate-validator
 Requires:         hornetq
 Requires:         httpcomponents-client
 Requires:         httpcomponents-core
+Requires:         istack-commons
 Requires:         infinispan
 Requires:         ironjacamar
 Requires:         jacorb
@@ -371,10 +384,10 @@ Requires:         jboss-web-native
 Requires:         jboss-vfs
 Requires:         jbossws-api
 Requires:         jbossws-common >= 2.0.4-3
-#Requires:         jbossws-common-tools
-Requires:         jbossws-cxf
-#Requires:         jbossws-cxf >= 4.0.2-2
-Requires:         jbossws-spi >= 2.0.3-2
+Requires:         jbossws-common-tools
+Requires:         jbossws-cxf >= 4.1.0
+Requires:         jbossws-spi >= 2.1.0
+Requires:         jbossws-native >= 4.1.0
 Requires:         jbossxb
 Requires:         jcip-annotations
 Requires:         jgroups
@@ -392,6 +405,9 @@ Requires:         netty
 Requires:         objectweb-asm
 Requires:         openjpa
 Requires:         openssl
+Requires:         opensaml-java
+Requires:         opensaml-java-openws
+Requires:         opensaml-java-xmltooling
 Requires:         picketbox
 Requires:         picketbox-commons
 Requires:         resteasy >= 2.3.2-7
@@ -403,14 +419,16 @@ Requires:         shrinkwrap-resolver
 Requires:         slf4j
 Requires:         slf4j-jboss-logmanager
 Requires:         staxmapper
+Requires:         velocity
 Requires:         weld-api
 Requires:         weld-core
 Requires:         wsdl4j >= 1.6.2-5
-Requires:         wss4j
-#Requires:         wss4j >= 1.6.7
+Requires:         wss4j >= 1.6.7
 Requires:         ws-xmlschema
 Requires:         xalan-j2
 Requires:         xerces-j2
+Requires:         xml-commons-apis
+Requires:         xml-commons-resolver
 Requires:         xml-security
 Requires:         xnio
 Requires(pre):    shadow-utils
@@ -677,25 +695,28 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath cal10n/cal10n-api) ch/qos/cal10n/main/cal10n-api.jar
     ln -s $(build-classpath cdi-api) javax/enterprise/api/main/cdi-api.jar
 
-#    for m in api common-utilities rt-bindings-coloc rt-bindings-http rt-bindings-object rt-bindings-soap \
-#             rt-bindings-xml rt-core rt-databinding-aegis rt-databinding-jaxb rt-frontend-jaxws \
-#             rt-frontend-simple rt-management rt-transports-common rt-transports-http rt-transports-jms \
-#             rt-transports-local rt-ws-addr rt-ws-policy rt-ws-rm rt-ws-security tools-common \
-#             tools-java2ws tools-validator tools-wsdlto-core tools-wsdlto-databinding-jaxb tools-wsdlto-frontend-jaxws; do
-#      ln -s $(build-classpath cxf/${m}) org/apache/cxf/main/${m}.jar
-#    done
-#
-#    for m in xjc-boolean xjc-dv xjc-ts; do
-#      ln -s $(build-classpath cxf-xjc-utils/cxf-${m}) org/apache/cxf/main/cxf-${m}.jar
-#    done
+    for m in api rt-bindings-coloc rt-bindings-object rt-bindings-soap \
+             rt-bindings-xml rt-core rt-databinding-aegis rt-databinding-jaxb rt-frontend-jaxws \
+             rt-frontend-simple rt-management rt-transports-http rt-transports-jms \
+             rt-transports-local rt-ws-addr rt-ws-mex rt-ws-policy rt-ws-rm rt-ws-security \
+             tools-common tools-java2ws tools-validator tools-wsdlto-core tools-wsdlto-databinding-jaxb \
+             tools-wsdlto-frontend-jaxws services-sts-core; do
+      ln -s $(build-classpath cxf/${m}) org/apache/cxf/impl/main/${m}.jar
+    done
+
+    ln -s $(build-classpath cxf/api) org/apache/cxf/main/api.jar
+
+    for m in xjc-boolean xjc-dv xjc-ts; do
+      ln -s $(build-classpath cxf-xjc-utils/cxf-${m}) org/apache/cxf/impl/main/cxf-${m}.jar
+    done
 
     ln -s $(build-classpath dom4j) org/dom4j/main/dom4j.jar
     ln -s $(build-classpath ecj) org/jboss/as/web/main/ecj.jar
     ln -s $(build-classpath guava) com/google/guava/main/guava.jar
     ln -s $(build-classpath glassfish-jaxb/jaxb-impl) com/sun/xml/bind/main/jaxb-impl.jar
     ln -s $(build-classpath glassfish-jaxb/jaxb-xjc) com/sun/xml/bind/main/jaxb-xjc.jar
-#    ln -s $(build-classpath glassfish-saaj) com/sun/xml/messaging/saaj/main/glassfish-saaj.jar
-#    ln -s $(build-classpath gnu-getopt) gnu/getopt/main/gnu-getopt.jar
+    ln -s $(build-classpath glassfish-saaj) com/sun/xml/messaging/saaj/main/glassfish-saaj.jar
+    ln -s $(build-classpath gnu-getopt) gnu/getopt/main/gnu-getopt.jar
     ln -s $(build-classpath bean-validation-api) javax/validation/api/main/bean-validation-api.jar
     ln -s $(build-classpath h2) com/h2database/h2/main/h2.jar
     ln -s $(build-classpath hibernate-validator) org/hibernate/validator/main/hibernate-validator.jar
@@ -721,6 +742,8 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath httpcomponents/httpcore) org/apache/httpcomponents/main/httpcore.jar
     ln -s $(build-classpath httpcomponents/httpmime) org/apache/httpcomponents/main/httpmime.jar
 
+    ln -s $(build-classpath istack-commons-runtime) com/sun/xml/bind/main/istack-commons-runtime.jar
+
     ln -s $(build-classpath infinispan/infinispan-cachestore-jdbc) org/infinispan/cachestore/jdbc/main/infinispan-cachestore-jdbc.jar
     ln -s $(build-classpath infinispan/infinispan-cachestore-remote) org/infinispan/cachestore/remote/main/infinispan-cachestore-remote.jar
     ln -s $(build-classpath infinispan/infinispan-client-hotrod) org/infinispan/client/hotrod/main/infinispan-client-hotrod.jar
@@ -739,7 +762,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath javamail/mail) javax/mail/api/main/mail.jar
     ln -s $(build-classpath javassist) org/javassist/main/javassist.jar
     ln -s $(build-classpath jaxen) org/jaxen/main/jaxen.jar
-#    ln -s $(build-classpath jaxws-jboss-httpserver-httpspi) org/jboss/ws/jaxws-jboss-httpserver-httpspi/main/jaxws-jboss-httpserver-httpspi.jar
+    ln -s $(build-classpath jaxws-jboss-httpserver-httpspi) org/jboss/ws/jaxws-jboss-httpserver-httpspi/main/jaxws-jboss-httpserver-httpspi.jar
     ln -s $(build-classpath jcip-annotations) net/jcip/main/jcip-annotations.jar
     ln -s $(build-classpath jandex) org/jboss/jandex/main/jandex.jar
     ln -s $(build-classpath jboss-jaxrs-1.1-api) javax/ws/rs/api/main/jaxrs-api.jar
@@ -823,16 +846,18 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jboss-web) org/jboss/as/web/main/jboss-web.jar
     ln -s $(build-classpath jbossws-api) org/jboss/ws/api/main/jbossws-api.jar
     ln -s $(build-classpath jbossws-common) org/jboss/ws/common/main/jbossws-common.jar
-#    ln -s $(build-classpath jbossws-common-tools) org/jboss/ws/tools/common/main/jbossws-common-tools.jar
+    ln -s $(build-classpath jbossws-common-tools) org/jboss/ws/tools/common/main/jbossws-common-tools.jar
     ln -s $(build-classpath jbossws-spi) org/jboss/ws/spi/main/jbossws-spi.jar
 
-#    for m in jbossws-cxf-factories jbossws-cxf-transports-httpserver jbossws-cxf-server; do
-#      ln -s $(build-classpath jbossws-cxf/${m}) org/jboss/ws/cxf/${m}/main/${m}.jar
-#    done
+    for m in jbossws-cxf-factories jbossws-cxf-transports-httpserver jbossws-cxf-server; do
+      ln -s $(build-classpath jbossws-cxf/${m}) org/jboss/ws/cxf/${m}/main/${m}.jar
+    done
 
-#    ln -s $(build-classpath jbossws-cxf/jbossws-cxf-client) org/jboss/ws/jaxws-client/main/jbossws-cxf-client.jar
-    ln -s $(build-classpath jbossws-cxf/jbossws-cxf-resources) org/jboss/as/webservices/main/jbossws-cxf-resources.jar
-    ln -s $(build-classpath jbossws-cxf/jbossws-cxf-resources-jboss711) org/jboss/as/webservices/main/jbossws-cxf-resources-jboss711.jar
+    ln -s $(build-classpath jbossws-cxf/jbossws-cxf-client) org/jboss/ws/jaxws-client/main/jbossws-cxf-client.jar
+    ln -s $(build-classpath jbossws-cxf/jbossws-cxf-resources-jboss711) org/jboss/as/webservices/main/jbossws-cxf-resources.jar
+
+    ln -s $(build-classpath jbossws-native/jbossws-native-core) org/jboss/ws/native/jbossws-native-core/main/jbossws-native-core.jar
+    ln -s $(build-classpath jbossws-native/jbossws-native-services) org/jboss/ws/native/jbossws-native-services/main/jbossws-native-services.jar
 
     ln -s $(build-classpath jbossxb) org/jboss/xb/main/jbossxb.jar
     ln -s $(build-classpath jgroups) org/jgroups/main/jgroups.jar
@@ -847,7 +872,10 @@ pushd $RPM_BUILD_ROOT%{homedir}
       ln -s $(build-classpath mod_cluster/${m}) org/jboss/as/modcluster/main/${m}.jar
     done
 
+    # TODO remove this when netty >= 3.5.10-1 will be available
+    ln -s $(build-classpath netty) org/jboss/netty/main/netty31.jar
     ln -s $(build-classpath netty) org/jboss/netty/main/netty.jar
+    ln -s $(build-classpath neethi) org/apache/neethi/main/neethi.jar
     ln -s $(build-classpath objectweb-asm/asm) asm/asm/main/asm.jar
 
     ln -s $(build-classpath openjpa/kernel) org/apache/openjpa/main/kernel.jar
@@ -856,6 +884,9 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath openjpa/persistence-jdbc) org/apache/openjpa/main/persistence-jdbc.jar
     ln -s $(build-classpath openjpa/jdbc) org/apache/openjpa/main/jdbc.jar
 
+    ln -s $(build-classpath opensaml-java) org/opensaml/main/opensaml-java.jar
+    ln -s $(build-classpath opensaml-java-openws) org/opensaml/main/opensaml-java-openws.jar
+    ln -s $(build-classpath opensaml-java-xmltooling) org/opensaml/main/opensaml-java-xmltooling.jar
     ln -s $(build-classpath felix/org.osgi.core) org/osgi/core/main/org.osgi.core.jar
     ln -s $(build-classpath felix/org.osgi.compendium) org/jboss/osgi/framework/main/org.osgi.compendium.jar
     ln -s $(build-classpath picketbox/picketbox) org/picketbox/main/picketbox.jar
@@ -883,6 +914,8 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath slf4j/jcl-over-slf4j) org/slf4j/jcl-over-slf4j/main/jcl-over-slf4j.jar
     ln -s $(build-classpath slf4j-jboss-logmanager) org/slf4j/impl/main/slf4j-jboss-logmanager.jar
     ln -s $(build-classpath staxmapper) org/jboss/staxmapper/main/staxmapper.jar
+    ln -s $(build-classpath txw2) com/sun/xml/bind/main/txw2.jar
+    ln -s $(build-classpath velocity) org/apache/velocity/main/velocity.jar
     ln -s $(build-classpath weld-api/weld-api) org/jboss/weld/api/main/weld-api.jar
     ln -s $(build-classpath weld-api/weld-spi) org/jboss/weld/spi/main/weld-spi.jar
     ln -s $(build-classpath weld-core) org/jboss/weld/core/main/weld-core.jar
@@ -892,7 +925,11 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath xalan-j2-serializer) org/apache/xalan/main/xalan-j2-serializer.jar
     ln -s $(build-classpath xerces-j2) org/apache/xerces/main/xerces-j2.jar
     ln -s $(build-classpath xml-security) org/apache/santuario/xmlsec/main/xml-security.jar
-#    ln -s $(build-classpath xmlschema-core) org/apache/ws/xmlschema/main/xmlschema-core.jar
+    ln -s $(build-classpath xmlschema-core) org/apache/ws/xmlschema/main/xmlschema-core.jar
+    ln -s $(build-classpath xml-commons-apis) org/apache/xerces/main/xml-commons-apis.jar
+    # TODO: remove this when xml-commons-resolver >= 1.2-11 will be available
+    ln -s $(build-classpath xml-commons-resolver) org/apache/xml-resolver/main/xml-resolver-1.2.jar
+    ln -s $(build-classpath xml-commons-resolver) org/apache/xml-resolver/main/xml-commons-resolver.jar
     ln -s $(build-classpath xnio-api) org/jboss/xnio/main/xnio-api.jar
     ln -s $(build-classpath xnio-nio) org/jboss/xnio/nio/main/xnio-nio.jar
   popd
@@ -1030,6 +1067,9 @@ fi
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Tue Nov 20 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-11
+- Add webservices support based on CXF 2.6.3
+
 * Tue Nov 06 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-10
 - Added Hibernate 4 (default persistence provider) support
 - Preparations for webservice-related modules from CXF

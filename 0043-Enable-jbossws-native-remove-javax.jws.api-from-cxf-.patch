@@ -1,0 +1,77 @@
+From 2b9ca20bee721c2bc3a330dfd64bf4083ee5caca Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Thu, 22 Nov 2012 12:30:19 +0100
+Subject: [PATCH] Enable jbossws-native, remove javax.jws.api from cxf, it's
+ in JDK
+
+---
+ build/build.xml                                                         | 2 --
+ build/pom.xml                                                           | 2 --
+ build/src/main/resources/modules/org/apache/cxf/impl/main/module.xml    | 1 -
+ .../org/jboss/as/webservices/server/jaxrpc-integration/main/module.xml  | 1 -
+ 4 files changed, 6 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 404ff65..6ed2367 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -1117,7 +1117,6 @@
+             <maven-resource group="org.jboss.ws.projects" artifact="jaxws-jboss-httpserver-httpspi"/>
+         </module-def>
+ 
+-        <!--
+         <module-def name="org.jboss.ws.native.jbossws-native-core">
+             <maven-resource group="org.jboss.ws.native" artifact="jbossws-native-core"/>
+         </module-def>
+@@ -1125,7 +1124,6 @@
+         <module-def name="org.jboss.ws.native.jbossws-native-services">
+             <maven-resource group="org.jboss.ws.native" artifact="jbossws-native-services"/>
+         </module-def>
+-        -->
+ 
+         <module-def name="org.jboss.ws.api">
+             <maven-resource group="org.jboss.ws" artifact="jbossws-api"/>
+diff --git a/build/pom.xml b/build/pom.xml
+index 14177f3..41d5fde 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -1569,7 +1569,6 @@
+                     <artifactId>jbossws-cxf-transports-httpserver</artifactId>
+                 </dependency>
+ 
+-                <!--
+                 <dependency>
+                     <groupId>org.jboss.ws.native</groupId>
+                     <artifactId>jbossws-native-core</artifactId>
+@@ -1579,7 +1578,6 @@
+                     <groupId>org.jboss.ws.native</groupId>
+                     <artifactId>jbossws-native-services</artifactId>
+                 </dependency>
+-                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.xnio</groupId>
+diff --git a/build/src/main/resources/modules/org/apache/cxf/impl/main/module.xml b/build/src/main/resources/modules/org/apache/cxf/impl/main/module.xml
+index 60af359..9d749f8 100644
+--- a/build/src/main/resources/modules/org/apache/cxf/impl/main/module.xml
++++ b/build/src/main/resources/modules/org/apache/cxf/impl/main/module.xml
+@@ -32,7 +32,6 @@
+         <module name="javax.api" />
+         <module name="javax.annotation.api" />
+         <module name="javax.jms.api" />
+-        <module name="javax.jws.api" />
+         <module name="javax.mail.api" />
+         <module name="javax.resource.api" />
+         <module name="javax.servlet.api" />
+diff --git a/build/src/main/resources/modules/org/jboss/as/webservices/server/jaxrpc-integration/main/module.xml b/build/src/main/resources/modules/org/jboss/as/webservices/server/jaxrpc-integration/main/module.xml
+index 6d227fb..48ed0f5 100644
+--- a/build/src/main/resources/modules/org/jboss/as/webservices/server/jaxrpc-integration/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/as/webservices/server/jaxrpc-integration/main/module.xml
+@@ -35,7 +35,6 @@
+         <module name="org.jboss.ws.api" export="true"/>
+         <module name="org.jboss.ws.spi" export="true"/>
+         <module name="org.jboss.ws.common" services="import" export="true"/>
+-        <module name="org.jboss.ws.native.jbossws-native-factories" services="export" export="true"/>
+         <module name="org.jboss.ws.native.jbossws-native-core" services="export" export="true">
+           <imports>
+             <include path="META-INF"/>

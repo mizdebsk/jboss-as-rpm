@@ -12,14 +12,14 @@
 %global jbuid 185
 
 # Enabled modules:
-%global modules cli cmp configadmin connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jacorb jaxr jaxrs jmx jsr77 logging management-client-content mail modcluster naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld xts
+%global modules appclient cli cmp configadmin connector controller-client controller deployment-repository deployment-scanner domain-management ee ejb3 embedded host-controller jacorb jaxr jaxrs jmx jsr77 logging management-client-content mail messaging modcluster naming network platform-mbean pojo process-controller protocol remoting sar security server threads transactions web weld xts
 
 # Additional modules enabled, but not listed above because of different structure:
 # arquillian domain-http clustering jpa osgi jdr webservices
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          11%{?dist}
+Release:          12%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -84,12 +84,15 @@ BuildArch:        noarch
 # Please keep alphabetically
 BuildRequires:    antlr
 BuildRequires:    ant-apache-bsf
+BuildRequires:    apache-commons-beanutils
 BuildRequires:    apache-commons-cli
 BuildRequires:    apache-commons-codec
 BuildRequires:    apache-commons-collections
 BuildRequires:    apache-commons-configuration
+BuildRequires:    apache-commons-io
 BuildRequires:    apache-commons-lang
 BuildRequires:    apache-commons-logging
+BuildRequires:    apache-commons-pool
 BuildRequires:    apache-james-project
 BuildRequires:    apache-juddi
 BuildRequires:    apache-mime4j
@@ -216,6 +219,7 @@ BuildRequires:    jbossws-spi >= 2.1.0
 BuildRequires:    jbossws-native >= 4.1.0
 BuildRequires:    jbossxb
 BuildRequires:    jcip-annotations
+BuildRequires:    jdom
 BuildRequires:    jline
 BuildRequires:    jul-to-slf4j-stub
 BuildRequires:    joda-time
@@ -239,6 +243,7 @@ BuildRequires:    xml-maven-plugin
 BuildRequires:    mojarra
 BuildRequires:    mod_cluster-java >= 1.2.1-2
 BuildRequires:    neethi
+BuildRequires:    nekohtml
 BuildRequires:    netty
 BuildRequires:    objectweb-asm
 BuildRequires:    openjpa
@@ -248,9 +253,11 @@ BuildRequires:    opensaml-java-xmltooling
 BuildRequires:    opensaml-java-parent
 BuildRequires:    picketbox
 BuildRequires:    picketbox-commons
+BuildRequires:    picketbox-xacml
 BuildRequires:    resteasy >= 2.3.2-7
 BuildRequires:    rhq-plugin-annotations
 BuildRequires:    scannotation
+BuildRequires:    sac
 BuildRequires:    serp
 BuildRequires:    shrinkwrap
 BuildRequires:    shrinkwrap-resolver
@@ -258,11 +265,13 @@ BuildRequires:    slf4j
 BuildRequires:    slf4j-jboss-logmanager
 BuildRequires:    snakeyaml
 BuildRequires:    staxmapper
+BuildRequires:    stax2-api
 BuildRequires:    systemd-units
 BuildRequires:    velocity
 BuildRequires:    weld-api
 BuildRequires:    weld-core
 BuildRequires:    weld-parent
+BuildRequires:    woodstox-core
 BuildRequires:    wsdl4j >= 1.6.2-5
 BuildRequires:    wss4j >= 1.6.7
 BuildRequires:    ws-xmlschema
@@ -272,15 +281,19 @@ BuildRequires:    xml-security
 BuildRequires:    xml-commons-apis
 BuildRequires:    xml-commons-resolver
 BuildRequires:    xnio
+BuildRequires:    xom
 
 Requires:         antlr
 Requires:         atinject
+Requires:         apache-commons-beanutils
 Requires:         apache-commons-cli
 Requires:         apache-commons-codec
 Requires:         apache-commons-collections
 Requires:         apache-commons-configuration
+Requires:         apache-commons-io
 Requires:         apache-commons-lang
 Requires:         apache-commons-logging
+Requires:         apache-commons-pool
 Requires:         apache-juddi
 Requires:         apache-mime4j
 Requires:         apache-scout
@@ -398,6 +411,7 @@ Requires:         jbossws-spi >= 2.1.0
 Requires:         jbossws-native >= 4.1.0
 Requires:         jbossxb
 Requires:         jcip-annotations
+Requires:         jdom
 Requires:         jgroups
 Requires:         jline
 Requires:         jul-to-slf4j-stub
@@ -409,6 +423,7 @@ Requires:         jython >= 2.2.1-9
 Requires:         mojarra
 Requires:         mod_cluster-java >= 1.2.1-2
 Requires:         neethi
+Requires:         nekohtml
 Requires:         netty
 Requires:         objectweb-asm
 Requires:         openjpa
@@ -418,9 +433,11 @@ Requires:         opensaml-java-openws
 Requires:         opensaml-java-xmltooling
 Requires:         picketbox
 Requires:         picketbox-commons
+Requires:         picketbox-xacml
 Requires:         resteasy >= 2.3.2-7
 Requires:         rhq-plugin-annotations
 Requires:         scannotation
+Requires:         sac
 Requires:         serp
 Requires:         shrinkwrap
 Requires:         shrinkwrap-resolver
@@ -428,9 +445,11 @@ Requires:         slf4j
 Requires:         slf4j-jboss-logmanager
 Requires:         snakeyaml
 Requires:         staxmapper
+Requires:         stax2-api
 Requires:         velocity
 Requires:         weld-api
 Requires:         weld-core
+Requires:         woodstox-core
 Requires:         wsdl4j >= 1.6.2-5
 Requires:         wss4j >= 1.6.7
 Requires:         ws-xmlschema
@@ -440,6 +459,7 @@ Requires:         xml-commons-apis
 Requires:         xml-commons-resolver
 Requires:         xml-security
 Requires:         xnio
+Requires:         xom
 Requires(pre):    shadow-utils
 Requires(post):   systemd-units
 Requires(preun):  systemd-units
@@ -511,7 +531,7 @@ done
 multimodules="arquillian domain-http clustering jpa osgi webservices"
 # If a submodule contains hyphen in the name, just skip it, e.g. domain-http => domainhttp
 modules_arquillian="common container-managed container-remote protocol-jmx testenricher-msc"
-modules_clustering="api common impl jgroups infinispan registry service web-spi web-infinispan ejb3-infinispan"
+modules_clustering="api common impl jgroups infinispan registry service singleton web-spi web-infinispan ejb3-infinispan"
 modules_jpa="util spi openjpa hibernate3 hibernate4"
 modules_domainhttp="interface error-context"
 modules_osgi="service configadmin"
@@ -685,11 +705,13 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
     # Please keep alphabetic by jar name
 
-    for m in codec collections configuration lang logging; do
+    for m in codec collections configuration io lang logging; do
       ln -s $(build-classpath apache-commons-${m}) org/apache/commons/${m}/main/commons-${m}.jar
     done
 
-    ln -s $(build-classpath apache-commons-cli) org/apache/commons/cli/main/apache-commons-cli.jar
+    for m in beanutils cli configuration pool; do
+      ln -s $(build-classpath apache-commons-${m}) org/apache/commons/${m}/main/apache-commons-${m}.jar
+    done
 
     ln -s $(build-classpath apache-juddi/juddi-client) org/apache/juddi/juddi-client/main/juddi-client.jar
     ln -s $(build-classpath apache-juddi/uddi-ws) org/apache/juddi/uddi-ws/main/uddi-ws.jar
@@ -723,13 +745,19 @@ pushd $RPM_BUILD_ROOT%{homedir}
       ln -s $(build-classpath cxf-xjc-utils/cxf-${m}) org/apache/cxf/impl/main/cxf-${m}.jar
     done
 
+    ln -s $(build-classpath cssparser) net/sourceforge/cssparser/main/cssparser.jar
     ln -s $(build-classpath dom4j) org/dom4j/main/dom4j.jar
     ln -s $(build-classpath ecj) org/jboss/as/web/main/ecj.jar
     ln -s $(build-classpath guava) com/google/guava/main/guava.jar
     ln -s $(build-classpath glassfish-jaxb/jaxb-impl) com/sun/xml/bind/main/jaxb-impl.jar
     ln -s $(build-classpath glassfish-jaxb/jaxb-xjc) com/sun/xml/bind/main/jaxb-xjc.jar
     ln -s $(build-classpath glassfish-saaj) com/sun/xml/messaging/saaj/main/glassfish-saaj.jar
+
     ln -s $(build-classpath gnu-getopt) gnu/getopt/main/gnu-getopt.jar
+    # Make sure we don't specify the version suffix in the jar name for gnu-getopt
+    # TODO report a bug and fix this properly
+    sed -i "s|gnu-getopt.*\.jar|gnu-getopt\.jar|" gnu/getopt/main/module.xml
+
     ln -s $(build-classpath bean-validation-api) javax/validation/api/main/bean-validation-api.jar
     ln -s $(build-classpath h2) com/h2database/h2/main/h2.jar
     ln -s $(build-classpath hibernate-validator) org/hibernate/validator/main/hibernate-validator.jar
@@ -877,6 +905,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath jbossws-native/jbossws-native-services) org/jboss/ws/native/jbossws-native-services/main/jbossws-native-services.jar
 
     ln -s $(build-classpath jbossxb) org/jboss/xb/main/jbossxb.jar
+    ln -s $(build-classpath jdom) org/jdom/main/jdom.jar
     ln -s $(build-classpath jgroups) org/jgroups/main/jgroups.jar
     ln -s $(build-classpath jettison) org/codehaus/jettison/main/jettison.jar
     ln -s $(build-classpath jline) jline/main/jline.jar
@@ -894,6 +923,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath netty) org/jboss/netty/main/netty31.jar
     ln -s $(build-classpath netty) org/jboss/netty/main/netty.jar
     ln -s $(build-classpath neethi) org/apache/neethi/main/neethi.jar
+    ln -s $(build-classpath nekohtml) net/sourceforge/nekohtml/main/nekohtml.jar
     ln -s $(build-classpath objectweb-asm/asm) asm/asm/main/asm.jar
 
     ln -s $(build-classpath openjpa/kernel) org/apache/openjpa/main/kernel.jar
@@ -910,6 +940,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath picketbox/picketbox) org/picketbox/main/picketbox.jar
     ln -s $(build-classpath picketbox/infinispan) org/picketbox/main/infinispan.jar
     ln -s $(build-classpath picketbox-commons) org/picketbox/main/picketbox-commons.jar
+    ln -s $(build-classpath picketbox-xacml) org/jboss/security/xacml/main/picketbox-xacml.jar
 
     for m in atom-provider cdi jackson-provider jaxb-provider jaxrs jettison-provider jsapi multipart-provider yaml-provider; do
       ln -s $(build-classpath resteasy/resteasy-${m}) org/jboss/resteasy/resteasy-${m}/main/resteasy-${m}.jar
@@ -920,6 +951,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     # RestEasy exception
     ln -s $(build-classpath resteasy/async-http-servlet-3.0) org/jboss/resteasy/resteasy-jaxrs/main/async-http-servlet-3.0.jar
 
+    ln -s $(build-classpath sac) org/w3c/css/sac/main/sac.jar
     ln -s $(build-classpath scannotation) org/scannotation/scannotation/main/scannotation.jar
     ln -s $(build-classpath serp) net/sourceforge/serp/main/serp.jar
 
@@ -933,11 +965,13 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath slf4j-jboss-logmanager) org/slf4j/impl/main/slf4j-jboss-logmanager.jar
     ln -s $(build-classpath snakeyaml) org/yaml/snakeyaml/main/snakeyaml.jar
     ln -s $(build-classpath staxmapper) org/jboss/staxmapper/main/staxmapper.jar
+    ln -s $(build-classpath stax2-api) org/codehaus/woodstox/main/stax2-api.jar
     ln -s $(build-classpath txw2) com/sun/xml/bind/main/txw2.jar
     ln -s $(build-classpath velocity) org/apache/velocity/main/velocity.jar
     ln -s $(build-classpath weld-api/weld-api) org/jboss/weld/api/main/weld-api.jar
     ln -s $(build-classpath weld-api/weld-spi) org/jboss/weld/spi/main/weld-spi.jar
     ln -s $(build-classpath weld-core) org/jboss/weld/core/main/weld-core.jar
+    ln -s $(build-classpath woodstox-core-asl) org/codehaus/woodstox/main/woodstox-core-asl.jar
     ln -s $(build-classpath wsdl4j) javax/wsdl4j/api/main/wsdl4j.jar
     ln -s $(build-classpath wss4j) org/apache/ws/security/main/wss4j.jar
     ln -s $(build-classpath xalan-j2) org/apache/xalan/main/xalan-j2.jar
@@ -951,6 +985,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath xml-commons-resolver) org/apache/xml-resolver/main/xml-commons-resolver.jar
     ln -s $(build-classpath xnio-api) org/jboss/xnio/main/xnio-api.jar
     ln -s $(build-classpath xnio-nio) org/jboss/xnio/nio/main/xnio-nio.jar
+    ln -s $(build-classpath xom) nu/xom/main/xom.jar
   popd
 popd
 
@@ -1086,6 +1121,9 @@ fi
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Wed Nov 28 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-12
+- Fixing many missing symlinks
+
 * Tue Nov 20 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-11
 - Add webservices support based on CXF 2.6.3
 - The jackson modules don't have symlinks to .jar files, RHBZ#879008

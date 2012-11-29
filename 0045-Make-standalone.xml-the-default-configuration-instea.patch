@@ -1,0 +1,20 @@
+From 486c82aa06acf3bc84dfa34cb1114b1fe2e3184c Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Thu, 29 Nov 2012 11:27:04 +0100
+Subject: [PATCH] Make standalone.xml the default configuration instead
+ standalone-web.xml
+
+---
+ build/src/main/resources/bin/initscripts/systemd/jboss-as.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/src/main/resources/bin/initscripts/systemd/jboss-as.conf b/build/src/main/resources/bin/initscripts/systemd/jboss-as.conf
+index 82699ad..580b385 100644
+--- a/build/src/main/resources/bin/initscripts/systemd/jboss-as.conf
++++ b/build/src/main/resources/bin/initscripts/systemd/jboss-as.conf
+@@ -1,4 +1,4 @@
+ # The configuration you want to run
+ #
+-JBOSS_CONFIG=standalone-web.xml
++JBOSS_CONFIG=standalone.xml
+ 

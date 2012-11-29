@@ -79,6 +79,7 @@ Patch41:          0042-Revert-Disable-jbossws-native-usage.patch
 Patch42:          0043-Enable-jbossws-native-remove-javax.jws.api-from-cxf-.patch
 Patch43:          0044-fedora-Missing-module-dependencies-after-unbundling.patch
 Patch44:          0045-Make-standalone.xml-the-default-configuration-instea.patch
+Patch45:          0046-Add-an-easy-way-to-override-the-default-bind-address.patch
 
 BuildArch:        noarch
 
@@ -1125,6 +1126,7 @@ fi
 * Wed Nov 28 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-12
 - Fixing many missing symlinks
 - Make standalone.xml the default configuration instead standalone-web.xml
+- Add an easy way to override the default bind address for systemd service
 
 * Tue Nov 20 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-11
 - Add webservices support based on CXF 2.6.3

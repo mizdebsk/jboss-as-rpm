@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          12%{?dist}
+Release:          13%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -34,52 +34,34 @@ Source0:          jboss-as-%{namedversion}-CLEAN.tar.xz
 # Makes possible to run JBoss AS in different directory by creating the structure and copying required configuration files
 Source1:          jboss-as-cp.sh
 
-Patch0:           0001-AS7-3724-DO-NOT-UPSTREAM-an-ugly-patch-to-remove-IIO.patch
-Patch1:           0002-Disable-checkstyle.patch
-Patch2:           0003-Fix-initd-script.patch
-Patch3:           0004-Added-standalone-web.xml-example-configuration.-Use-.patch
-Patch4:           0005-Add-systemd-files-re-arrange-directory-with-init-scr.patch
-Patch5:           0006-Fix-JBOSS_HOME-when-jboss-cli.sh-is-executed-through.patch
-Patch6:           0007-AS7-3800-JBOSS_BASE_DIR-is-checked-in-standalone.sh-.patch
-Patch7:           0008-Remove-activation-module.patch
-Patch8:           0009-Use-properties-in-add-user-AS7-module.patch
-Patch9:           0010-added-support-for-overriding-the-user-and-roles-prop.patch
-Patch10:          0011-AS7-4536-add-user.sh-mangles-permissions-of-mgmt-use.patch
-Patch11:          0012-AS7-4286-Fix-JavaCC-grammars-for-version-5.patch
-Patch12:          0013-Remove-jasper-jdt-requirement-it-was-replaced-by-ecj.patch
-Patch13:          0014-Disable-still-not-available-modules.patch
-Patch14:          0015-Removed-unused-import-in-modcluster-module.patch
-Patch15:          0016-Remove-org.osgi.enterprise-dependency.patch
-Patch16:          0017-Drop-some-enforcer-exclusions-these-are-aliases-in-F.patch
-Patch17:          0018-Disable-Hibernate.patch
-Patch18:          0019-Remove-jbossweb-native-dependency.-We-ll-have-unpack.patch
-Patch19:          0020-Commenting-out-still-unavailable-dependencies.patch
-Patch20:          0021-Disable-checkstyle-in-testsuite-too.patch
-Patch21:          0022-Disable-testsuites.patch
-Patch22:          0023-Added-org.jboss.as.jdr-module.patch
-Patch23:          0024-Make-AS7-work-with-jython-2.2.1.patch
-Patch24:          0025-Remove-javax.jws.api.-This-is-part-of-the-JDK.patch
-Patch25:          0026-Specify-version-requirement-for-org.eclipse.jdt-core.patch
-Patch26:          0027-Link-ecj-in-the-org.jboss.as.web-module-to-be-able-t.patch
-Patch27:          0028-Add-ExampleDS-H2-datasource-to-standalone-web.xml.patch
-Patch28:          0029-Add-jtype-dependency-to-hibernate-validator-to-fix-t.patch
-Patch29:          0030-Add-org.apache.openjpa-module.-This-allows-to-use-th.patch
-Patch30:          0031-Add-org.hibernate.3-module.patch
-Patch31:          0032-Enable-jpa-openjpa-and-jpa-hibernate3-modules.patch
-Patch32:          0033-Revert-AS7-3724-DO-NOT-UPSTREAM-an-ugly-patch-to-rem.patch
-Patch33:          0034-Enable-jbossxb-module.patch
-Patch34:          0035-Added-org.jboss.as.xts-module.patch
-Patch35:          0036-Add-support-for-Hibernate-4.patch
-Patch36:          0037-Add-org.osgi-org.osgi.compendium-dependency-since-it.patch
-Patch37:          0038-Disable-jbossws-native-usage.patch
-Patch38:          0039-Enabled-webservices-related-moduled.patch
-Patch39:          0040-JBWS-3446-Add-methods-for-creating-a-test-https-conn.patch
-Patch40:          0041-Modified-AS7-4890-upgrade-to-JBossWS-4.1.0.Beta1.patch
-Patch41:          0042-Revert-Disable-jbossws-native-usage.patch
-Patch42:          0043-Enable-jbossws-native-remove-javax.jws.api-from-cxf-.patch
-Patch43:          0044-fedora-Missing-module-dependencies-after-unbundling.patch
-Patch44:          0045-Make-standalone.xml-the-default-configuration-instea.patch
-Patch45:          0046-Add-an-easy-way-to-override-the-default-bind-address.patch
+Patch0:           0001-fedora-Disable-checkstyle.patch
+Patch1:           0002-fedora-Added-standalone-web.xml-example-configuratio.patch
+Patch2:           0003-Add-systemd-files-re-arrange-directory-with-init-scr.patch
+Patch3:           0004-Fix-JBOSS_HOME-when-jboss-cli.sh-is-executed-through.patch
+Patch4:           0005-AS7-3800-JBOSS_BASE_DIR-is-checked-in-standalone.sh-.patch
+Patch5:           0006-fedora-Remove-activation-module.patch
+Patch6:           0007-Use-properties-in-add-user-AS7-module.patch
+Patch7:           0008-added-support-for-overriding-the-user-and-roles-prop.patch
+Patch8:           0009-AS7-4536-add-user.sh-mangles-permissions-of-mgmt-use.patch
+Patch9:           0010-AS7-4286-Fix-JavaCC-grammars-for-version-5.patch
+Patch10:          0011-fedora-Remove-jasper-jdt-requirement-it-was-replaced.patch
+Patch11:          0012-Removed-unused-import-in-modcluster-module.patch
+Patch12:          0013-fedora-Remove-org.osgi.enterprise-dependency.patch
+Patch13:          0014-fedora-Drop-some-enforcer-exclusions-these-are-alias.patch
+Patch14:          0015-fedora-Remove-jbossweb-native-dependency.-We-ll-have.patch
+Patch15:          0016-fedora-Disable-checkstyle-in-testsuite-too.patch
+Patch16:          0017-fedora-Disable-testsuites.patch
+Patch17:          0018-fedora-Make-AS7-work-with-jython-2.2.1.patch
+Patch18:          0019-fedora-Add-jtype-dependency-to-hibernate-validator-t.patch
+Patch19:          0020-Add-org.apache.openjpa-module.-This-allows-to-use-th.patch
+Patch20:          0021-fedora-Add-org.hibernate.3-module.patch
+Patch21:          0022-fedora-Add-org.osgi-org.osgi.compendium-dependency-s.patch
+Patch22:          0023-JBWS-3446-Add-methods-for-creating-a-test-https-conn.patch
+Patch23:          0024-Modified-AS7-4890-upgrade-to-JBossWS-4.1.0.Beta1.patch
+Patch24:          0025-fedora-Remove-javax.jws.api.-This-is-part-of-the-JDK.patch
+Patch25:          0026-fedora-Missing-module-dependencies-in-mime4j-com.sun.patch
+Patch26:          0027-fedora-Remove-still-unavailable-in-Fedora-dependenci.patch
+Patch27:          0028-fedora-Do-not-extract-jbossweb-native-it-s-symlinked.patch
 
 BuildArch:        noarch
 
@@ -962,7 +944,10 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath shrinkwrap/impl-base) org/jboss/shrinkwrap/core/main/impl-base.jar
 
     ln -s $(build-classpath slf4j/api) org/slf4j/main/api.jar
+    ln -s $(build-classpath slf4j/api) org/slf4j/main/slf4j-api.jar
     ln -s $(build-classpath slf4j/ext) org/slf4j/ext/main/ext.jar
+    ln -s $(build-classpath slf4j/ext) org/slf4j/ext/main/slf4j-ext.jar
+
     ln -s $(build-classpath slf4j/jcl-over-slf4j) org/slf4j/jcl-over-slf4j/main/jcl-over-slf4j.jar
     ln -s $(build-classpath slf4j-jboss-logmanager) org/slf4j/impl/main/slf4j-jboss-logmanager.jar
     ln -s $(build-classpath snakeyaml) org/yaml/snakeyaml/main/snakeyaml.jar
@@ -1123,6 +1108,9 @@ fi
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Tue Dec 04 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-13
+- Rebasing patches
+
 * Wed Nov 28 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-12
 - Fixing many missing symlinks
 - Make standalone.xml the default configuration instead standalone-web.xml

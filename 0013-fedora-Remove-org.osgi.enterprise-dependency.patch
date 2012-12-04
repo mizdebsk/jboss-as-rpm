@@ -1,0 +1,75 @@
+From d628c52f64025c4a4a58ac965d8e549e5e4efb2c Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 19 Jun 2012 11:16:40 +0200
+Subject: [PATCH] [fedora] Remove org.osgi.enterprise dependency
+
+---
+ build/pom.xml        | 5 -----
+ osgi/service/pom.xml | 4 ----
+ pom.xml              | 6 ------
+ spec-api/pom.xml     | 4 ----
+ 4 files changed, 19 deletions(-)
+
+diff --git a/build/pom.xml b/build/pom.xml
+index 587be3d..ca99da8 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -1575,11 +1575,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>org.osgi</groupId>
+-                    <artifactId>org.osgi.enterprise</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>org.picketlink</groupId>
+                     <artifactId>picketlink-fed</artifactId>
+                 </dependency>
+diff --git a/osgi/service/pom.xml b/osgi/service/pom.xml
+index f20f5be..338da61 100644
+--- a/osgi/service/pom.xml
++++ b/osgi/service/pom.xml
+@@ -90,10 +90,6 @@
+             <groupId>org.osgi</groupId>
+             <artifactId>org.osgi.core</artifactId>
+         </dependency>
+-        <dependency>
+-            <groupId>org.osgi</groupId>
+-            <artifactId>org.osgi.enterprise</artifactId>
+-        </dependency>
+ 
+         <!-- Test Dependencies -->
+         <dependency>
+diff --git a/pom.xml b/pom.xml
+index 58abe94..a7e6ee8 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -5632,12 +5632,6 @@
+             </dependency>
+ 
+             <dependency>
+-                <groupId>org.osgi</groupId>
+-                <artifactId>org.osgi.enterprise</artifactId>
+-                <version>${version.osgi}</version>
+-            </dependency>
+-
+-            <dependency>
+                 <groupId>org.picketbox</groupId>
+                 <artifactId>picketbox</artifactId>
+                 <version>${version.org.picketbox}</version>
+diff --git a/spec-api/pom.xml b/spec-api/pom.xml
+index fbd99b2..a1005c8 100644
+--- a/spec-api/pom.xml
++++ b/spec-api/pom.xml
+@@ -129,10 +129,6 @@
+       <artifactId>org.osgi.core</artifactId>
+     </dependency>
+     <dependency>
+-       <groupId>org.osgi</groupId>
+-       <artifactId>org.osgi.enterprise</artifactId>
+-    </dependency>
+-    <dependency>
+       <groupId>javax.mail</groupId>
+       <artifactId>mail</artifactId>
+     </dependency>

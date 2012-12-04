@@ -1,0 +1,251 @@
+From 0b523b7c677095789b8df1ddc655a9080aad8fea Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Mon, 16 Apr 2012 17:45:12 +0200
+Subject: [PATCH] [fedora] Remove activation module
+
+---
+ build/build.xml                                    |  4 ---
+ build/pom.xml                                      |  5 ---
+ build/src/license/licenses.xml                     | 16 ---------
+ .../resources/modules/javaee/api/main/module.xml   |  1 -
+ .../modules/javax/activation/api/main/module.xml   | 39 ----------------------
+ .../resources/modules/javax/api/main/module.xml    |  1 +
+ .../modules/javax/mail/api/main/module.xml         |  1 -
+ .../modules/javax/xml/bind/api/main/module.xml     |  1 -
+ .../modules/javax/xml/registry/api/main/module.xml |  2 +-
+ .../modules/javax/xml/soap/api/main/module.xml     |  1 -
+ .../codehaus/jackson/jackson-xc/main/module.xml    |  3 +-
+ .../jboss/resteasy/resteasy-jaxrs/main/module.xml  |  1 -
+ pom.xml                                            |  7 ----
+ 13 files changed, 3 insertions(+), 79 deletions(-)
+ delete mode 100644 build/src/main/resources/modules/javax/activation/api/main/module.xml
+
+diff --git a/build/build.xml b/build/build.xml
+index 0a0ce06..0679d4d 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -340,10 +340,6 @@
+ 
+         <module-def name="javaee.api"/>
+ 
+-        <module-def name="javax.activation.api">
+-            <maven-resource group="javax.activation" artifact="activation"/>
+-        </module-def>
+-
+         <module-def name="javax.annotation.api">
+             <maven-resource group="org.jboss.spec.javax.annotation" artifact="jboss-annotations-api_1.1_spec"/>
+         </module-def>
+diff --git a/build/pom.xml b/build/pom.xml
+index dfc91a9..86f4868 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -298,11 +298,6 @@
+                 </dependency>
+ 
+                 <dependency>
+-                    <groupId>javax.activation</groupId>
+-                    <artifactId>activation</artifactId>
+-                </dependency>
+-
+-                <dependency>
+                     <groupId>javax.enterprise</groupId>
+                     <artifactId>cdi-api</artifactId>
+                 </dependency>
+diff --git a/build/src/license/licenses.xml b/build/src/license/licenses.xml
+index 5ff098a..a1bf243 100644
+--- a/build/src/license/licenses.xml
++++ b/build/src/license/licenses.xml
+@@ -234,22 +234,6 @@
+       </licenses>
+     </dependency>
+     <dependency>
+-      <groupId>javax.activation</groupId>
+-      <artifactId>activation</artifactId>
+-      <licenses>
+-        <license>
+-          <name>Common Development and Distribution License</name>
+-          <url>http://repository.jboss.org/licenses/cddl.txt</url>
+-          <distribution>repo</distribution>
+-        </license>
+-        <license>
+-          <name>GNU General Public License, Version 2 with the Classpath Exception</name>
+-          <url>http://repository.jboss.org/licenses/gpl-2.0-ce.txt</url>
+-          <distribution>repo</distribution>
+-        </license>
+-      </licenses>
+-    </dependency>
+-    <dependency>
+       <groupId>javax.enterprise</groupId>
+       <artifactId>cdi-api</artifactId>
+       <licenses>
+diff --git a/build/src/main/resources/modules/javaee/api/main/module.xml b/build/src/main/resources/modules/javaee/api/main/module.xml
+index 5f599df..a0c5f12 100644
+--- a/build/src/main/resources/modules/javaee/api/main/module.xml
++++ b/build/src/main/resources/modules/javaee/api/main/module.xml
+@@ -28,7 +28,6 @@
+     </resources>
+ 
+     <dependencies>
+-        <module name="javax.activation.api" export="true"/>
+         <module name="javax.annotation.api" export="true"/>
+         <module name="javax.ejb.api" export="true"/>
+         <module name="javax.el.api" export="true"/>
+diff --git a/build/src/main/resources/modules/javax/activation/api/main/module.xml b/build/src/main/resources/modules/javax/activation/api/main/module.xml
+deleted file mode 100644
+index 7b73e1f..0000000
+--- a/build/src/main/resources/modules/javax/activation/api/main/module.xml
++++ /dev/null
+@@ -1,39 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-
+-<!--
+-  ~ JBoss, Home of Professional Open Source.
+-  ~ Copyright 2010, Red Hat, Inc., and individual contributors
+-  ~ as indicated by the @author tags. See the copyright.txt file in the
+-  ~ distribution for a full listing of individual contributors.
+-  ~
+-  ~ This is free software; you can redistribute it and/or modify it
+-  ~ under the terms of the GNU Lesser General Public License as
+-  ~ published by the Free Software Foundation; either version 2.1 of
+-  ~ the License, or (at your option) any later version.
+-  ~
+-  ~ This software is distributed in the hope that it will be useful,
+-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+-  ~ Lesser General Public License for more details.
+-  ~
+-  ~ You should have received a copy of the GNU Lesser General Public
+-  ~ License along with this software; if not, write to the Free
+-  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+-  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-  -->
+-
+-<module xmlns="urn:jboss:module:1.1" name="javax.activation.api">
+-    <dependencies>
+-        <module name="javax.api" />
+-        <module name="javax.mail.api">
+-            <imports><include path="META-INF"/></imports>
+-        </module>
+-        <module name="com.sun.xml.messaging.saaj"/>
+-        <module name="org.jboss.ws.native.jbossws-native-core"/>
+-        <module name="org.apache.cxf" optional="true"/>
+-    </dependencies>
+-
+-    <resources>
+-        <!-- Insert resources here -->
+-    </resources>
+-</module>
+diff --git a/build/src/main/resources/modules/javax/api/main/module.xml b/build/src/main/resources/modules/javax/api/main/module.xml
+index 5470de4..3206521 100644
+--- a/build/src/main/resources/modules/javax/api/main/module.xml
++++ b/build/src/main/resources/modules/javax/api/main/module.xml
+@@ -27,6 +27,7 @@
+             <paths>
+                 <path name="javax/accessibility"/>
+                 <path name="javax/activity"/>
++                <path name="javax/activation"/>
+                 <path name="javax/crypto"/>
+                 <path name="javax/crypto/interfaces"/>
+                 <path name="javax/crypto/spec"/>
+diff --git a/build/src/main/resources/modules/javax/mail/api/main/module.xml b/build/src/main/resources/modules/javax/mail/api/main/module.xml
+index 12a0c85..59b2f5a 100644
+--- a/build/src/main/resources/modules/javax/mail/api/main/module.xml
++++ b/build/src/main/resources/modules/javax/mail/api/main/module.xml
+@@ -24,7 +24,6 @@
+ 
+ <module xmlns="urn:jboss:module:1.1" name="javax.mail.api">
+     <dependencies>
+-        <module name="javax.activation.api" />
+         <module name="javax.api"/>
+     </dependencies>
+ 
+diff --git a/build/src/main/resources/modules/javax/xml/bind/api/main/module.xml b/build/src/main/resources/modules/javax/xml/bind/api/main/module.xml
+index ccb597c..d68235c 100644
+--- a/build/src/main/resources/modules/javax/xml/bind/api/main/module.xml
++++ b/build/src/main/resources/modules/javax/xml/bind/api/main/module.xml
+@@ -26,7 +26,6 @@
+ 
+ 
+     <dependencies>
+-        <module name="javax.activation.api" export="true"/>
+         <module name="javax.xml.stream.api"/>
+         <module name="com.sun.xml.bind" services="import"/>
+         <module name="javax.api"/>
+diff --git a/build/src/main/resources/modules/javax/xml/registry/api/main/module.xml b/build/src/main/resources/modules/javax/xml/registry/api/main/module.xml
+index 0b4a509..c49fde8 100644
+--- a/build/src/main/resources/modules/javax/xml/registry/api/main/module.xml
++++ b/build/src/main/resources/modules/javax/xml/registry/api/main/module.xml
+@@ -24,7 +24,7 @@
+ 
+ <module xmlns="urn:jboss:module:1.1" name="javax.xml.registry.api">
+     <dependencies>
+-        <module name="javax.activation.api" export="true"/>
++        <module name="javax.api" export="true"/>
+     </dependencies>
+ 
+     <resources>
+diff --git a/build/src/main/resources/modules/javax/xml/soap/api/main/module.xml b/build/src/main/resources/modules/javax/xml/soap/api/main/module.xml
+index f65c518..20c547c 100644
+--- a/build/src/main/resources/modules/javax/xml/soap/api/main/module.xml
++++ b/build/src/main/resources/modules/javax/xml/soap/api/main/module.xml
+@@ -24,7 +24,6 @@
+ 
+ <module xmlns="urn:jboss:module:1.1" name="javax.xml.soap.api">
+     <dependencies>
+-        <module name="javax.activation.api" export="true"/>
+         <module name="javax.api"/>
+         <module name="org.jboss.modules"/>
+     </dependencies>
+diff --git a/build/src/main/resources/modules/org/codehaus/jackson/jackson-xc/main/module.xml b/build/src/main/resources/modules/org/codehaus/jackson/jackson-xc/main/module.xml
+index 2c5b473..3a9ea01 100644
+--- a/build/src/main/resources/modules/org/codehaus/jackson/jackson-xc/main/module.xml
++++ b/build/src/main/resources/modules/org/codehaus/jackson/jackson-xc/main/module.xml
+@@ -32,9 +32,8 @@
+ 
+     <dependencies>
+         <module name="javax.api"/>
+-        <module name="javax.activation.api"/>
+         <module name="javax.xml.bind.api"/>
+         <module name="org.codehaus.jackson.jackson-mapper-asl"/>
+         <module name="org.codehaus.jackson.jackson-core-asl"/>
+     </dependencies>
+-</module>
+\ No newline at end of file
++</module>
+diff --git a/build/src/main/resources/modules/org/jboss/resteasy/resteasy-jaxrs/main/module.xml b/build/src/main/resources/modules/org/jboss/resteasy/resteasy-jaxrs/main/module.xml
+index 0c06cc0..4f821ff 100644
+--- a/build/src/main/resources/modules/org/jboss/resteasy/resteasy-jaxrs/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/resteasy/resteasy-jaxrs/main/module.xml
+@@ -34,7 +34,6 @@
+     <dependencies>
+         <module name="javax.api"/>
+         <module name="javax.annotation.api"/>
+-        <module name="javax.activation.api"/>
+         <module name="javax.ws.rs.api"/>
+         <module name="org.apache.commons.codec" />
+         <module name="org.apache.httpcomponents" />
+diff --git a/pom.xml b/pom.xml
+index 036f99e..686a609 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -89,7 +89,6 @@
+         <version.com.h2database>1.3.161</version.com.h2database>
+         <version.dom4j>1.6.1</version.dom4j>
+         <version.gnu.getopt>1.0.13</version.gnu.getopt>
+-        <version.javax.activation>1.1.1</version.javax.activation>
+         <version.javax.enterprise>1.0-SP4</version.javax.enterprise>
+         <version.javax.faces.jsf-api.1.2>1.2_15-jbossorg-2</version.javax.faces.jsf-api.1.2>
+         <version.javax.faces.jsf-impl>2.1.7-jbossorg-2</version.javax.faces.jsf-impl>
+@@ -1298,12 +1297,6 @@
+             </dependency>
+ 
+             <dependency>
+-                <groupId>javax.activation</groupId>
+-                <artifactId>activation</artifactId>
+-                <version>${version.javax.activation}</version>
+-            </dependency>
+-
+-            <dependency>
+                 <groupId>javax.enterprise</groupId>
+                 <artifactId>cdi-api</artifactId>
+                 <version>${version.javax.enterprise}</version>

@@ -1,0 +1,21 @@
+From cbf0caa26e6441e9b604131f61436cb0a6d824b5 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 19 Jun 2012 11:04:02 +0200
+Subject: [PATCH] Removed unused import in modcluster module
+
+---
+ .../src/main/java/org/jboss/as/modcluster/ModClusterSubsystemAdd.java    | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/modcluster/src/main/java/org/jboss/as/modcluster/ModClusterSubsystemAdd.java b/modcluster/src/main/java/org/jboss/as/modcluster/ModClusterSubsystemAdd.java
+index 71cdff4..b00b073 100644
+--- a/modcluster/src/main/java/org/jboss/as/modcluster/ModClusterSubsystemAdd.java
++++ b/modcluster/src/main/java/org/jboss/as/modcluster/ModClusterSubsystemAdd.java
+@@ -46,7 +46,6 @@ import org.jboss.modcluster.config.impl.ModClusterConfig;
+ import org.jboss.msc.service.ServiceBuilder;
+ import org.jboss.msc.service.ServiceController;
+ import org.jboss.msc.service.ServiceController.Mode;
+-import org.omg.CosCollection.Command;
+ 
+ /**
+  * The managed subsystem add update.

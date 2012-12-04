@@ -1,0 +1,23 @@
+From 64bcdfada949b3c514c49c9b04eedc5cb24f5c14 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Mon, 3 Dec 2012 13:11:04 +0100
+Subject: [PATCH] [fedora] Do not extract jbossweb-native, it's symlinked in
+ Fedora
+
+---
+ build/build.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 425bc63..550ac83 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -896,7 +896,7 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-web"/>
+             <maven-resource group="org.eclipse.jdt" artifact="core"/>
+             <maven-resource group="org.jboss.web" artifact="jbossweb"/>
+-            <extract-native-jar group="org.jboss.as" artifact="jbossweb-native"/>
++            <!-- <extract-native-jar group="org.jboss.as" artifact="jbossweb-native"/>  symlinked in Fedora -->
+         </module-def>
+ 
+         <module-def name="org.jboss.as.webservices">

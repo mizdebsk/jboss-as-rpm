@@ -1,0 +1,26 @@
+From 12a187b40dc4188202ba3f1ee4b9a3b84ee35995 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 19 Jun 2012 12:07:28 +0200
+Subject: [PATCH] [fedora] Remove jbossweb-native dependency. We'll have
+ unpackaged .so files in jboss-web-native package
+
+---
+ build/pom.xml | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/build/pom.xml b/build/pom.xml
+index ca99da8..a3af398 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -144,11 +144,6 @@
+         </dependency>
+ 
+         <dependency>
+-            <groupId>org.jboss.as</groupId>
+-            <artifactId>jbossweb-native</artifactId>
+-        </dependency>
+-
+-        <dependency>
+             <groupId>org.jboss.invocation</groupId>
+             <artifactId>jboss-invocation</artifactId>
+         </dependency>

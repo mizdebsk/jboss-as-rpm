@@ -1,0 +1,78 @@
+From e6bd7d7f84cebd4b277c7d936cbde6cac919f082 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Fri, 30 Nov 2012 13:24:53 +0100
+Subject: [PATCH] [fedora] Missing module dependencies in mime4j,
+ com.sun.xml.bind and org.apache.xerces after unbundling
+
+---
+ build/build.xml                                              |  4 +++-
+ build/pom.xml                                                | 12 +++++++++++-
+ .../main/resources/modules/com/sun/xml/bind/main/module.xml  |  3 +++
+ .../main/resources/modules/org/apache/xerces/main/module.xml |  2 ++
+ 4 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/build/build.xml b/build/build.xml
+index 6cd12d8..52d4429 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -555,7 +555,9 @@
+         </module-def>
+ 
+         <module-def name="org.apache.james.mime4j">
+-            <maven-resource group="org.apache.james" artifact="apache-mime4j"/>
++            <maven-resource group="org.apache.james" artifact="apache-mime4j-core"/>
++            <maven-resource group="org.apache.james" artifact="apache-mime4j-dom"/>
++            <maven-resource group="org.apache.james" artifact="apache-mime4j-storage"/>
+         </module-def>
+     	
+         <module-def name="org.apache.juddi.juddi-client">
+diff --git a/build/pom.xml b/build/pom.xml
+index cafd709..017f42b 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -549,7 +549,17 @@
+ 
+                 <dependency>
+                     <groupId>org.apache.james</groupId>
+-                    <artifactId>apache-mime4j</artifactId>
++                    <artifactId>apache-mime4j-core</artifactId>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.james</groupId>
++                    <artifactId>apache-mime4j-dom</artifactId>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.james</groupId>
++                    <artifactId>apache-mime4j-storage</artifactId>
+                 </dependency>
+ 
+                 <dependency>
+diff --git a/build/src/main/resources/modules/com/sun/xml/bind/main/module.xml b/build/src/main/resources/modules/com/sun/xml/bind/main/module.xml
+index a48db1b..f821c27 100644
+--- a/build/src/main/resources/modules/com/sun/xml/bind/main/module.xml
++++ b/build/src/main/resources/modules/com/sun/xml/bind/main/module.xml
+@@ -28,6 +28,9 @@
+     </properties>
+ 
+     <resources>
++        <!-- Unbundled from jaxb in Fedora -->
++        <resource-root path="istack-commons-runtime.jar"/>
++        <resource-root path="txw2.jar"/>
+         <!-- Insert resources here -->
+     </resources>
+ 
+diff --git a/build/src/main/resources/modules/org/apache/xerces/main/module.xml b/build/src/main/resources/modules/org/apache/xerces/main/module.xml
+index 0e04923..65f3893 100644
+--- a/build/src/main/resources/modules/org/apache/xerces/main/module.xml
++++ b/build/src/main/resources/modules/org/apache/xerces/main/module.xml
+@@ -25,6 +25,8 @@
+ <module xmlns="urn:jboss:module:1.1" name="org.apache.xerces">
+ 
+     <resources>
++        <!-- Unbundled from xerces in Fedora -->
++        <resource-root path="xml-commons-apis.jar"/>
+         <!-- Insert resources here -->
+     </resources>
+ 

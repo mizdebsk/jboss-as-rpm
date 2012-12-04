@@ -1,0 +1,969 @@
+From 14882bb0ab177419f97def6169b788e58f45169f Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Mon, 19 Nov 2012 12:13:13 +0100
+Subject: [PATCH] Modified [AS7-4890] upgrade to JBossWS 4.1.0.Beta1
+
+---
+ build/build.xml                                    |  18 +-
+ build/pom.xml                                      |  45 +++--
+ build/src/license/licenses.xml                     |  86 ++++----
+ .../modules/org/apache/cxf/impl/main/module.xml    |  57 ++++++
+ .../modules/org/apache/cxf/main/module.xml         |   7 +
+ .../modules/org/apache/ws/security/main/module.xml |   2 +
+ .../org/jboss/as/webservices/main/module.xml       |   1 -
+ .../webservices/server/integration/main/module.xml |   2 +-
+ .../server/jaxrpc-integration/main/module.xml      |   4 -
+ .../ws/cxf/jbossws-cxf-client/main/module.xml      |   2 +-
+ .../ws/cxf/jbossws-cxf-server/main/module.xml      |   2 +-
+ .../main/module.xml                                |   2 +-
+ .../org/jboss/ws/jaxws-client/main/module.xml      |   2 +-
+ .../ws/native/jbossws-native-core/main/module.xml  |   1 -
+ .../jbossws-native-factories/main/module.xml       |  34 ----
+ .../resources/modules/org/opensaml/main/module.xml |  38 ++++
+ pom.xml                                            | 218 ++++++++++++++-------
+ 17 files changed, 339 insertions(+), 182 deletions(-)
+ create mode 100644 build/src/main/resources/modules/org/apache/cxf/impl/main/module.xml
+ delete mode 100644 build/src/main/resources/modules/org/jboss/ws/native/jbossws-native-factories/main/module.xml
+ create mode 100644 build/src/main/resources/modules/org/opensaml/main/module.xml
+
+diff --git a/build/build.xml b/build/build.xml
+index c82c6c7..64cc7f3 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -518,9 +518,10 @@
+ 
+         <module-def name="org.apache.cxf">
+             <maven-resource group="org.apache.cxf" artifact="cxf-api"/>
+-            <maven-resource group="org.apache.cxf" artifact="cxf-common-utilities"/>
++        </module-def>
++
++        <module-def name="org.apache.cxf.impl">
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-bindings-coloc"/>
+-            <maven-resource group="org.apache.cxf" artifact="cxf-rt-bindings-http"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-bindings-object"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-bindings-soap"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-bindings-xml"/>
+@@ -530,11 +531,11 @@
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-frontend-jaxws"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-frontend-simple"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-management"/>
+-            <maven-resource group="org.apache.cxf" artifact="cxf-rt-transports-common"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-transports-http"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-transports-jms"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-transports-local"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-ws-addr"/>
++            <maven-resource group="org.apache.cxf" artifact="cxf-rt-ws-mex"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-ws-policy"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-ws-rm"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-rt-ws-security"/>
+@@ -544,6 +545,7 @@
+             <maven-resource group="org.apache.cxf" artifact="cxf-tools-wsdlto-core"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-tools-wsdlto-databinding-jaxb"/>
+             <maven-resource group="org.apache.cxf" artifact="cxf-tools-wsdlto-frontend-jaxws"/>
++            <maven-resource group="org.apache.cxf.services.sts" artifact="cxf-services-sts-core"/>
+             <maven-resource group="org.apache.cxf.xjcplugins" artifact="cxf-xjc-boolean"/>
+             <maven-resource group="org.apache.cxf.xjcplugins" artifact="cxf-xjc-dv"/>
+             <maven-resource group="org.apache.cxf.xjcplugins" artifact="cxf-xjc-ts"/>
+@@ -1116,10 +1118,6 @@
+             <maven-resource group="org.jboss.ws.native" artifact="jbossws-native-core"/>
+         </module-def>
+ 
+-        <module-def name="org.jboss.ws.native.jbossws-native-factories">
+-            <maven-resource group="org.jboss.ws.native" artifact="jbossws-native-factories"/>
+-        </module-def>
+-
+         <module-def name="org.jboss.ws.native.jbossws-native-services">
+             <maven-resource group="org.jboss.ws.native" artifact="jbossws-native-services"/>
+         </module-def>
+@@ -1136,6 +1134,12 @@
+             <maven-resource group="org.jboss.ws" artifact="jbossws-common-tools"/>
+         </module-def>
+ 
++        <module-def name="org.opensaml">
++            <maven-resource group="org.opensaml" artifact="opensaml"/>
++            <maven-resource group="org.opensaml" artifact="openws"/>
++            <maven-resource group="org.opensaml" artifact="xmltooling"/>
++        </module-def>
++
+         <module-def name="org.jboss.ws.saaj-impl">
+         </module-def>
+ 
+diff --git a/build/pom.xml b/build/pom.xml
+index f63797d..d7f6569 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -374,21 +374,11 @@
+ 
+                 <dependency>
+                     <groupId>org.apache.cxf</groupId>
+-                    <artifactId>cxf-common-utilities</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.apache.cxf</groupId>
+                     <artifactId>cxf-rt-bindings-coloc</artifactId>
+                 </dependency>
+ 
+                 <dependency>
+                     <groupId>org.apache.cxf</groupId>
+-                    <artifactId>cxf-rt-bindings-http</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.apache.cxf</groupId>
+                     <artifactId>cxf-rt-bindings-object</artifactId>
+                 </dependency>
+ 
+@@ -434,11 +424,6 @@
+ 
+                 <dependency>
+                     <groupId>org.apache.cxf</groupId>
+-                    <artifactId>cxf-rt-transports-common</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.apache.cxf</groupId>
+                     <artifactId>cxf-rt-transports-http</artifactId>
+                 </dependency>
+ 
+@@ -459,6 +444,11 @@
+ 
+                 <dependency>
+                     <groupId>org.apache.cxf</groupId>
++                    <artifactId>cxf-rt-ws-mex</artifactId>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.apache.cxf</groupId>
+                     <artifactId>cxf-rt-ws-policy</artifactId>
+                 </dependency>
+ 
+@@ -503,6 +493,11 @@
+                 </dependency>
+ 
+                 <dependency>
++                    <groupId>org.apache.cxf.services.sts</groupId>
++                    <artifactId>cxf-services-sts-core</artifactId>
++                </dependency>
++
++                <dependency>
+                     <groupId>org.apache.cxf.xjcplugins</groupId>
+                     <artifactId>cxf-xjc-boolean</artifactId>
+                 </dependency>
+@@ -518,6 +513,21 @@
+                 </dependency>
+ 
+                 <dependency>
++                    <groupId>org.opensaml</groupId>
++                    <artifactId>opensaml</artifactId>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.opensaml</groupId>
++                    <artifactId>openws</artifactId>
++                </dependency>
++
++                <dependency>
++                    <groupId>org.opensaml</groupId>
++                    <artifactId>xmltooling</artifactId>
++                </dependency>
++
++                <dependency>
+                     <groupId>org.apache.felix</groupId>
+                     <artifactId>org.apache.felix.configadmin</artifactId>
+                 </dependency>
+@@ -1561,11 +1571,6 @@
+ 
+                 <dependency>
+                     <groupId>org.jboss.ws.native</groupId>
+-                    <artifactId>jbossws-native-factories</artifactId>
+-                </dependency>
+-
+-                <dependency>
+-                    <groupId>org.jboss.ws.native</groupId>
+                     <artifactId>jbossws-native-services</artifactId>
+                 </dependency>
+ 
+diff --git a/build/src/license/licenses.xml b/build/src/license/licenses.xml
+index a1bf243..5d09708 100644
+--- a/build/src/license/licenses.xml
++++ b/build/src/license/licenses.xml
+@@ -414,17 +414,6 @@
+     </dependency>
+     <dependency>
+       <groupId>org.apache.cxf</groupId>
+-      <artifactId>cxf-common-utilities</artifactId>
+-      <licenses>
+-        <license>
+-          <name>Apache Software License, Version 2.0</name>
+-          <url>http://repository.jboss.org/licenses/apache-2.0.txt</url>
+-          <distribution>repo</distribution>
+-        </license>
+-      </licenses>
+-    </dependency>
+-    <dependency>
+-      <groupId>org.apache.cxf</groupId>
+       <artifactId>cxf-rt-bindings-coloc</artifactId>
+       <licenses>
+         <license>
+@@ -436,17 +425,6 @@
+     </dependency>
+     <dependency>
+       <groupId>org.apache.cxf</groupId>
+-      <artifactId>cxf-rt-bindings-http</artifactId>
+-      <licenses>
+-        <license>
+-          <name>Apache Software License, Version 2.0</name>
+-          <url>http://repository.jboss.org/licenses/apache-2.0.txt</url>
+-          <distribution>repo</distribution>
+-        </license>
+-      </licenses>
+-    </dependency>
+-    <dependency>
+-      <groupId>org.apache.cxf</groupId>
+       <artifactId>cxf-rt-bindings-object</artifactId>
+       <licenses>
+         <license>
+@@ -546,7 +524,7 @@
+     </dependency>
+     <dependency>
+       <groupId>org.apache.cxf</groupId>
+-      <artifactId>cxf-rt-transports-common</artifactId>
++      <artifactId>cxf-rt-transports-http</artifactId>
+       <licenses>
+         <license>
+           <name>Apache Software License, Version 2.0</name>
+@@ -557,7 +535,7 @@
+     </dependency>
+     <dependency>
+       <groupId>org.apache.cxf</groupId>
+-      <artifactId>cxf-rt-transports-http</artifactId>
++      <artifactId>cxf-rt-transports-jms</artifactId>
+       <licenses>
+         <license>
+           <name>Apache Software License, Version 2.0</name>
+@@ -568,7 +546,7 @@
+     </dependency>
+     <dependency>
+       <groupId>org.apache.cxf</groupId>
+-      <artifactId>cxf-rt-transports-jms</artifactId>
++      <artifactId>cxf-rt-transports-local</artifactId>
+       <licenses>
+         <license>
+           <name>Apache Software License, Version 2.0</name>
+@@ -579,7 +557,7 @@
+     </dependency>
+     <dependency>
+       <groupId>org.apache.cxf</groupId>
+-      <artifactId>cxf-rt-transports-local</artifactId>
++      <artifactId>cxf-rt-ws-addr</artifactId>
+       <licenses>
+         <license>
+           <name>Apache Software License, Version 2.0</name>
+@@ -590,7 +568,7 @@
+     </dependency>
+     <dependency>
+       <groupId>org.apache.cxf</groupId>
+-      <artifactId>cxf-rt-ws-addr</artifactId>
++      <artifactId>cxf-rt-ws-mex</artifactId>
+       <licenses>
+         <license>
+           <name>Apache Software License, Version 2.0</name>
+@@ -699,6 +677,17 @@
+       </licenses>
+     </dependency>
+     <dependency>
++      <groupId>org.apache.cxf.services.sts</groupId>
++      <artifactId>cxf-services-sts-core</artifactId>
++      <licenses>
++        <license>
++          <name>Apache Software License, Version 2.0</name>
++          <url>http://repository.jboss.org/licenses/apache-2.0.txt</url>
++          <distribution>repo</distribution>
++        </license>
++      </licenses>
++    </dependency>
++    <dependency>
+       <groupId>org.apache.cxf.xjcplugins</groupId>
+       <artifactId>cxf-xjc-boolean</artifactId>
+       <licenses>
+@@ -930,6 +919,39 @@
+       </licenses>
+     </dependency>
+     <dependency>
++      <groupId>org.opensaml</groupId>
++      <artifactId>opensaml</artifactId>
++      <licenses>
++        <license>
++          <name>Apache Software License, Version 2.0</name>
++          <url>http://repository.jboss.org/licenses/apache-2.0.txt</url>
++          <distribution>repo</distribution>
++        </license>
++      </licenses>
++    </dependency>
++    <dependency>
++      <groupId>org.opensaml</groupId>
++      <artifactId>openws</artifactId>
++      <licenses>
++        <license>
++          <name>Apache Software License, Version 2.0</name>
++          <url>http://repository.jboss.org/licenses/apache-2.0.txt</url>
++          <distribution>repo</distribution>
++        </license>
++      </licenses>
++    </dependency>
++    <dependency>
++      <groupId>org.opensaml</groupId>
++      <artifactId>xmltooling</artifactId>
++      <licenses>
++        <license>
++          <name>Apache Software License, Version 2.0</name>
++          <url>http://repository.jboss.org/licenses/apache-2.0.txt</url>
++          <distribution>repo</distribution>
++        </license>
++      </licenses>
++    </dependency>
++    <dependency>
+       <groupId>org.codehaus.jackson</groupId>
+       <artifactId>jackson-jaxrs</artifactId>
+       <licenses>
+@@ -3291,16 +3313,6 @@
+     </dependency>
+     <dependency>
+       <groupId>org.jboss.ws.native</groupId>
+-      <artifactId>jbossws-native-factories</artifactId>
+-      <licenses>
+-        <license>
+-          <name>GNU Lesser General Public License, Version 2.1</name>
+-          <url>http://repository.jboss.org/licenses/lgpl-2.1.txt</url>
+-        </license>
+-      </licenses>
+-    </dependency>
+-    <dependency>
+-      <groupId>org.jboss.ws.native</groupId>
+       <artifactId>jbossws-native-services</artifactId>
+       <licenses>
+         <license>
+diff --git a/build/src/main/resources/modules/org/apache/cxf/impl/main/module.xml b/build/src/main/resources/modules/org/apache/cxf/impl/main/module.xml
+new file mode 100644
+index 0000000..60af359
+--- /dev/null
++++ b/build/src/main/resources/modules/org/apache/cxf/impl/main/module.xml
+@@ -0,0 +1,57 @@
++<?xml version="1.0" encoding="UTF-8"?>
++
++<!--
++  ~ JBoss, Home of Professional Open Source.
++  ~ Copyright 2012, Red Hat, Inc., and individual contributors
++  ~ as indicated by the @author tags. See the copyright.txt file in the
++  ~ distribution for a full listing of individual contributors.
++  ~
++  ~ This is free software; you can redistribute it and/or modify it
++  ~ under the terms of the GNU Lesser General Public License as
++  ~ published by the Free Software Foundation; either version 2.1 of
++  ~ the License, or (at your option) any later version.
++  ~
++  ~ This software is distributed in the hope that it will be useful,
++  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
++  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++  ~ Lesser General Public License for more details.
++  ~
++  ~ You should have received a copy of the GNU Lesser General Public
++  ~ License along with this software; if not, write to the Free
++  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
++  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
++  -->
++
++<module xmlns="urn:jboss:module:1.1" name="org.apache.cxf.impl">
++    <resources>
++        <!-- Insert resources here -->
++    </resources>
++
++    <dependencies>
++        <module name="asm.asm" />
++        <module name="javax.api" />
++        <module name="javax.annotation.api" />
++        <module name="javax.jms.api" />
++        <module name="javax.jws.api" />
++        <module name="javax.mail.api" />
++        <module name="javax.resource.api" />
++        <module name="javax.servlet.api" />
++        <module name="javax.wsdl4j.api" />
++        <module name="javax.xml.bind.api" services="import"/>
++        <module name="com.sun.xml.bind" services="import"/>
++        <module name="javax.xml.soap.api" />
++        <module name="javax.xml.stream.api" />
++        <module name="javax.xml.ws.api" />
++        <module name="org.apache.commons.lang" />
++        <module name="org.apache.neethi" />
++        <module name="org.apache.velocity" />
++        <module name="org.apache.xml-resolver" />
++        <module name="org.apache.ws.xmlschema" />
++        <module name="org.apache.ws.security" />
++        <module name="org.apache.santuario.xmlsec" />
++        <module name="org.joda.time" />
++        <module name="org.opensaml" />
++        <module name="org.springframework.spring" optional="true"/>
++        <module name="org.apache.cxf" export="true"/>
++    </dependencies>
++</module>
+diff --git a/build/src/main/resources/modules/org/apache/cxf/main/module.xml b/build/src/main/resources/modules/org/apache/cxf/main/module.xml
+index 24cce6e..41f8c1b 100644
+--- a/build/src/main/resources/modules/org/apache/cxf/main/module.xml
++++ b/build/src/main/resources/modules/org/apache/cxf/main/module.xml
+@@ -33,6 +33,12 @@
+ 
+     <dependencies>
+         <module name="asm.asm" />
++        <module name="org.apache.cxf.impl" services="import">
++            <imports>
++                <include path="META-INF/cxf"/> <!-- required to also pull in the bus extensions from META-INF -->
++                <include path="META-INF/"/>
++            </imports>
++        </module>
+         <module name="javax.api" />
+         <module name="javax.annotation.api" />
+         <module name="javax.jms.api" />
+@@ -40,6 +46,7 @@
+         <module name="javax.mail.api" />
+         <module name="javax.resource.api" />
+         <module name="javax.servlet.api" />
++        <module name="javax.wsdl4j.api" />
+         <module name="javax.xml.bind.api" services="import"/>
+         <module name="com.sun.xml.bind" services="import"/>
+         <module name="javax.wsdl4j.api" />
+diff --git a/build/src/main/resources/modules/org/apache/ws/security/main/module.xml b/build/src/main/resources/modules/org/apache/ws/security/main/module.xml
+index d414930..d136e75 100644
+--- a/build/src/main/resources/modules/org/apache/ws/security/main/module.xml
++++ b/build/src/main/resources/modules/org/apache/ws/security/main/module.xml
+@@ -37,5 +37,7 @@
+       <module name="org.apache.commons.logging" />
+       <module name="org.apache.santuario.xmlsec" />
+       <module name="org.apache.xalan" />
++      <module name="org.joda.time" />
++      <module name="org.opensaml" />
+     </dependencies>
+ </module>
+diff --git a/build/src/main/resources/modules/org/jboss/as/webservices/main/module.xml b/build/src/main/resources/modules/org/jboss/as/webservices/main/module.xml
+index c8b2bca..d47a8f2 100644
+--- a/build/src/main/resources/modules/org/jboss/as/webservices/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/as/webservices/main/module.xml
+@@ -51,7 +51,6 @@
+         <module name="org.jboss.as.security"/>
+         <module name="org.jboss.as.web"/>
+         <module name="org.jboss.threads"/>
+-        <module name="org.jboss.metadata"/>
+         <module name="org.jboss.modules"/>
+         <module name="org.jboss.msc"/>
+         <module name="org.jboss.vfs"/>
+diff --git a/build/src/main/resources/modules/org/jboss/as/webservices/server/integration/main/module.xml b/build/src/main/resources/modules/org/jboss/as/webservices/server/integration/main/module.xml
+index 559ff3f..c4f01fb 100644
+--- a/build/src/main/resources/modules/org/jboss/as/webservices/server/integration/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/as/webservices/server/integration/main/module.xml
+@@ -62,7 +62,7 @@
+         </module>
+         <module name="org.jboss.ws.cxf.jbossws-cxf-server" services="export" export="true"/>
+         <!-- Do not import services from cxf module direclty, those need to come from jbossws -->
+-        <module name="org.apache.cxf" export="true">
++        <module name="org.apache.cxf.impl" export="true">
+           <imports>
+             <include path="META-INF/cxf"/>
+             <include path="META-INF"/>
+diff --git a/build/src/main/resources/modules/org/jboss/as/webservices/server/jaxrpc-integration/main/module.xml b/build/src/main/resources/modules/org/jboss/as/webservices/server/jaxrpc-integration/main/module.xml
+index 6d227fb..3322fae 100644
+--- a/build/src/main/resources/modules/org/jboss/as/webservices/server/jaxrpc-integration/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/as/webservices/server/jaxrpc-integration/main/module.xml
+@@ -29,13 +29,10 @@
+ 
+     <dependencies>
+         <module name="javax.api" export="true"/>
+-        <module name="javax.xml.rpc.api" export="true"/>
+         <module name="javax.wsdl4j.api" export="true"/>
+-        <module name="com.sun.xml.bind" services="export" export="true"/>
+         <module name="org.jboss.ws.api" export="true"/>
+         <module name="org.jboss.ws.spi" export="true"/>
+         <module name="org.jboss.ws.common" services="import" export="true"/>
+-        <module name="org.jboss.ws.native.jbossws-native-factories" services="export" export="true"/>
+         <module name="org.jboss.ws.native.jbossws-native-core" services="export" export="true">
+           <imports>
+             <include path="META-INF"/>
+@@ -49,7 +46,6 @@
+           </exports>
+         </module>
+         <module name="org.jboss.ws.native.jbossws-native-services" services="export" export="true"/>
+-        <module name="org.apache.xalan" services="export" export="true"/>
+         <module name="org.apache.xerces" services="export" export="true"/>
+         <module name="org.jboss.as.webservices" services="export" export="true"/>
+     </dependencies>
+diff --git a/build/src/main/resources/modules/org/jboss/ws/cxf/jbossws-cxf-client/main/module.xml b/build/src/main/resources/modules/org/jboss/ws/cxf/jbossws-cxf-client/main/module.xml
+index 80e7c7a..3b36525 100644
+--- a/build/src/main/resources/modules/org/jboss/ws/cxf/jbossws-cxf-client/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/ws/cxf/jbossws-cxf-client/main/module.xml
+@@ -45,7 +45,7 @@
+         <module name="org.jboss.ws.jaxws-client" export="true" services="export" />
+         <!--  JBossWS configuration of Apache CXF -->
+         <module name="org.jboss.ws.cxf.jbossws-cxf-factories" services="export" />
+-        <!-- Apache CXF - do not import services, those need to come from JBossWS -->
++        <!-- Apache CXF APIs only -->
+         <module name="org.apache.cxf" export="true" />
+         <module name="org.jboss.ws.cxf.jbossws-cxf-transports-httpserver" export="true" services="export" />
+         <module name="org.jboss.jaxbintros" export="true"/>
+diff --git a/build/src/main/resources/modules/org/jboss/ws/cxf/jbossws-cxf-server/main/module.xml b/build/src/main/resources/modules/org/jboss/ws/cxf/jbossws-cxf-server/main/module.xml
+index f2ffe48..decea5f 100644
+--- a/build/src/main/resources/modules/org/jboss/ws/cxf/jbossws-cxf-server/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/ws/cxf/jbossws-cxf-server/main/module.xml
+@@ -46,7 +46,7 @@
+         <module name="org.jboss.ws.jaxws-client" />
+         <module name="org.jboss.ws.cxf.jbossws-cxf-factories" services="import"/>
+         <!-- do not import services from cxf, those need to come from jbossws -->
+-        <module name="org.apache.cxf">
++        <module name="org.apache.cxf.impl">
+           <imports>
+             <include path="META-INF/cxf"/> <!-- required to also pull in the bus extensions from META-INF -->
+             <include path="META-INF/"/>
+diff --git a/build/src/main/resources/modules/org/jboss/ws/cxf/jbossws-cxf-transports-httpserver/main/module.xml b/build/src/main/resources/modules/org/jboss/ws/cxf/jbossws-cxf-transports-httpserver/main/module.xml
+index 0bcbaad..1c4ff96 100644
+--- a/build/src/main/resources/modules/org/jboss/ws/cxf/jbossws-cxf-transports-httpserver/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/ws/cxf/jbossws-cxf-transports-httpserver/main/module.xml
+@@ -38,7 +38,7 @@
+         <module name="javax.annotation.api" />
+         <module name="javax.xml.ws.api" />
+         <module name="org.jboss.ws.jaxws-jboss-httpserver-httpspi" />
+-        <module name="org.apache.cxf" services="import">
++        <module name="org.apache.cxf.impl" services="import">
+           <imports>
+             <include path="META-INF/cxf"/> <!-- required to also pull in the bus extensions from META-INF -->
+             <include path="META-INF/"/>
+diff --git a/build/src/main/resources/modules/org/jboss/ws/jaxws-client/main/module.xml b/build/src/main/resources/modules/org/jboss/ws/jaxws-client/main/module.xml
+index 0c97c7e..58e4aca 100644
+--- a/build/src/main/resources/modules/org/jboss/ws/jaxws-client/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/ws/jaxws-client/main/module.xml
+@@ -42,7 +42,7 @@
+         <module name="org.jboss.ws.common" />
+         <module name="org.jboss.ws.cxf.jbossws-cxf-factories" services="import"/>
+         <!-- do not import services from cxf, those need to come from jbossws -->
+-        <module name="org.apache.cxf">
++        <module name="org.apache.cxf.impl">
+           <imports>
+             <include path="META-INF/cxf"/> <!-- required to also pull in the bus extensions from META-INF -->
+             <include path="META-INF/"/>
+diff --git a/build/src/main/resources/modules/org/jboss/ws/native/jbossws-native-core/main/module.xml b/build/src/main/resources/modules/org/jboss/ws/native/jbossws-native-core/main/module.xml
+index 8230bbc..8792b05 100644
+--- a/build/src/main/resources/modules/org/jboss/ws/native/jbossws-native-core/main/module.xml
++++ b/build/src/main/resources/modules/org/jboss/ws/native/jbossws-native-core/main/module.xml
+@@ -56,7 +56,6 @@
+         <module name="org.jboss.ws.api" />
+         <module name="org.jboss.ws.spi" />
+         <module name="org.jboss.ws.common" />
+-        <module name="org.jboss.ws.native.jbossws-native-factories" services="import"/>
+         <module name="org.jboss.ws.native.jbossws-native-services" services="import"/>
+         <module name="org.jboss.common-core" />
+         <module name="org.jboss.logging" />
+diff --git a/build/src/main/resources/modules/org/jboss/ws/native/jbossws-native-factories/main/module.xml b/build/src/main/resources/modules/org/jboss/ws/native/jbossws-native-factories/main/module.xml
+deleted file mode 100644
+index 47b5336..0000000
+--- a/build/src/main/resources/modules/org/jboss/ws/native/jbossws-native-factories/main/module.xml
++++ /dev/null
+@@ -1,34 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-
+-<!--
+-  ~ JBoss, Home of Professional Open Source.
+-  ~ Copyright 2011, Red Hat, Inc., and individual contributors
+-  ~ as indicated by the @author tags. See the copyright.txt file in the
+-  ~ distribution for a full listing of individual contributors.
+-  ~
+-  ~ This is free software; you can redistribute it and/or modify it
+-  ~ under the terms of the GNU Lesser General Public License as
+-  ~ published by the Free Software Foundation; either version 2.1 of
+-  ~ the License, or (at your option) any later version.
+-  ~
+-  ~ This software is distributed in the hope that it will be useful,
+-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
+-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+-  ~ Lesser General Public License for more details.
+-  ~
+-  ~ You should have received a copy of the GNU Lesser General Public
+-  ~ License along with this software; if not, write to the Free
+-  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+-  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-  -->
+-
+-<module xmlns="urn:jboss:module:1.1" name="org.jboss.ws.native.jbossws-native-factories">
+-
+-    <properties>
+-        <property name="jboss.api" value="private"/>
+-    </properties>
+-
+-    <resources>
+-        <!-- Insert resources here -->
+-    </resources>
+-</module>
+diff --git a/build/src/main/resources/modules/org/opensaml/main/module.xml b/build/src/main/resources/modules/org/opensaml/main/module.xml
+new file mode 100644
+index 0000000..f588b75
+--- /dev/null
++++ b/build/src/main/resources/modules/org/opensaml/main/module.xml
+@@ -0,0 +1,38 @@
++<?xml version="1.0" encoding="UTF-8"?>
++
++<!--
++  ~ JBoss, Home of Professional Open Source.
++  ~ Copyright 2012, Red Hat, Inc., and individual contributors
++  ~ as indicated by the @author tags. See the copyright.txt file in the
++  ~ distribution for a full listing of individual contributors.
++  ~
++  ~ This is free software; you can redistribute it and/or modify it
++  ~ under the terms of the GNU Lesser General Public License as
++  ~ published by the Free Software Foundation; either version 2.1 of
++  ~ the License, or (at your option) any later version.
++  ~
++  ~ This software is distributed in the hope that it will be useful,
++  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
++  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
++  ~ Lesser General Public License for more details.
++  ~
++  ~ You should have received a copy of the GNU Lesser General Public
++  ~ License along with this software; if not, write to the Free
++  ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
++  ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
++  -->
++
++<module xmlns="urn:jboss:module:1.1" name="org.opensaml">
++
++    <resources>
++        <!-- Insert resources here -->
++    </resources>
++
++    <dependencies>
++      <module name="javax.api"/>
++      <module name="org.slf4j"/>
++      <module name="org.apache.santuario.xmlsec"/>
++      <module name="org.apache.ws.security" />
++      <module name="org.joda.time"/>
++    </dependencies>
++</module>
+diff --git a/pom.xml b/pom.xml
+index 897243b..70c105e 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -108,8 +108,8 @@
+         <version.net.sourceforge.htmlunit>2.8</version.net.sourceforge.htmlunit>
+         <version.net.sourceforge.nekohtml>1.9.14</version.net.sourceforge.nekohtml>
+         <version.org.apache.ant>1.8.2</version.org.apache.ant>
+-        <version.org.apache.cxf>2.4.6</version.org.apache.cxf>
+-        <version.org.apache.cxf.xjcplugins>2.4.0</version.org.apache.cxf.xjcplugins>
++        <version.org.apache.cxf>2.6.1</version.org.apache.cxf>
++        <version.org.apache.cxf.xjcplugins>2.6.0</version.org.apache.cxf.xjcplugins>
+         <version.org.apache.felix.configadmin>1.2.8</version.org.apache.felix.configadmin>
+         <version.org.apache.felix.log>1.0.0</version.org.apache.felix.log>
+         <version.org.apache.james.apache-mime4j>0.6</version.org.apache.james.apache-mime4j>
+@@ -234,6 +234,9 @@
+         <version.org.jboss.xnio.xnio-nio>${version.org.jboss.xnio}</version.org.jboss.xnio.xnio-nio>
+         <version.org.jgroups>3.0.6.Final</version.org.jgroups>
+         <version.org.mockito>1.8.5</version.org.mockito>
++        <version.org.opensaml.opensaml>2.5.1-1</version.org.opensaml.opensaml>
++        <version.org.opensaml.openws>1.4.2-1</version.org.opensaml.openws>
++        <version.org.opensaml.xmltooling>1.3.2-1</version.org.opensaml.xmltooling>
+         <version.org.picketbox>4.0.7.Final</version.org.picketbox>
+         <version.org.picketbox.picketbox-commons>1.0.0.final</version.org.picketbox.picketbox-commons>
+         <version.org.picketlink>2.0.2.Final</version.org.picketlink>
+@@ -434,7 +437,6 @@
+                                             <exclude>org.jboss.security:jbosssx</exclude>
+                                             <exclude>org.jboss.slf4j:slf4j-jboss-logging</exclude>
+                                             <exclude>org.jboss.spec.javax.resource:jboss-connector-api_1.5_spec</exclude>
+-                                            <exclude>org.opensaml:opensaml</exclude>
+                                             <exclude>org.ops4j.base</exclude>
+                                             <exclude>org.ops4j.pax.swissbox</exclude>
+                                             <exclude>org.ops4j.pax.web</exclude>
+@@ -1536,8 +1538,8 @@
+                 <version>${version.org.apache.cxf}</version>
+                 <exclusions>
+                     <exclusion>
+-                        <groupId>org.apache.cxf</groupId>
+-                        <artifactId>cxf-common-utilities</artifactId>
++                        <groupId>org.apache.geronimo.specs</groupId>
++                        <artifactId>geronimo-javamail_1.4_spec</artifactId>
+                     </exclusion>
+                     <exclusion>
+                         <groupId>org.apache.ws.xmlschema</groupId>
+@@ -1551,19 +1553,9 @@
+             </dependency>
+ 
+             <dependency>
+-                <groupId>org.apache.cxf</groupId>
+-                <artifactId>cxf-common-utilities</artifactId>
++                <groupId>org.apache.cxf.services.sts</groupId>
++                <artifactId>cxf-services-sts-core</artifactId>
+                 <version>${version.org.apache.cxf}</version>
+-                <exclusions>
+-                    <exclusion>
+-                        <groupId>org.apache.ws.xmlschema</groupId>
+-                        <artifactId>xmlschema-core</artifactId>
+-                    </exclusion>
+-                    <exclusion>
+-                        <groupId>org.codehaus.woodstox</groupId>
+-                        <artifactId>woodstox-core-asl</artifactId>
+-                    </exclusion>
+-                </exclusions>
+             </dependency>
+ 
+             <dependency>
+@@ -1624,34 +1616,6 @@
+ 
+             <dependency>
+                 <groupId>org.apache.cxf</groupId>
+-                <artifactId>cxf-rt-bindings-http</artifactId>
+-                <version>${version.org.apache.cxf}</version>
+-                <exclusions>
+-                    <exclusion>
+-                        <groupId>javax.xml.bind</groupId>
+-                        <artifactId>jaxb-api</artifactId>
+-                    </exclusion>
+-                    <exclusion>
+-                        <groupId>org.codehaus.jra</groupId>
+-                        <artifactId>jra</artifactId>
+-                    </exclusion>
+-                    <exclusion>
+-                        <groupId>org.apache.cxf</groupId>
+-                        <artifactId>cxf-rt-bindings-xml</artifactId>
+-                    </exclusion>
+-                    <exclusion>
+-                        <groupId>org.apache.cxf</groupId>
+-                        <artifactId>cxf-rt-transports-http</artifactId>
+-                    </exclusion>
+-                    <exclusion>
+-                        <groupId>org.apache.cxf</groupId>
+-                        <artifactId>cxf-rt-frontend-jaxws</artifactId>
+-                    </exclusion>
+-                </exclusions>
+-            </dependency>
+-
+-            <dependency>
+-                <groupId>org.apache.cxf</groupId>
+                 <artifactId>cxf-rt-bindings-object</artifactId>
+                 <version>${version.org.apache.cxf}</version>
+                 <exclusions>
+@@ -2008,23 +1972,13 @@
+ 
+             <dependency>
+                 <groupId>org.apache.cxf</groupId>
+-                <artifactId>cxf-rt-transports-common</artifactId>
++                <artifactId>cxf-rt-ws-addr</artifactId>
+                 <version>${version.org.apache.cxf}</version>
+-                <exclusions>
+-                    <exclusion>
+-                        <groupId>org.apache.cxf</groupId>
+-                        <artifactId>cxf-api</artifactId>
+-                    </exclusion>
+-                    <exclusion>
+-                        <groupId>org.apache.cxf</groupId>
+-                        <artifactId>cxf-rt-core</artifactId>
+-                    </exclusion>
+-                </exclusions>
+             </dependency>
+ 
+             <dependency>
+                 <groupId>org.apache.cxf</groupId>
+-                <artifactId>cxf-rt-ws-addr</artifactId>
++                <artifactId>cxf-rt-ws-mex</artifactId>
+                 <version>${version.org.apache.cxf}</version>
+             </dependency>
+ 
+@@ -2154,6 +2108,10 @@
+                 <version>${version.org.apache.cxf}</version>
+                 <exclusions>
+                     <exclusion>
++                        <groupId>net.sf.ehcache</groupId>
++                        <artifactId>ehcache-core</artifactId>
++                    </exclusion>
++                    <exclusion>
+                         <groupId>xml-apis</groupId>
+                         <artifactId>xml-apis</artifactId>
+                     </exclusion>
+@@ -2689,6 +2647,130 @@
+             </dependency>
+ 
+             <dependency>
++                <groupId>org.opensaml</groupId>
++                <artifactId>opensaml</artifactId>
++                <version>${version.org.opensaml.opensaml}</version>
++                <exclusions>
++                    <exclusion>
++                        <groupId>org.opensaml</groupId>
++                        <artifactId>openws</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>velocity</groupId>
++                        <artifactId>velocity</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.owasp.esapi</groupId>
++                        <artifactId>esapi</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.slf4j</groupId>
++                        <artifactId>log4j-over-slf4j</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.slf4j</groupId>
++                        <artifactId>jcl-over-slf4j</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.slf4j</groupId>
++                        <artifactId>jul-to-slf4j</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.bouncycastle</groupId>
++                        <artifactId>bcprov-ext-jdk15</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.bouncycastle</groupId>
++                        <artifactId>bcprov-jdk15</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>ca.juliusdavies</groupId>
++                        <artifactId>not-yet-commons-ssl</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>net.jcip</groupId>
++                        <artifactId>jcip-annotations</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>xml-resolver</groupId>
++                        <artifactId>xml-resolver</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>xerces</groupId>
++                        <artifactId>xercesImpl</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>xml-apis</groupId>
++                        <artifactId>xml-apis</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>xalan</groupId>
++                        <artifactId>xalan</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>commons-codec</groupId>
++                        <artifactId>commons-codec</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>commons-httpclient</groupId>
++                        <artifactId>commons-httpclient</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>commons-lang</groupId>
++                        <artifactId>commons-lang</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>commons-collections</groupId>
++                        <artifactId>commons-collections</artifactId>
++                    </exclusion>
++                </exclusions>
++            </dependency>
++
++            <dependency>
++                <groupId>org.opensaml</groupId>
++                <artifactId>openws</artifactId>
++                <version>${version.org.opensaml.openws}</version>
++                <exclusions>
++                    <exclusion>
++                        <groupId>commons-httpclient</groupId>
++                        <artifactId>commons-httpclient</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>xml-apis</groupId>
++                        <artifactId>xml-apis</artifactId>
++                    </exclusion>
++                </exclusions>
++            </dependency>
++
++            <dependency>
++                <groupId>org.opensaml</groupId>
++                <artifactId>xmltooling</artifactId>
++                <version>${version.org.opensaml.xmltooling}</version>
++                <exclusions>
++                    <exclusion>
++                        <groupId>org.slf4j</groupId>
++                        <artifactId>log4j-over-slf4j</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.slf4j</groupId>
++                        <artifactId>jul-to-slf4j</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>org.bouncycastle</groupId>
++                        <artifactId>bcprov-jdk15</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>ca.juliusdavies</groupId>
++                        <artifactId>not-yet-commons-ssl</artifactId>
++                    </exclusion>
++                    <exclusion>
++                        <groupId>xml-apis</groupId>
++                        <artifactId>xml-apis</artifactId>
++                    </exclusion>
++                </exclusions>
++            </dependency>
++
++            <dependency>
+                 <groupId>org.apache.felix</groupId>
+                 <artifactId>org.apache.felix.configadmin</artifactId>
+                 <version>${version.org.apache.felix.configadmin}</version>
+@@ -5250,7 +5332,7 @@
+                     </exclusion>
+                     <exclusion>
+                         <groupId>org.apache.cxf</groupId>
+-                        <artifactId>cxf-rt-bindings-http</artifactId>
++                        <artifactId>cxf-rt-ws-mex</artifactId>
+                     </exclusion>
+                     <exclusion>
+                         <groupId>org.apache.cxf</groupId>
+@@ -5410,16 +5492,16 @@
+                         <artifactId>stax-api</artifactId>
+                     </exclusion>
+                     <exclusion>
+-                       <groupId>org.jboss.jaxr</groupId>
+-                       <artifactId>juddi-service</artifactId>
++                        <groupId>org.apache.cxf</groupId>
++                        <artifactId>cxf-rt-ws-mex</artifactId>
+                     </exclusion>
+                     <exclusion>
+-                        <groupId>org.apache.cxf</groupId>
+-                        <artifactId>cxf-rt-bindings-soap</artifactId>
++                        <groupId>org.apache.cxf.services.sts</groupId>
++                        <artifactId>cxf-services-sts-core</artifactId>
+                     </exclusion>
+                     <exclusion>
+                         <groupId>org.apache.cxf</groupId>
+-                        <artifactId>cxf-rt-bindings-http</artifactId>
++                        <artifactId>cxf-rt-bindings-soap</artifactId>
+                     </exclusion>
+                     <exclusion>
+                         <groupId>org.apache.cxf</groupId>
+@@ -5529,10 +5611,6 @@
+                         <groupId>stax</groupId>
+                         <artifactId>stax-api</artifactId>
+                     </exclusion>
+-                    <exclusion>
+-                        <groupId>org.jboss.jaxr</groupId>
+-                        <artifactId>juddi-service</artifactId>
+-                    </exclusion>
+                </exclusions>
+             </dependency>
+ 
+@@ -5586,12 +5664,6 @@
+ 
+             <dependency>
+                 <groupId>org.jboss.ws.native</groupId>
+-                <artifactId>jbossws-native-factories</artifactId>
+-                <version>${version.org.jboss.ws.jbossws-native}</version>
+-            </dependency>
+-
+-            <dependency>
+-                <groupId>org.jboss.ws.native</groupId>
+                 <artifactId>jbossws-native-services</artifactId>
+                 <version>${version.org.jboss.ws.jbossws-native}</version>
+             </dependency>

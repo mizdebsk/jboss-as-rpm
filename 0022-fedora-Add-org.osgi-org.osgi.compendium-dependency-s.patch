@@ -1,0 +1,58 @@
+From 3da4a24845e7315314e57754715692bf25795125 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Wed, 24 Oct 2012 11:11:33 +0200
+Subject: [PATCH] [fedora] Add org.osgi:org.osgi.compendium dependency since it
+ was unbundled from org.jboss.osgi.framework:jbosgi-framework-core but is
+ required by org.jboss.as.osgi
+
+---
+ build/build.xml | 1 +
+ build/pom.xml   | 5 +++++
+ pom.xml         | 6 ++++++
+ 3 files changed, 12 insertions(+)
+
+diff --git a/build/build.xml b/build/build.xml
+index 23b49c9..c82c6c7 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -994,6 +994,7 @@
+             <maven-resource group="org.jboss.osgi.resolver" artifact="jbosgi-resolver-api"/>
+             <maven-resource group="org.jboss.osgi.resolver" artifact="jbosgi-resolver-spi"/>
+             <maven-resource group="org.jboss.osgi.resolver" artifact="jbosgi-resolver-felix"/>
++            <maven-resource group="org.osgi" artifact="org.osgi.compendium"/>
+         </module-def>
+ 
+         <module-def name="org.jboss.osgi.repository">
+diff --git a/build/pom.xml b/build/pom.xml
+index 0163b93..f63797d 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -1600,6 +1600,11 @@
+                 </dependency>
+ 
+                 <dependency>
++                    <groupId>org.osgi</groupId>
++                    <artifactId>org.osgi.compendium</artifactId>
++                </dependency>
++
++                <dependency>
+                     <groupId>org.picketlink</groupId>
+                     <artifactId>picketlink-fed</artifactId>
+                 </dependency>
+diff --git a/pom.xml b/pom.xml
+index 538a3e3..897243b 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -5713,6 +5713,12 @@
+             </dependency>
+ 
+             <dependency>
++                <groupId>org.osgi</groupId>
++                <artifactId>org.osgi.compendium</artifactId>
++                <version>${version.osgi}</version>
++            </dependency>
++
++            <dependency>
+                 <groupId>org.picketbox</groupId>
+                 <artifactId>picketbox</artifactId>
+                 <version>${version.org.picketbox}</version>

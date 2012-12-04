@@ -1,0 +1,177 @@
+From a344d17f9e0d49c435a4f1468526e7e25b77c7bd Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Fri, 30 Nov 2012 14:01:30 +0100
+Subject: [PATCH] [fedora] Remove still unavailable in Fedora dependencies
+
+---
+ build/build.xml | 12 ++++++++++++
+ build/pom.xml   | 12 ++++++++++++
+ 2 files changed, 24 insertions(+)
+
+diff --git a/build/build.xml b/build/build.xml
+index 52d4429..425bc63 100644
+--- a/build/build.xml
++++ b/build/build.xml
+@@ -86,7 +86,9 @@
+ 
+     <target name="create-ext-content">
+         <mkdir dir="${output.dir}/modules/org/jboss/integration/ext-content/main/bundled"/>
++        <!--
+         <copy file="${org.jboss.seam.integration:jboss-seam-int-jbossas:jar}" tofile="${output.dir}/modules/org/jboss/integration/ext-content/main/bundled/jboss-seam-int.jar"/>
++        -->
+ 
+         <!-- Copy the EJB specific schemas to the JBOSS_HOME/docs/schema folder -->
+         <unzip src="${org.jboss.metadata:jboss-metadata-ejb:jar}" dest="${output.dir}/docs/schema/">
+@@ -321,9 +323,11 @@
+             <maven-resource group="com.sun.faces" artifact="jsf-impl"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="com.sun.jsf-impl" slot="1.2">
+             <maven-resource group="javax.faces" artifact="jsf-impl"/>
+         </module-def>
++        -->
+ 
+         <module-def name="com.sun.xml.bind">
+             <maven-resource group="com.sun.xml.bind" artifact="jaxb-impl"/>
+@@ -707,9 +711,11 @@
+             <maven-resource group="org.jboss.as" artifact="jboss-as-appclient"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="org.jboss.as.console">
+             <maven-resource-with-classifier group="org.jboss.as" artifact="jboss-as-console" classifier="resources"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.jboss.as.cli">
+             <maven-resource group="org.jboss.as" artifact="jboss-as-cli"/>
+@@ -1171,11 +1177,13 @@
+             <maven-resource group="org.osgi" artifact="org.osgi.core"/>
+         </module-def>
+ 
++        <!--
+         <module-def name="org.picketlink">
+             <maven-resource group="org.picketlink" artifact="picketlink-fed" jandex="true"/>
+             <maven-resource group="org.picketlink" artifact="picketlink-bindings" jandex="true"/>
+             <maven-resource group="org.picketlink" artifact="picketlink-bindings-jboss"/>
+         </module-def>
++        -->
+ 
+         <module-def name="org.picketbox">
+             <maven-resource group="org.picketbox" artifact="picketbox"/>
+@@ -1233,14 +1241,17 @@
+             <maven-bundle group="org.apache.felix" artifact="org.apache.felix.configadmin"/>
+         </bundle-def>
+ 
++        <!--
+         <bundle-def name="org.apache.felix.log">
+             <maven-bundle group="org.apache.felix" artifact="org.apache.felix.log"/>
+         </bundle-def>
++        -->
+ 
+         <bundle-def name="org.jboss.as.osgi.configadmin">
+             <maven-bundle group="org.jboss.as" artifact="jboss-as-osgi-configadmin"/>
+         </bundle-def>
+ 
++        <!--
+         <bundle-def name="javax.servlet.api" slot="v25">
+             <maven-bundle group="org.jboss.osgi.http" artifact="jbosgi-http-api"/>
+         </bundle-def>
+@@ -1256,6 +1267,7 @@
+         <bundle-def name="org.projectodd.stilts">
+             <maven-bundle group="org.projectodd.stilts" artifact="stilts-stomplet-server-bundle"/>
+         </bundle-def>
++        -->
+     </target>
+ 
+     <target name="clean-target">
+diff --git a/build/pom.xml b/build/pom.xml
+index 017f42b..83683e3 100644
+--- a/build/pom.xml
++++ b/build/pom.xml
+@@ -307,10 +307,12 @@
+                     <artifactId>jsf-api</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>javax.faces</groupId>
+                     <artifactId>jsf-impl</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>javax.inject</groupId>
+@@ -527,10 +529,12 @@
+                     <artifactId>org.apache.felix.configadmin</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.apache.felix</groupId>
+                     <artifactId>org.apache.felix.log</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.apache.httpcomponents</groupId>
+@@ -828,11 +832,13 @@
+                     <artifactId>jboss-as-configadmin</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+                     <artifactId>jboss-as-console</artifactId>
+                     <classifier>resources</classifier>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.as</groupId>
+@@ -1223,6 +1229,7 @@
+                     <artifactId>jbosgi-framework-core</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.osgi.http</groupId>
+                     <artifactId>jbosgi-http-api</artifactId>
+@@ -1232,6 +1239,7 @@
+                     <groupId>org.jboss.osgi.logging</groupId>
+                     <artifactId>jboss-osgi-logging</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.osgi.repository</groupId>
+@@ -1318,10 +1326,12 @@
+                     <artifactId>jboss-sasl</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.jboss.seam.integration</groupId>
+                     <artifactId>jboss-seam-int-jbossas</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.jboss.security</groupId>
+@@ -1614,6 +1624,7 @@
+                     <artifactId>org.osgi.compendium</artifactId>
+                 </dependency>
+ 
++                <!--
+                 <dependency>
+                     <groupId>org.picketlink</groupId>
+                     <artifactId>picketlink-fed</artifactId>
+@@ -1633,6 +1644,7 @@
+                     <groupId>org.projectodd.stilts</groupId>
+                     <artifactId>stilts-stomplet-server-bundle</artifactId>
+                 </dependency>
++                -->
+ 
+                 <dependency>
+                     <groupId>org.scannotation</groupId>

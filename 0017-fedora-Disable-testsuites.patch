@@ -1,0 +1,24 @@
+From 037b03aace50b0d1c3df6f1c9a5f9b4a1a2b4b70 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <mgoldman@redhat.com>
+Date: Tue, 19 Jun 2012 18:55:42 +0200
+Subject: [PATCH] [fedora] Disable testsuites
+
+---
+ pom.xml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/pom.xml b/pom.xml
+index 877b810..b131778 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -5979,8 +5979,10 @@
+                 <module>webservices</module>
+                 <module>weld</module>
+                 <module>xts</module>
++                <!--
+                 <module>testsuite/shared</module>
+                 <module>testsuite</module>
++                -->
+             </modules>
+         </profile>
+     </profiles>

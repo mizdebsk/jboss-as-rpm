@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          13%{?dist}
+Release:          14%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -211,7 +211,7 @@ BuildRequires:    javapackages-tools >= 0.7.2-1
 BuildRequires:    jpackage-utils
 BuildRequires:    jtype
 BuildRequires:    jython >= 2.2.1-9
-BuildRequires:    maven
+BuildRequires:    maven-local
 BuildRequires:    maven-jar-plugin
 BuildRequires:    maven-checkstyle-plugin
 BuildRequires:    maven-resources-plugin
@@ -1108,6 +1108,10 @@ fi
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Wed Feb 06 2013 Java SIG <java-devel@lists.fedoraproject.org> - 7.1.1-14
+- Update for https://fedoraproject.org/wiki/Fedora_19_Maven_Rebuild
+- Replace maven BuildRequires with maven-local
+
 * Tue Dec 04 2012 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-13
 - Rebasing patches
 

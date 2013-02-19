@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          15%{?dist}
+Release:          16%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -474,6 +474,10 @@ git add .
 git commit -a -q -m "%{version} baseline."
 
 git am %{patches}
+
+# Remove wagon extension
+%pom_xpath_remove "pom:build/pom:extensions"
+%pom_xpath_remove "pom:build/pom:extensions" build-config/pom.xml
 
 %build
 export MAVEN_OPTS="-Xms512m -Xmx1024m -XX:PermSize=128m -XX:MaxPermSize=384m"
@@ -1108,6 +1112,9 @@ fi
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Tue Feb 19 2013 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-16
+- Remove wagon extension
+
 * Thu Feb 14 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 7.1.1-15
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 

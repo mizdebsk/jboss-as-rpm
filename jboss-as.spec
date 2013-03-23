@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          16%{?dist}
+Release:          17%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -703,7 +703,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
     ln -s $(build-classpath apache-juddi/juddi-client) org/apache/juddi/juddi-client/main/juddi-client.jar
     ln -s $(build-classpath apache-juddi/uddi-ws) org/apache/juddi/uddi-ws/main/uddi-ws.jar
-    ln -s $(build-classpath apache-scout) org/apache/juddi/scout/main/scout.jar
+    ln -s $(build-classpath apache-scout) org/apache/juddi/scout/main/apache-scout.jar
 
     for m in core dom storage; do
       ln -s $(build-classpath apache-mime4j/${m}) org/apache/james/mime4j/main/${m}.jar
@@ -1112,6 +1112,9 @@ fi
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Sat Mar 23 2013 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-17
+- Fixed apache-scout jar name
+
 * Tue Feb 19 2013 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-16
 - Remove wagon extension
 

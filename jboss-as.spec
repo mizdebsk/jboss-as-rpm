@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          17%{?dist}
+Release:          18%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -225,6 +225,7 @@ BuildRequires:    maven-eclipse-plugin
 BuildRequires:    maven-ejb-plugin
 BuildRequires:    xml-maven-plugin
 BuildRequires:    mojarra
+BuildRequires:    mockito
 BuildRequires:    mod_cluster-java >= 1.2.1-2
 BuildRequires:    neethi
 BuildRequires:    nekohtml
@@ -238,6 +239,8 @@ BuildRequires:    opensaml-java-parent
 BuildRequires:    picketbox
 BuildRequires:    picketbox-commons
 BuildRequires:    picketbox-xacml
+BuildRequires:    powermock-junit4
+BuildRequires:    powermock-api-mockito
 BuildRequires:    resteasy >= 2.3.2-7
 BuildRequires:    rhq-plugin-annotations
 BuildRequires:    scannotation
@@ -479,6 +482,9 @@ git am %{patches}
 %pom_xpath_remove "pom:build/pom:extensions"
 %pom_xpath_remove "pom:build/pom:extensions" build-config/pom.xml
 
+# Make the javax.inject dep available at build time too
+%pom_xpath_remove "pom:dependencies/pom:dependency[pom:artifactId = 'javax.inject']/pom:scope" arquillian/container-remote/pom.xml
+
 %build
 export MAVEN_OPTS="-Xms512m -Xmx1024m -XX:PermSize=128m -XX:MaxPermSize=384m"
 
@@ -503,6 +509,8 @@ for mode in standalone domain; do
   install -d -m 755 $RPM_BUILD_ROOT%{cachedir}/${mode}
   install -d -m 775 $RPM_BUILD_ROOT%{logdir}/${mode}
 done
+
+install -d -m 775 $RPM_BUILD_ROOT%{libdir}/domain/servers
 
 # build-config is not installed in the resulting package, but required to build it
 # ee-deployment is a special case, it should be a submodule of ee, but it isn't...
@@ -640,6 +648,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
   # Domain
   ln -s %{confdir}/domain domain/configuration
   ln -s %{libdir}/domain/data domain/data
+  ln -s %{libdir}/domain/servers domain/servers
   ln -s %{logdir}/domain domain/log
   ln -s %{cachedir}/domain/tmp domain/tmp
 
@@ -1112,6 +1121,10 @@ fi
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Wed May 22 2013 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-18
+- Fixed BR/R
+- Preparations for domain mode enablement
+
 * Sat Mar 23 2013 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-17
 - Fixed apache-scout jar name
 

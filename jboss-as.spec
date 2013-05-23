@@ -19,7 +19,7 @@
 
 Name:             jboss-as
 Version:          7.1.1
-Release:          18%{?dist}
+Release:          19%{?dist}
 Summary:          JBoss Application Server
 Group:            System Environment/Daemons
 License:          LGPLv2 and ASL 2.0
@@ -62,11 +62,12 @@ Patch24:          0025-fedora-Remove-javax.jws.api.-This-is-part-of-the-JDK.patc
 Patch25:          0026-fedora-Missing-module-dependencies-in-mime4j-com.sun.patch
 Patch26:          0027-fedora-Remove-still-unavailable-in-Fedora-dependenci.patch
 Patch27:          0028-fedora-Do-not-extract-jbossweb-native-it-s-symlinked.patch
+Patch28:          0029-fedora-Allow-to-launch-the-domain-mode-using-the-sys.patch
 
 BuildArch:        noarch
 
 # Please keep alphabetically
-BuildRequires:    antlr
+BuildRequires:    antlr-tool
 BuildRequires:    ant-apache-bsf
 BuildRequires:    apache-commons-beanutils
 BuildRequires:    apache-commons-cli
@@ -270,7 +271,7 @@ BuildRequires:    xml-commons-resolver
 BuildRequires:    xnio
 BuildRequires:    xom
 
-Requires:         antlr
+Requires:         antlr-tool
 Requires:         atinject
 Requires:         apache-commons-beanutils
 Requires:         apache-commons-cli
@@ -702,11 +703,11 @@ pushd $RPM_BUILD_ROOT%{homedir}
 
     # Please keep alphabetic by jar name
 
-    for m in codec collections configuration io lang logging; do
+    for m in codec configuration io; do
       ln -s $(build-classpath apache-commons-${m}) org/apache/commons/${m}/main/commons-${m}.jar
     done
 
-    for m in beanutils cli configuration pool; do
+    for m in beanutils cli collections configuration lang logging pool; do
       ln -s $(build-classpath apache-commons-${m}) org/apache/commons/${m}/main/apache-commons-${m}.jar
     done
 
@@ -749,12 +750,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath glassfish-jaxb/jaxb-impl) com/sun/xml/bind/main/jaxb-impl.jar
     ln -s $(build-classpath glassfish-jaxb/jaxb-xjc) com/sun/xml/bind/main/jaxb-xjc.jar
     ln -s $(build-classpath glassfish-saaj) com/sun/xml/messaging/saaj/main/glassfish-saaj.jar
-
     ln -s $(build-classpath gnu-getopt) gnu/getopt/main/gnu-getopt.jar
-    # Make sure we don't specify the version suffix in the jar name for gnu-getopt
-    # TODO report a bug and fix this properly
-    sed -i "s|gnu-getopt.*\.jar|gnu-getopt\.jar|" gnu/getopt/main/module.xml
-
     ln -s $(build-classpath bean-validation-api) javax/validation/api/main/bean-validation-api.jar
     ln -s $(build-classpath h2) com/h2database/h2/main/h2.jar
     ln -s $(build-classpath hibernate-validator) org/hibernate/validator/main/hibernate-validator.jar
@@ -916,8 +912,6 @@ pushd $RPM_BUILD_ROOT%{homedir}
       ln -s $(build-classpath mod_cluster/${m}) org/jboss/as/modcluster/main/${m}.jar
     done
 
-    # TODO remove this when netty >= 3.5.10-1 will be available
-    ln -s $(build-classpath netty) org/jboss/netty/main/netty31.jar
     ln -s $(build-classpath netty) org/jboss/netty/main/netty.jar
     ln -s $(build-classpath neethi) org/apache/neethi/main/neethi.jar
     ln -s $(build-classpath nekohtml) net/sourceforge/nekohtml/main/nekohtml.jar
@@ -980,9 +974,7 @@ pushd $RPM_BUILD_ROOT%{homedir}
     ln -s $(build-classpath xml-security) org/apache/santuario/xmlsec/main/xml-security.jar
     ln -s $(build-classpath xmlschema-core) org/apache/ws/xmlschema/main/xmlschema-core.jar
     ln -s $(build-classpath xml-commons-apis) org/apache/xerces/main/xml-commons-apis.jar
-    # TODO: remove this when xml-commons-resolver >= 1.2-11 will be available
-    ln -s $(build-classpath xml-commons-resolver) org/apache/xml-resolver/main/xml-resolver-1.2.jar
-    ln -s $(build-classpath xml-commons-resolver) org/apache/xml-resolver/main/xml-commons-resolver.jar
+    ln -s $(build-classpath xml-commons-resolver) org/apache/xml-resolver/main/xml-commons-resolver-1.2.jar
     ln -s $(build-classpath xnio-api) org/jboss/xnio/main/xnio-api.jar
     ln -s $(build-classpath xnio-nio) org/jboss/xnio/nio/main/xnio-nio.jar
     ln -s $(build-classpath xom) nu/xom/main/xom.jar
@@ -1025,19 +1017,7 @@ pushd %{homedir}/modules/org/jboss/as/web/main/lib/linux-${arch} > /dev/null
   ln -sf ${libdir}/libssl.so libssl.so
 popd > /dev/null
 
-# Systemd
-%if 0%{?fedora} > 17
-
 %systemd_post jboss-as.service
-
-%else
-
-if [ $1 -eq 1 ] ; then
-    # Initial installation
-    /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-fi
-
-%endif
 
 %preun
 # Let's clean up the arch-specific symlinks
@@ -1046,37 +1026,10 @@ arch=`uname -m`
 rm -rf %{homedir}/modules/org/jboss/as/web/main/lib/linux-${arch}/*
 rm -rf %{homedir}/modules/org/hornetq/main/lib/linux-${arch}/*
 
-# Systemd
-%if 0%{?fedora} > 17
-
 %systemd_preun jboss-as.service
 
-%else
-
-if [ $1 -eq 0 ] ; then
-    # Package removal, not upgrade
-    /bin/systemctl --no-reload disable jboss-as.service > /dev/null 2>&1 || :
-    /bin/systemctl stop jboss-as.service > /dev/null 2>&1 || :
-fi
-
-%endif
-
 %postun
-
-# Systemd
-%if 0%{?fedora} > 17
-
 %systemd_postun_with_restart jboss-as.service
-
-%else
-
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ] ; then
-    # Package upgrade, not uninstall
-    /bin/systemctl try-restart jboss-as.service >/dev/null 2>&1 || :
-fi
-
-%endif
 
 %files
 %{homedir}/appclient
@@ -1121,6 +1074,11 @@ fi
 %doc %{homedir}/LICENSE.txt
 
 %changelog
+* Thu May 23 2013 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-19
+- Fix the jar symlinks
+- Make it possible to launch the domain mode using systemd service
+- Cleanup
+
 * Wed May 22 2013 Marek Goldmann <mgoldman@redhat.com> - 7.1.1-18
 - Fixed BR/R
 - Preparations for domain mode enablement

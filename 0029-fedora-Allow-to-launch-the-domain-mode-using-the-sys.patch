@@ -1,0 +1,61 @@
+From 7786c82a8206917d4a4fa8ed6d5c4cbe964f4523 Mon Sep 17 00:00:00 2001
+From: Marek Goldmann <marek.goldmann@gmail.com>
+Date: Thu, 23 May 2013 14:29:44 +0200
+Subject: [PATCH] [fedora] Allow to launch the domain mode using the systemd
+ service
+
+---
+ .../src/main/resources/bin/initscripts/systemd/jboss-as.conf |  3 +++
+ .../main/resources/bin/initscripts/systemd/jboss-as.service  |  2 +-
+ build/src/main/resources/bin/launch.sh                       | 12 ++++++++++++
+ 3 files changed, 16 insertions(+), 1 deletion(-)
+ create mode 100755 build/src/main/resources/bin/launch.sh
+
+diff --git a/build/src/main/resources/bin/initscripts/systemd/jboss-as.conf b/build/src/main/resources/bin/initscripts/systemd/jboss-as.conf
+index 20f2780..3621acd 100644
+--- a/build/src/main/resources/bin/initscripts/systemd/jboss-as.conf
++++ b/build/src/main/resources/bin/initscripts/systemd/jboss-as.conf
+@@ -2,6 +2,9 @@
+ #
+ JBOSS_CONFIG=standalone.xml
+ 
++# The mode you want to run
++JBOSS_MODE=standalone
++
+ # The address to bind to
+ #
+ JBOSS_BIND=0.0.0.0
+diff --git a/build/src/main/resources/bin/initscripts/systemd/jboss-as.service b/build/src/main/resources/bin/initscripts/systemd/jboss-as.service
+index 1a546cc..244a3f4 100644
+--- a/build/src/main/resources/bin/initscripts/systemd/jboss-as.service
++++ b/build/src/main/resources/bin/initscripts/systemd/jboss-as.service
+@@ -9,7 +9,7 @@ EnvironmentFile=-/etc/jboss-as/jboss-as.conf
+ User=jboss-as
+ LimitNOFILE=102642
+ PIDFile=/var/run/jboss-as/jboss-as.pid
+-ExecStart=/usr/share/jboss-as/bin/standalone.sh -c $JBOSS_CONFIG -b $JBOSS_BIND
++ExecStart=/usr/share/jboss-as/bin/launch.sh $JBOSS_MODE $JBOSS_CONFIG $JBOSS_BIND
+ StandardOutput=null
+ 
+ [Install]
+diff --git a/build/src/main/resources/bin/launch.sh b/build/src/main/resources/bin/launch.sh
+new file mode 100755
+index 0000000..3bc76a3
+--- /dev/null
++++ b/build/src/main/resources/bin/launch.sh
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++if [ "x$JBOSS_HOME" = "x" ]; then
++    JBOSS_HOME="/usr/share/jboss-as"
++fi
++
++if [[ "$1" == "domain" ]]; then
++    $JBOSS_HOME/bin/domain.sh -c $2 -b $3
++else
++    $JBOSS_HOME/bin/standalone.sh -c $2 -b $3
++fi
++
+-- 
+1.8.1.4
+
